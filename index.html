@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <title>هيثم AI</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="brand">هيثم <span>AI</span></div>
+      <div class="subtitle">المساعد التعليمي الذكي</div>
+    </div>
+    <div class="badge">الإصدار 1.0</div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">مرحبًا بك</p>
+        <h1>ماذا تريد أن تنجز اليوم؟</h1>
+        <p>اسأل هيثم AI في الرياضيات والتعليم والاختبارات والتحضير والأعمال المدرسية.</p>
+      </div>
+      <div class="hero-mark">∑</div>
+    </section>
+
+    <section class="grid">
+      <button class="card" data-prompt="جهز لي تحضير درس رياضيات منظم، وسأذكر لك الصف واسم الدرس. ابدأ بسؤالي عن الصف والدرس."><b>📚</b><strong>تحضير درس</strong><small>تحضير منظم وجاهز</small></button>
+      <button class="card" data-prompt="أريد إنشاء اختبار رياضيات. اسألني عن الصف والدرس وعدد الأسئلة ونوعها ومستوى الصعوبة."><b>📝</b><strong>إنشاء اختبار</strong><small>أسئلة ونموذج إجابة</small></button>
+      <button class="card" data-prompt="أريد مساعدة في مسألة رياضيات. اطلب مني المسألة واشرح الحل خطوة بخطوة."><b>📐</b><strong>الرياضيات</strong><small>شرح وحل وتدريب</small></button>
+      <button class="card" data-prompt="أريد إعداد إعلان أو تعميم مدرسي. اسألني عن المناسبة والجمهور والمعلومات المطلوبة."><b>🏫</b><strong>المدرسة</strong><small>إعلانات وتقارير وبرامج</small></button>
+      <button class="card" data-prompt="أريد خطة علاجية أو إثرائية لطلاب. اسألني عن الصف والمشكلة والمدة."><b>🎓</b><strong>الطلاب</strong><small>خطط وتقييمات</small></button>
+      <button class="card" data-prompt="أريد تجهيز محتوى لتصميم منشور أو شهادة. اسألني عن المناسبة والمقاس والمعلومات."><b>🎨</b><strong>التصاميم</strong><small>نصوص وأفكار بصرية</small></button>
+    </section>
+
+    <section class="chat">
+      <div id="messages" class="messages">
+        <div class="msg ai"><b>هيثم AI</b><p>مرحبًا أستاذ هيثم 👋<br>أنا جاهز لمساعدتك. اكتب طلبك مباشرة.</p></div>
+      </div>
+      <form id="chatForm" class="composer">
+        <textarea id="input" rows="2" placeholder="اكتب طلبك هنا..." required></textarea>
+        <button type="submit">إرسال ➤</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>هيثم AI — ذكاءٌ يصنع التعلُّم</footer>
+  <script src="/app.js"></script>
+</body>
+</html>
