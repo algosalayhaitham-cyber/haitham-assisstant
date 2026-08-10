@@ -1,108 +1,44 @@
-// app.js - تشغيل واجهة هيثم AI
+document.addEventListener('DOMContentLoaded', function () {
 
-const form = document.getElementById('form');
-const input = document.getElementById('input');
-const messages = document.getElementById('messages');
+  const form = document.getElementById('form');
+  const input = document.getElementById('input');
+  const messages = document.getElementById('messages');
 
-if (form && input && messages) {
+  if (!form || !input || !messages) {
+    alert('خطأ: لم يتم العثور على عناصر المحادثة');
+    return;
+  }
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const message = input.value.trim();
+    const text = input.value.trim();
 
-    if (!message) return;
+    if (!text) return;
 
-    // عرض رسالة المستخدم
-    const userMessage = document.createElement('div');
-    userMessage.className = 'msg user';
+    const msg = document.createElement('div');
+    msg.className = 'msg user';
 
-    const userName = document.createElement('b');
-    userName.textContent = 'أنت';
+    msg.innerHTML = `
+      <b>أنت</b>
+      <p>${text}</p>
+    `;
 
-    const userText = document.createElement('p');
-    userText.textContent = message;
+    messages.appendChild(msg);
 
-    userMessage.appendChild(userName);
-    userMessage.appendChild(userText);
-    messages.appendChild(userMessage);
-
-    // تفريغ مربع الكتابة
     input.value = '';
 
-    // رسالة انتظار
-    const loadingMessage = document.createElement('div');
-    loadingMessage.className = 'msg ai';
-    loadingMessage.id = 'loading';
+    const reply = document.createElement('div');
+    reply.className = 'msg ai';
 
-    const loadingName = document.createElement('b');
-    loadingName.textContent = 'هيثم AI';
+    reply.innerHTML = `
+      <b>هيثم AI</b>
+      <p>وصلت رسالتك بنجاح ✅</p>
+    `;
 
-    const loadingText = document.createElement('p');
-    loadingText.textContent = 'جاري التفكير...';
-
-    loadingMessage.appendChild(loadingName);
-    loadingMessage.appendChild(loadingText);
-    messages.appendChild(loadingMessage);
-
-    messages.scrollTop = messages.scrollHeight;
-
-    try {
-
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: message
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('الخادم لم يستجب بشكل صحيح');
-      }
-
-      const data = await res.json();
-
-      // حذف رسالة الانتظار
-      loadingMessage.remove();
-
-      // عرض الرد
-      const botMessage = document.createElement('div');
-      botMessage.className = 'msg ai';
-
-      const botName = document.createElement('b');
-      botName.textContent = 'هيثم AI';
-
-      const botText = document.createElement('p');
-      botText.textContent = data.reply || 'لم يصل رد من الذكاء الاصطناعي.';
-
-      botMessage.appendChild(botName);
-      botMessage.appendChild(botText);
-
-      messages.appendChild(botMessage);
-
-    } catch (err) {
-
-      loadingMessage.remove();
-
-      const errorMessage = document.createElement('div');
-      errorMessage.className = 'msg ai';
-
-      const errorName = document.createElement('b');
-      errorName.textContent = 'هيثم AI';
-
-      const errorText = document.createElement('p');
-      errorText.textContent =
-        'حدث خطأ في الاتصال بالخادم: ' + err.message;
-
-      errorMessage.appendChild(errorName);
-      errorMessage.appendChild(errorText);
-
-      messages.appendChild(errorMessage);
-    }
+    messages.appendChild(reply);
 
     messages.scrollTop = messages.scrollHeight;
   });
-}
+
+});
