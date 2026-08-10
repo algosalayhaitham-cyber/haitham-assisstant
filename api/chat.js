@@ -1,4 +1,4 @@
-ج// api/chat.js - هذا يشتغل على Vercel Serverless
+// api/chat.js - هذا يشتغل على Vercel Serverless
 async function handler(req, res) {
   if (req.method!== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
