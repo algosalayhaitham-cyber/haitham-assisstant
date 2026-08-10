@@ -1,4 +1,4 @@
-// api/chat.js - هذا يشتغل على Vercel Serverless
+ج// api/chat.js - هذا يشتغل على Vercel Serverless
 async function handler(req, res) {
   if (req.method!== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -19,7 +19,7 @@ async function handler(req, res) {
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-       model: 'gpt-4o',', // رخيص وسريع
+       model: 'gpt-4o', // رخيص وسريع
         messages: [
           { role: 'system', content: 'انت المساعد هيثم، مساعد تعليمي ذكي باللغة العربية. اجاباتك واضحة ومفيدة للطلاب.' },
           { role: 'user', content: message }
