@@ -65,7 +65,15 @@ document.addEventListener('DOMContentLoaded', function () {
         })
       });
 
-      const data = await response.json();
+      const text = await response.text();
+
+let data;
+
+try {
+  data = JSON.parse(text);
+} catch {
+  throw new Error(text || 'السيرفر لم يرجع استجابة صحيحة');
+}
 
       // حذف جاري التفكير
       loading.remove();
