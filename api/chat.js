@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', // رخيص وسريع
+       model: 'gpt-4o',', // رخيص وسريع
         messages: [
           { role: 'system', content: 'انت المساعد هيثم، مساعد تعليمي ذكي باللغة العربية. اجاباتك واضحة ومفيدة للطلاب.' },
           { role: 'user', content: message }
