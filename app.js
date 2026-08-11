@@ -1,3 +1,11 @@
+// تسجيل تطبيق PWA للعمل على الجوال
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('PWA Service Worker Registered!'))
+      .catch(err => console.log('SW registration failed: ', err));
+  });
+}
 // app.js - هيثم AI (شامل: صور + معادلات + PDF + Word + حفظ + صوت)
 
 document.addEventListener('DOMContentLoaded', function () {
