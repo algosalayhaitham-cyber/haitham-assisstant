@@ -3,155 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تصحيح أوراق - هيثم AI</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>📝 تصحيح الاختبارات - هيثم AI</title>
     <style>
-        /* ===== تنسيقات خاصة بصفحة التصحيح ===== */
+        /* ===== التنسيقات العامة ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Tahoma', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
+
         .container {
-            max-width: 800px;
+            max-width: 750px;
             width: 100%;
-            margin: auto;
             background: rgba(255,255,255,0.95);
-            padding: 35px;
             border-radius: 25px;
+            padding: 25px;
             box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-            animation: slideIn 0.6s ease;
+            animation: slideIn 0.5s ease;
         }
-        
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 3px solid #e2e8f0;
             flex-wrap: wrap;
-        }
-        
-        .header h1 {
-            color: #1a1a2e;
-            font-size: 28px;
-            display: flex;
-            align-items: center;
             gap: 10px;
         }
-        
+
+        .header h1 {
+            color: #1a1a2e;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .header h1 span {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 5px 15px;
+            padding: 3px 12px;
             border-radius: 50px;
             color: white;
-            font-size: 14px;
+            font-size: 12px;
         }
-        
+
         .back-btn {
             background: #4A90D9;
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 8px 20px;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: bold;
             transition: 0.3s;
-            text-decoration: none;
         }
-        
+
         .back-btn:hover {
             background: #357ABD;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(74, 144, 217, 0.4);
         }
-        
+
+        /* ===== نصائح ===== */
+        .tip-box {
+            background: #fef3c7;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border-right: 5px solid #f59e0b;
+            font-size: 14px;
+            color: #78350f;
+        }
+
+        .tip-box strong {
+            font-weight: bold;
+        }
+
+        /* ===== رفع الصورة ===== */
         .upload-area {
             border: 3px dashed #cbd5e0;
             border-radius: 18px;
-            padding: 40px 20px;
+            padding: 30px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             background: #fafafa;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        
+
         .upload-area:hover {
             border-color: #667eea;
             background: #f0f2ff;
             transform: scale(1.01);
         }
-        
+
         .upload-area .icon {
-            font-size: 50px;
-            margin-bottom: 10px;
+            font-size: 45px;
             display: block;
+            margin-bottom: 6px;
         }
-        
+
         .upload-area p {
             color: #4a5568;
-            font-size: 16px;
-        }
-        
-        .upload-area .sub-text {
-            color: #a0aec0;
-            font-size: 14px;
-        }
-        
-        .input-group {
-            margin-top: 18px;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2d3748;
-            font-weight: bold;
             font-size: 15px;
         }
-        
+
+        .upload-area .sub-text {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .camera-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .camera-btn {
+            background: #4A90D9;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .camera-btn:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        #previewImage {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 15px;
+            display: none;
+            margin: 10px 0;
+            border: 4px solid #667eea;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        /* ===== الحقول ===== */
+        .input-group {
+            margin-top: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
         .input-group label .badge {
             display: inline-block;
             padding: 2px 10px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            margin-right: 8px;
+            margin-right: 6px;
         }
-        
+
         .badge-required {
             background: #fc8181;
             color: white;
         }
-        
+
         .badge-optional {
             background: #a0aec0;
             color: white;
         }
-        
+
         .input-group input,
-        .input-group textarea {
+        .input-group textarea,
+        .input-group select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 10px 14px;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             font-size: 14px;
@@ -159,212 +214,384 @@
             font-family: inherit;
             background: #f7fafc;
         }
-        
+
         .input-group input:focus,
-        .input-group textarea:focus {
+        .input-group textarea:focus,
+        .input-group select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
             background: white;
         }
-        
+
         .input-group textarea {
-            min-height: 90px;
+            min-height: 70px;
             resize: vertical;
         }
-        
+
+        .input-group select {
+            appearance: auto;
+        }
+
+        /* ===== الأزرار ===== */
         .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
             border: none;
-            padding: 14px 28px;
-            font-size: 16px;
+            padding: 13px 20px;
+            font-size: 15px;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
             font-weight: bold;
             margin-top: 10px;
+            color: white;
         }
-        
+
         .btn:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-        
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
         .btn-success {
             background: linear-gradient(135deg, #48bb78, #38a169);
         }
-        
+
         .btn-success:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(72, 187, 120, 0.4);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
         }
-        
-        .btn-grade {
+
+        .btn-warning {
             background: linear-gradient(135deg, #ed8936, #dd6b20);
         }
-        
-        .btn-grade:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(237, 137, 54, 0.4);
+
+        .btn-warning:hover:not(:disabled) {
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
         }
-        
+
+        .btn-danger {
+            background: linear-gradient(135deg, #fc8181, #f56565);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            box-shadow: 0 8px 25px rgba(252, 129, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #a0aec0, #718096);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            box-shadow: 0 8px 25px rgba(160, 174, 192, 0.4);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-row .btn {
+            flex: 1;
+        }
+
+        /* ===== التحميل ===== */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            margin-top: 15px;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        /* ===== النتيجة ===== */
         .result-box {
-            margin-top: 25px;
+            margin-top: 20px;
             padding: 20px;
-            background: linear-gradient(135deg, #f6f9fc 0%, #e8f0fe 100%);
+            background: linear-gradient(135deg, #f6f9fc, #e8f0fe);
             border-radius: 18px;
             display: none;
             border-right: 6px solid #667eea;
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn 0.5s ease;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .result-box h3 {
             color: #1a1a2e;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
+
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #e2e8f0;
             flex-wrap: wrap;
+            gap: 5px;
         }
-        
+
         .result-item:last-child {
             border-bottom: none;
         }
-        
+
         .result-label {
             color: #4a5568;
             font-weight: bold;
+            font-size: 14px;
         }
-        
+
         .result-value {
             color: #2d3748;
-            max-width: 60%;
+            font-size: 14px;
             word-break: break-word;
+            max-width: 60%;
         }
-        
+
         .score-high {
             color: #48bb78;
             font-size: 24px;
             font-weight: bold;
         }
-        
+
         .score-medium {
             color: #ed8936;
             font-size: 24px;
             font-weight: bold;
         }
-        
+
         .score-low {
             color: #fc8181;
             font-size: 24px;
             font-weight: bold;
         }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 30px;
-            margin-top: 20px;
+
+        .grade-box {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 12px;
+            border-right: 4px solid #48bb78;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #667eea;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+
+        .grade-box .emoji {
+            font-size: 30px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .grade-box .text {
+            flex: 1;
         }
-        
+
+        .grade-box .text strong {
+            font-size: 18px;
+            color: #1a1a2e;
+        }
+
+        .grade-box .text p {
+            color: #718096;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
         .error {
             color: #fc8181;
             background: #fff5f5;
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-radius: 12px;
-            margin-top: 15px;
+            margin-top: 12px;
             display: none;
             border: 2px solid #feb2b2;
+            font-size: 14px;
         }
-        
-        #previewImage {
-            max-width: 100%;
-            max-height: 350px;
-            margin-top: 15px;
-            border-radius: 15px;
-            display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            border: 4px solid #667eea;
+
+        /* ===== إحصائيات ===== */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            flex-wrap: wrap;
         }
-        
-        .grade-result {
-            background: #f0fff4;
-            padding: 15px;
+
+        .stat-card {
+            flex: 1;
+            min-width: 70px;
+            background: white;
+            padding: 10px;
             border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .stat-card .number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #718096;
+            font-size: 11px;
+        }
+
+        /* ===== سجل الطلاب ===== */
+        .history-section {
             margin-top: 15px;
-            border-right: 4px solid #48bb78;
+            padding-top: 15px;
+            border-top: 2px solid #e2e8f0;
         }
-        
-        .grade-result .emoji {
-            font-size: 28px;
+
+        .history-section h4 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 16px;
         }
-        
-        @media (max-width: 768px) {
-            .container { padding: 20px; }
-            .header { flex-direction: column; gap: 10px; align-items: stretch; }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 13px;
+            border-right: 3px solid #667eea;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .history-item .name {
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .history-item .score {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .history-item .date {
+            color: #a0aec0;
+            font-size: 11px;
+        }
+
+        .history-empty {
+            color: #a0aec0;
+            font-size: 13px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* ===== استجابة للجوال ===== */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-row { flex-direction: column; }
+            .btn-row .btn { width: 100%; }
             .result-value { max-width: 100%; }
+            .stats-row { flex-direction: row; }
+            .stat-card { min-width: 60px; padding: 8px; }
+            .stat-card .number { font-size: 18px; }
+            .header h1 { font-size: 20px; }
+            .header { flex-direction: column; align-items: stretch; }
+            .upload-area { padding: 20px 15px; }
+            .upload-area .icon { font-size: 35px; }
+            .camera-row { flex-direction: column; }
+            .history-item { font-size: 12px; }
+        }
+
+        @media (max-width: 400px) {
+            .container { padding: 10px; }
+            .stat-card { min-width: 50px; padding: 6px; }
+            .stat-card .number { font-size: 16px; }
+            .stat-card .label { font-size: 10px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- الهيدر -->
+    <!-- ===== الهيدر ===== -->
     <div class="header">
-        <h1>📝 تصحيح أوراق <span>هيثم AI</span></h1>
-        <button class="back-btn" onclick="window.location.href='index.html'">🔙 رجوع للرئيسية</button>
+        <h1>📝 تصحيح الاختبارات <span>هيثم AI</span></h1>
+        <button class="back-btn" onclick="window.location.href='index.html'">🔙 رجوع</button>
     </div>
 
-    <!-- نصائح -->
-    <div style="background: #fef3c7; padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; border-right: 5px solid #f59e0b;">
-        <span style="font-size: 20px;">💡</span>
-        <span style="color: #78350f; font-weight: bold;">نصيحة هيثم:</span>
-        <span style="color: #78350f;">ارفع صورة واضحة للورقة، وتأكد من الإضاءة الجيدة للحصول على أفضل نتائج!</span>
+    <!-- ===== نصائح ===== -->
+    <div class="tip-box">
+        💡 <strong>نصيحة:</strong> صوّر الورقة بوضوح، وتأكد من الإضاءة الجيدة للحصول على أفضل نتائج!
     </div>
 
-    <!-- رفع الصورة -->
+    <!-- ===== رفع الصورة ===== -->
     <div class="upload-area" id="uploadArea">
         <span class="icon">📸</span>
-        <p>انقر لرفع صورة ورقة الإجابة</p>
-        <p class="sub-text">يدعم: JPG, PNG (حد أقصى 10 ميجابايت)</p>
+        <p>انقر لرفع صورة ورقة الاختبار</p>
+        <p class="sub-text">JPG, PNG (حد أقصى 10 ميجابايت)</p>
         <input type="file" id="paperInput" accept="image/*" style="display: none;">
+    </div>
+
+    <div class="camera-row">
+        <button class="camera-btn" onclick="captureFromCamera()">📷 تصوير من الكاميرا</button>
+        <button class="camera-btn" style="background:#ed8936;" onclick="clearAll()">🗑️ مسح الكل</button>
     </div>
 
     <img id="previewImage" alt="معاينة الورقة">
 
-    <!-- حقول الإدخال -->
+    <!-- ===== معلومات الطالب ===== -->
     <div class="input-group">
         <label>👤 اسم الطالب <span class="badge badge-required">مطلوب</span></label>
         <input type="text" id="studentName" placeholder="أدخل اسم الطالب" value="أحمد محمد">
+    </div>
+
+    <div class="input-group">
+        <label>📚 المادة <span class="badge badge-required">مطلوب</span></label>
+        <select id="subject">
+            <option value="رياضيات">📐 رياضيات</option>
+            <option value="فيزياء">⚡ فيزياء</option>
+            <option value="كيمياء">🧪 كيمياء</option>
+            <option value="لغة عربية">📖 لغة عربية</option>
+            <option value="لغة إنجليزية">🇬🇧 لغة إنجليزية</option>
+            <option value="تاريخ">🏛️ تاريخ</option>
+            <option value="أخرى">📚 أخرى</option>
+        </select>
     </div>
 
     <div class="input-group">
@@ -377,26 +604,33 @@
         <input type="number" id="expectedWords" placeholder="مثال: 100" value="50">
     </div>
 
-    <!-- الأزرار -->
-    <button class="btn btn-success" onclick="startCorrection()">🚀 ابدأ التصحيح</button>
-    <button class="btn btn-grade" onclick="estimateGrade()">⭐ تقدير الدرجة</button>
+    <!-- ===== الأزرار ===== -->
+    <div class="btn-row">
+        <button class="btn btn-primary" onclick="startCorrection()">🚀 ابدأ التصحيح</button>
+        <button class="btn btn-warning" onclick="estimateGrade()">⭐ تقدير الدرجة</button>
+    </div>
 
-    <!-- مؤشر التحميل -->
+    <!-- ===== التحميل ===== -->
     <div class="loading" id="loadingIndicator">
         <div class="spinner"></div>
         <p>⏳ جاري التصحيح والتحليل...</p>
-        <p style="color: #a0aec0; font-size: 14px;">هيثم يعمل بجد لتصحيح إجابتك</p>
+        <p style="color: #a0aec0; font-size: 13px;">هيثم يعمل بجد لتصحيح إجابتك</p>
     </div>
 
-    <!-- رسالة الخطأ -->
+    <!-- ===== الخطأ ===== -->
     <div class="error" id="errorMessage"></div>
 
-    <!-- نتيجة التصحيح -->
+    <!-- ===== النتيجة ===== -->
     <div class="result-box" id="resultBox">
         <h3>✅ نتيجة التصحيح</h3>
+
         <div class="result-item">
             <span class="result-label">👤 اسم الطالب</span>
             <span class="result-value" id="resultStudent">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">📚 المادة</span>
+            <span class="result-value" id="resultSubject">-</span>
         </div>
         <div class="result-item">
             <span class="result-label">📊 عدد الكلمات</span>
@@ -412,45 +646,83 @@
         </div>
         <div class="result-item" id="resultDetailsContainer" style="display: none;">
             <span class="result-label">📄 التفاصيل</span>
-            <span class="result-value" id="resultDetails" style="font-size: 14px; max-width: 400px; word-wrap: break-word;">-</span>
+            <span class="result-value" id="resultDetails" style="font-size: 13px;">-</span>
         </div>
-        <div id="gradeResultContainer" style="display: none;"></div>
+
+        <!-- التقدير -->
+        <div id="gradeContainer"></div>
+
+        <!-- إحصائيات -->
+        <div class="stats-row" id="statsRow" style="display:none;">
+            <div class="stat-card">
+                <div class="number" id="statCorrect">0</div>
+                <div class="label">✅ صحيح</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="statWrong">0</div>
+                <div class="label">❌ خطأ</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="statPartial">0</div>
+                <div class="label">⚠️ ناقص</div>
+            </div>
+        </div>
+
+        <!-- أزرار النتيجة -->
+        <div class="btn-row" style="margin-top:12px;">
+            <button class="btn btn-success" onclick="saveResult()" style="flex:1;">💾 حفظ</button>
+            <button class="btn btn-warning" onclick="shareResult()" style="flex:1;">📤 مشاركة</button>
+            <button class="btn btn-primary" onclick="printResult()" style="flex:1;">🖨️ طباعة</button>
+        </div>
+
+        <!-- سجل الطلاب -->
+        <div class="history-section" id="historySection">
+            <h4>📋 سجل الطلاب المُصححين</h4>
+            <div id="historyList"><div class="history-empty">لا يوجد سجل بعد</div></div>
+        </div>
     </div>
 
-    <!-- أزرار إضافية -->
-    <div style="display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap;">
-        <button class="btn" onclick="speakResult()" style="background: linear-gradient(135deg, #4299e1, #3182ce); flex: 1; min-width: 120px;">
-            🔊 استماع
-        </button>
-        <button class="btn" onclick="saveResult()" style="background: linear-gradient(135deg, #48bb78, #38a169); flex: 1; min-width: 120px;">
-            💾 حفظ
-        </button>
-        <button class="btn" onclick="printResult()" style="background: linear-gradient(135deg, #ed8936, #dd6b20); flex: 1; min-width: 120px;">
-            🖨️ طباعة
-        </button>
-    </div>
+    <!-- كاميرا مخفية للجوال -->
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;">
 </div>
 
-<!-- ============================================================ -->
-<!-- السكريبتات -->
-<!-- ============================================================ -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
 <script>
-    // =============================================
+    // ================================================================
     // 1. المتغيرات
-    // =============================================
+    // ================================================================
     let imageBase64 = null;
     let correctionResult = null;
+    let studentHistory = [];
 
-    // =============================================
+    // تحميل السجل
+    loadHistory();
+
+    // ================================================================
     // 2. رفع الصورة
-    // =============================================
+    // ================================================================
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('paperInput');
+    const cameraInput = document.getElementById('cameraInput');
 
     uploadArea.addEventListener('click', () => fileInput.click());
 
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+    });
+
+    function captureFromCamera() {
+        cameraInput.click();
+    }
+
+    cameraInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+    });
+
+    // سحب وإفلات
     uploadArea.addEventListener('dragover', function(e) {
         e.preventDefault();
         this.style.borderColor = '#667eea';
@@ -475,11 +747,6 @@
         }
     });
 
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) handleFile(file);
-    });
-
     function handleFile(file) {
         if (file.size > 10 * 1024 * 1024) {
             showError('حجم الصورة كبير جداً. الرجاء اختيار صورة أقل من 10 ميجابايت.');
@@ -493,17 +760,17 @@
             preview.src = imageBase64;
             preview.style.display = 'block';
             hideError();
-            
-            document.querySelector('.upload-area p:first-of-type').textContent = '✅ تم رفع الصورة بنجاح';
-            document.querySelector('.upload-area').style.borderColor = '#48bb78';
-            document.querySelector('.upload-area').style.background = '#f0fff4';
+
+            uploadArea.querySelector('p:first-of-type').textContent = '✅ تم رفع الصورة بنجاح';
+            uploadArea.style.borderColor = '#48bb78';
+            uploadArea.style.background = '#f0fff4';
         };
         reader.readAsDataURL(file);
     }
 
-    // =============================================
-    // 3. استخراج النص من الصورة (OCR)
-    // =============================================
+    // ================================================================
+    // 3. استخراج النص (OCR)
+    // ================================================================
     async function extractTextFromImage() {
         if (!imageBase64) {
             throw new Error('لا توجد صورة للتحليل');
@@ -524,12 +791,13 @@
         return result.data.text;
     }
 
-    // =============================================
-    // 4. دالة التصحيح الرئيسية
-    // =============================================
+    // ================================================================
+    // 4. التصحيح
+    // ================================================================
     async function startCorrection() {
-        const studentName = document.getElementById('studentName').value || 'غير معروف';
-        const answerKey = document.getElementById('answerKey').value || '';
+        const studentName = document.getElementById('studentName').value.trim() || 'غير معروف';
+        const subject = document.getElementById('subject').value;
+        const answerKey = document.getElementById('answerKey').value.trim();
         const expectedWords = parseInt(document.getElementById('expectedWords').value) || 50;
 
         if (!imageBase64) {
@@ -537,45 +805,47 @@
             return;
         }
 
-        if (!answerKey.trim()) {
+        if (!answerKey) {
             showError('❌ الرجاء إدخال الحل النموذجي');
             return;
         }
 
-        // إظهار مؤشر التحميل
         document.getElementById('loadingIndicator').style.display = 'block';
         document.getElementById('resultBox').style.display = 'none';
-        document.getElementById('gradeResultContainer').style.display = 'none';
+        document.getElementById('gradeContainer').innerHTML = '';
+        document.getElementById('statsRow').style.display = 'none';
         hideError();
 
         try {
-            // استخراج النص من الصورة
             const extractedText = await extractTextFromImage();
             console.log('📝 النص المستخرج:', extractedText);
 
-            // حساب عدد الكلمات
             const wordCount = extractedText.split(/\s+/).filter(w => w.length > 0).length;
             const wordRatio = Math.min(wordCount / expectedWords, 1);
 
-            // حساب درجة التشابه
             const score = calculateSimilarity(extractedText, answerKey);
             const adjustedScore = Math.round(score * (0.7 + 0.3 * wordRatio));
             const finalScore = Math.min(adjustedScore, 20);
 
-            // إنشاء الملاحظات
-            const feedback = generateFeedback(finalScore);
+            // محاكاة إحصائيات (للتجربة)
+            const correct = Math.floor(finalScore / 2);
+            const wrong = Math.floor((20 - finalScore) / 2);
+            const partial = 20 - correct - wrong;
 
-            // تخزين النتيجة
             correctionResult = {
                 studentName: studentName,
+                subject: subject,
                 wordCount: wordCount,
                 score: finalScore,
-                maxScore: 20,
-                feedback: feedback,
-                extractedText: extractedText.substring(0, 300) + (extractedText.length > 300 ? '...' : '')
+                total: 20,
+                correct: correct,
+                wrong: wrong,
+                partial: partial,
+                feedback: generateFeedback(finalScore),
+                extractedText: extractedText.substring(0, 300) + (extractedText.length > 300 ? '...' : ''),
+                date: new Date().toLocaleString('ar-SA')
             };
 
-            // عرض النتيجة
             displayResult(correctionResult);
 
         } catch (error) {
@@ -586,9 +856,9 @@
         }
     }
 
-    // =============================================
-    // 5. حساب درجة التشابه
-    // =============================================
+    // ================================================================
+    // 5. حساب التشابه
+    // ================================================================
     function calculateSimilarity(studentAnswer, modelAnswer) {
         if (!studentAnswer || !modelAnswer) return 0;
 
@@ -609,16 +879,14 @@
 
         const similarity = matchCount / modelWords.length;
         let score = Math.round(similarity * 20);
-
-        // منح درجة حد أدنى إذا كان هناك نص مقروء
         if (studentAnswer.length > 10 && score < 2) score = 2;
 
         return Math.min(score, 20);
     }
 
-    // =============================================
-    // 6. إنشاء الملاحظات
-    // =============================================
+    // ================================================================
+    // 6. توليد الملاحظات
+    // ================================================================
     function generateFeedback(score) {
         if (score >= 18) return '🌟 ممتاز! إجابة متقنة وشاملة. هيثم فخور بك!';
         if (score >= 15) return '👍 جيد جداً، لكن يمكن تحسين بعض النقاط. استمر!';
@@ -627,20 +895,22 @@
         return '📚 يرجى مراجعة المادة جيداً والمحاولة مرة أخرى.';
     }
 
-    // =============================================
+    // ================================================================
     // 7. عرض النتيجة
-    // =============================================
+    // ================================================================
     function displayResult(result) {
         document.getElementById('resultStudent').textContent = result.studentName;
+        document.getElementById('resultSubject').textContent = result.subject;
         document.getElementById('resultWords').textContent = result.wordCount + ' كلمة';
 
         const scoreElement = document.getElementById('resultScore');
-        scoreElement.textContent = `${result.score}/${result.maxScore}`;
+        const percentage = Math.round((result.score / result.total) * 100);
+        scoreElement.textContent = `${result.score}/${result.total} (${percentage}%)`;
         scoreElement.className = 'result-value';
 
-        if (result.score >= 15) {
+        if (percentage >= 75) {
             scoreElement.classList.add('score-high');
-        } else if (result.score >= 10) {
+        } else if (percentage >= 50) {
             scoreElement.classList.add('score-medium');
         } else {
             scoreElement.classList.add('score-low');
@@ -655,114 +925,160 @@
             document.getElementById('resultDetailsContainer').style.display = 'none';
         }
 
+        // إحصائيات
+        document.getElementById('statCorrect').textContent = result.correct || 0;
+        document.getElementById('statWrong').textContent = result.wrong || 0;
+        document.getElementById('statPartial').textContent = result.partial || 0;
+        document.getElementById('statsRow').style.display = 'flex';
+
+        // تقدير
+        showGrade(result.score, result.total);
+
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
-        
-        // إخفاء التقدير السابق
-        document.getElementById('gradeResultContainer').style.display = 'none';
+
+        saveToHistory(result);
+        renderHistory();
     }
 
-    // =============================================
-    // 8. دالة تقدير الدرجة
-    // =============================================
+    // ================================================================
+    // 8. تقدير الدرجة
+    // ================================================================
     function estimateGrade() {
-        if (!correctionResult) {
-            showError('❌ لازم تصحح الورقة أولاً');
+        const resultText = document.getElementById('resultScore').textContent;
+        if (!resultText || resultText === '-') {
+            alert('❌ قم بالتصحيح أولاً');
             return;
         }
 
-        const score = correctionResult.score;
-        const maxScore = correctionResult.maxScore;
-        const percentage = (score / maxScore) * 100;
-
-        let grade = '';
-        let emoji = '';
-        let recommendation = '';
-
-        if (percentage >= 90) {
-            grade = 'ممتاز';
-            emoji = '⭐';
-            recommendation = 'أداء رائع، استمر بهذا المستوى!';
-        } else if (percentage >= 75) {
-            grade = 'جيد جداً';
-            emoji = '🌟';
-            recommendation = 'أداء مميز، ركز على النقاط التي أخطأت فيها';
-        } else if (percentage >= 60) {
-            grade = 'جيد';
-            emoji = '👍';
-            recommendation = 'أداء جيد، أنصحك بمراجعة الأخطاء';
-        } else if (percentage >= 45) {
-            grade = 'مقبول';
-            emoji = '📖';
-            recommendation = 'تحتاج إلى مراجعة الدروس مع المعلم';
-        } else {
-            grade = 'ضعيف';
-            emoji = '📚';
-            recommendation = 'بحاجة إلى خطة علاجية فورية';
+        const match = resultText.match(/(\d+)\/(\d+)/);
+        if (!match) {
+            alert('❌ لم أجد نتيجة التصحيح');
+            return;
         }
 
-        const container = document.getElementById('gradeResultContainer');
-        container.innerHTML = `
-            <div class="grade-result">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span class="emoji">${emoji}</span>
-                    <div>
-                        <strong style="font-size: 20px; color: #1a1a2e;">التقدير: ${grade}</strong><br>
-                        <span style="color: #4a5568;">${score} من ${maxScore} (${Math.round(percentage)}%)</span><br>
-                        <span style="color: #718096; font-size: 14px;">💡 ${recommendation}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.style.display = 'block';
-        
-        // تشغيل تأثير confetti إذا كان التقدير ممتاز
-        if (percentage >= 90) {
+        const score = parseInt(match[1]);
+        const total = parseInt(match[2]);
+        showGrade(score, total);
+
+        if ((score / total) >= 0.9) {
             createConfetti();
         }
     }
 
-    // =============================================
-    // 9. دوال إضافية
-    // =============================================
-    function speakResult() {
-        if (!correctionResult) {
-            showError('لا توجد نتيجة للتحدث');
-            return;
+    function showGrade(score, total) {
+        const percentage = (score / total) * 100;
+        let grade = '', emoji = '', recommendation = '';
+
+        if (percentage >= 90) {
+            grade = 'ممتاز';
+            emoji = '⭐';
+            recommendation = 'أداء رائع! أنت متميز جداً، استمر بهذا المستوى';
+        } else if (percentage >= 75) {
+            grade = 'جيد جداً';
+            emoji = '🌟';
+            recommendation = 'أداء مميز! ركز على النقاط التي أخطأت فيها لتصل للامتياز';
+        } else if (percentage >= 60) {
+            grade = 'جيد';
+            emoji = '👍';
+            recommendation = 'أداء جيد! أنصحك بمراجعة الأخطاء وتعزيز نقاط الضعف';
+        } else if (percentage >= 45) {
+            grade = 'مقبول';
+            emoji = '📖';
+            recommendation = 'تحتاج إلى مراجعة الدروس مع المعلم وتركيز أكبر';
+        } else {
+            grade = 'ضعيف';
+            emoji = '📚';
+            recommendation = 'بحاجة إلى خطة علاجية فورية ودعم إضافي';
         }
 
-        const text = `الطالب ${correctionResult.studentName}، الدرجة ${correctionResult.score} من ${correctionResult.maxScore}. ${correctionResult.feedback}`;
-        
-        if ('speechSynthesis' in window) {
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = 'ar-SA';
-            msg.rate = 0.9;
-            speechSynthesis.speak(msg);
-        } else {
-            showError('المتصفح لا يدعم خاصية النطق');
+        document.getElementById('gradeContainer').innerHTML = `
+            <div class="grade-box">
+                <span class="emoji">${emoji}</span>
+                <div class="text">
+                    <strong>التقدير: ${grade}</strong>
+                    <p>${score} من ${total} (${Math.round(percentage)}%) - ${recommendation}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // ================================================================
+    // 9. السجل
+    // ================================================================
+    function saveToHistory(result) {
+        const history = JSON.parse(localStorage.getItem('correctionHistory') || '[]');
+        history.push({
+            ...result,
+            id: Date.now()
+        });
+        localStorage.setItem('correctionHistory', JSON.stringify(history));
+        studentHistory = history;
+    }
+
+    function loadHistory() {
+        const saved = localStorage.getItem('correctionHistory');
+        if (saved) {
+            try {
+                studentHistory = JSON.parse(saved);
+                renderHistory();
+            } catch(e) {}
         }
     }
 
-    function saveResult() {
-        if (!correctionResult) {
-            showError('لا توجد نتيجة للحفظ');
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        if (studentHistory.length === 0) {
+            list.innerHTML = '<div class="history-empty">لا يوجد سجل بعد</div>';
             return;
         }
 
-        const history = JSON.parse(localStorage.getItem('correctionHistory') || '[]');
-        history.push({
-            ...correctionResult,
-            date: new Date().toLocaleString('ar-SA')
-        });
-        localStorage.setItem('correctionHistory', JSON.stringify(history));
+        const last10 = studentHistory.slice(-10).reverse();
+        list.innerHTML = last10.map(item => `
+            <div class="history-item">
+                <span class="name">${item.studentName}</span>
+                <span>${item.subject || ''}</span>
+                <span class="score">${item.score}/${item.total}</span>
+                <span class="date">${item.date || ''}</span>
+            </div>
+        `).join('');
+    }
 
-        alert(`✅ تم حفظ نتيجة ${correctionResult.studentName} بنجاح!`);
-        console.log('📊 السجل:', history);
+    // ================================================================
+    // 10. حفظ ومشاركة وطباعة
+    // ================================================================
+    function saveResult() {
+        if (!correctionResult) {
+            alert('❌ لا توجد نتيجة للحفظ');
+            return;
+        }
+        saveToHistory(correctionResult);
+        renderHistory();
+        alert('✅ تم حفظ نتيجة الطالب بنجاح!');
+    }
+
+    function shareResult() {
+        if (!correctionResult) {
+            alert('❌ لا توجد نتيجة للمشاركة');
+            return;
+        }
+
+        const text = `📊 نتيجة تصحيح الاختبار\n👤 الطالب: ${correctionResult.studentName}\n📚 المادة: ${correctionResult.subject}\n⭐ الدرجة: ${correctionResult.score}/${correctionResult.total}\n📝 الملاحظات: ${correctionResult.feedback}`;
+
+        if (navigator.share) {
+            navigator.share({ title: 'نتيجة التصحيح', text: text }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ تم نسخ النتيجة للحافظة!');
+            }).catch(() => {
+                prompt('انسخ النتيجة:', text);
+            });
+        }
     }
 
     function printResult() {
         if (!correctionResult) {
-            showError('لا توجد نتيجة للطباعة');
+            alert('❌ لا توجد نتيجة للطباعة');
             return;
         }
 
@@ -773,21 +1089,21 @@
             <style>
                 body { font-family: Tahoma, sans-serif; padding: 40px; }
                 h2 { color: #1a1a2e; }
-                .item { margin: 15px 0; padding: 10px; border-bottom: 1px solid #ddd; }
+                .item { margin: 12px 0; padding: 10px; border-bottom: 1px solid #ddd; }
                 .label { font-weight: bold; color: #4a5568; }
                 .value { color: #2d3748; }
-                .grade-box { background: #f0f8ff; padding: 15px; border-radius: 12px; margin-top: 10px; border-right: 4px solid #4A90D9; }
+                .grade { background: #f0f8ff; padding: 15px; border-radius: 12px; margin-top: 10px; border-right: 4px solid #667eea; }
             </style>
             </head>
             <body>
                 <h2>📊 نتيجة التصحيح - هيثم AI</h2>
                 <div class="item"><span class="label">👤 اسم الطالب:</span> <span class="value">${correctionResult.studentName}</span></div>
-                <div class="item"><span class="label">📊 عدد الكلمات:</span> <span class="value">${correctionResult.wordCount} كلمة</span></div>
-                <div class="item"><span class="label">⭐ الدرجة:</span> <span class="value">${correctionResult.score}/${correctionResult.maxScore}</span></div>
+                <div class="item"><span class="label">📚 المادة:</span> <span class="value">${correctionResult.subject}</span></div>
+                <div class="item"><span class="label">⭐ الدرجة:</span> <span class="value">${correctionResult.score}/${correctionResult.total}</span></div>
                 <div class="item"><span class="label">📝 الملاحظات:</span> <span class="value">${correctionResult.feedback}</span></div>
-                <div class="item"><span class="label">📄 النص المستخرج:</span> <span class="value">${correctionResult.extractedText || 'لا توجد تفاصيل إضافية'}</span></div>
+                <div class="grade">${document.getElementById('gradeContainer').innerHTML}</div>
                 <hr>
-                <p style="color: #718096; font-size: 14px;">تم التصحيح بواسطة 🤖 هيثم AI</p>
+                <p style="color:#718096;font-size:13px;">تم التصحيح بواسطة 🤖 هيثم AI</p>
             </body>
             </html>
         `);
@@ -795,32 +1111,37 @@
         printWindow.print();
     }
 
-    function createConfetti() {
-        const container = document.createElement('div');
-        container.className = 'confetti-container';
-        document.body.appendChild(container);
+    // ================================================================
+    // 11. مسح الكل
+    // ================================================================
+    function clearAll() {
+        imageBase64 = null;
+        correctionResult = null;
+        document.getElementById('previewImage').style.display = 'none';
+        document.getElementById('previewImage').src = '';
+        document.getElementById('resultBox').style.display = 'none';
+        document.getElementById('gradeContainer').innerHTML = '';
+        document.getElementById('statsRow').style.display = 'none';
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('resultDetailsContainer').style.display = 'none';
 
-        const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6', '#845ec2'];
+        uploadArea.querySelector('p:first-of-type').textContent = 'انقر لرفع صورة ورقة الاختبار';
+        uploadArea.style.borderColor = '#cbd5e0';
+        uploadArea.style.background = '#fafafa';
 
-        for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.cssText = `
-                position: absolute;
-                left: ${Math.random() * 100}%;
-                background: ${colors[Math.floor(Math.random() * colors.length)]};
-                width: ${Math.random() * 8 + 4}px;
-                height: ${Math.random() * 8 + 4}px;
-                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-                animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
-                animation-delay: ${Math.random() * 1.5}s;
-            `;
-            container.appendChild(confetti);
-        }
-
-        setTimeout(() => container.remove(), 4000);
+        document.getElementById('studentName').value = '';
+        document.getElementById('answerKey').value = '';
+        document.getElementById('resultStudent').textContent = '-';
+        document.getElementById('resultSubject').textContent = '-';
+        document.getElementById('resultWords').textContent = '-';
+        document.getElementById('resultScore').textContent = '-';
+        document.getElementById('resultFeedback').textContent = '-';
     }
 
+    // ================================================================
+    // 12. دوال مساعدة
+    // ================================================================
     function showError(message) {
         const errorDiv = document.getElementById('errorMessage');
         errorDiv.textContent = '❌ ' + message;
@@ -831,28 +1152,46 @@
         document.getElementById('errorMessage').style.display = 'none';
     }
 
-    // =============================================
-    // 10. إضافة أنماط الـ Confetti (ديناميكية)
-    // =============================================
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = `
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
+    function createConfetti() {
+        const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6', '#845ec2'];
+        const container = document.createElement('div');
+        container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden;';
+        document.body.appendChild(container);
+
+        for (let i = 0; i < 50; i++) {
+            const el = document.createElement('div');
+            el.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                top: -10px;
+                width: ${Math.random() * 8 + 4}px;
+                height: ${Math.random() * 8 + 4}px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                animation: confettiFall ${Math.random() * 2 + 1}s linear forwards;
+                animation-delay: ${Math.random() * 0.8}s;
+            `;
+            container.appendChild(el);
         }
-        @keyframes confettiFall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+
+        if (!document.getElementById('confettiStyle')) {
+            const style = document.createElement('style');
+            style.id = 'confettiStyle';
+            style.textContent = `
+                @keyframes confettiFall {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
         }
-    `;
-    document.head.appendChild(styleSheet);
+
+        setTimeout(() => container.remove(), 4000);
+    }
+
+    console.log('📝 صفحة تصحيح الاختبارات جاهزة!');
+    console.log('💡 ارفع صورة، أدخل الإجابة النموذجية، واضغط "ابدأ التصحيح"');
 </script>
 
 </body>
-</html>
+    </html> 
