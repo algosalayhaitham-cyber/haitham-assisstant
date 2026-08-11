@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اسأل هيثم - تصحيح الاختبارات الذكي</title>
+    <title>تصحيح أوراق - هيثم AI</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
+        /* ===== تنسيقات خاصة بصفحة التصحيح ===== */
         * {
             margin: 0;
             padding: 0;
@@ -22,16 +24,14 @@
         }
         
         .container {
-            max-width: 950px;
+            max-width: 800px;
             width: 100%;
             margin: auto;
             background: rgba(255,255,255,0.95);
-            padding: 30px;
+            padding: 35px;
             border-radius: 25px;
             box-shadow: 0 30px 80px rgba(0,0,0,0.5);
             animation: slideIn 0.6s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
         }
         
         @keyframes slideIn {
@@ -49,15 +49,15 @@
             flex-wrap: wrap;
         }
         
-        .header h2 {
+        .header h1 {
             color: #1a1a2e;
-            font-size: 30px;
+            font-size: 28px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .header h2 span {
+        .header h1 span {
             background: linear-gradient(135deg, #667eea, #764ba2);
             padding: 5px 15px;
             border-radius: 50px;
@@ -65,107 +65,34 @@
             font-size: 14px;
         }
         
-        .haitham-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f0f2ff;
-            padding: 8px 18px;
-            border-radius: 50px;
-            border: 2px solid #667eea;
-        }
-        
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #48bb78;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .tab {
-            padding: 12px 24px;
-            background: #e2e8f0;
+        .back-btn {
+            background: #4A90D9;
+            color: white;
             border: none;
-            border-radius: 12px;
+            padding: 10px 25px;
+            border-radius: 30px;
             cursor: pointer;
             font-size: 15px;
             font-weight: bold;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 100px;
-            color: #4a5568;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            transition: 0.3s;
+            text-decoration: none;
         }
         
-        .tab:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        .tab.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-        
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        .back-btn:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.4);
         }
         
         .upload-area {
             border: 3px dashed #cbd5e0;
             border-radius: 18px;
-            padding: 35px 20px;
+            padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             background: #fafafa;
             margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .upload-area::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(102,126,234,0.05) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .upload-area:hover::before {
-            opacity: 1;
         }
         
         .upload-area:hover {
@@ -183,8 +110,6 @@
         .upload-area p {
             color: #4a5568;
             font-size: 16px;
-            position: relative;
-            z-index: 1;
         }
         
         .upload-area .sub-text {
@@ -192,109 +117,8 @@
             font-size: 14px;
         }
         
-        .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            font-weight: bold;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-        }
-        
-        .btn:hover:not(:disabled)::after {
-            left: 100%;
-        }
-        
-        .btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-        }
-        
-        .btn-success:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(72, 187, 120, 0.4);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #fc8181, #f56565);
-        }
-        
-        .btn-danger:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(252, 129, 129, 0.4);
-        }
-        
-        .btn-warning {
-            background: linear-gradient(135deg, #ed8936, #dd6b20);
-        }
-        
-        .btn-warning:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(237, 137, 54, 0.4);
-        }
-        
-        .btn-info {
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-        }
-        
-        .btn-info:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(66, 153, 225, 0.4);
-        }
-        
-        .btn-haitham {
-            background: linear-gradient(135deg, #f6ad55, #ed8936);
-            font-size: 18px;
-            padding: 16px 30px;
-        }
-        
-        .btn-haitham:hover:not(:disabled) {
-            box-shadow: 0 12px 30px rgba(237, 137, 54, 0.5);
-            transform: translateY(-3px) scale(1.02);
-        }
-        
-        #previewImage {
-            max-width: 100%;
-            max-height: 400px;
-            margin-top: 20px;
-            border-radius: 15px;
-            display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            border: 4px solid #667eea;
-            transition: all 0.3s ease;
-        }
-        
-        #previewImage:hover {
-            transform: scale(1.02);
-        }
-        
         .input-group {
             margin-top: 18px;
-            text-align: right;
         }
         
         .input-group label {
@@ -325,8 +149,7 @@
         }
         
         .input-group input,
-        .input-group textarea,
-        .input-group select {
+        .input-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e2e8f0;
@@ -338,8 +161,7 @@
         }
         
         .input-group input:focus,
-        .input-group textarea:focus,
-        .input-group select:focus {
+        .input-group textarea:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
@@ -351,33 +173,72 @@
             resize: vertical;
         }
         
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 12px 30px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-grade {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+        
+        .btn-grade:hover:not(:disabled) {
+            box-shadow: 0 12px 30px rgba(237, 137, 54, 0.4);
+        }
+        
         .result-box {
             margin-top: 25px;
-            padding: 25px;
+            padding: 20px;
             background: linear-gradient(135deg, #f6f9fc 0%, #e8f0fe 100%);
             border-radius: 18px;
             display: none;
             border-right: 6px solid #667eea;
             animation: fadeIn 0.6s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
         
-        .result-box h4 {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-box h3 {
             color: #1a1a2e;
-            margin-bottom: 20px;
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 15px;
         }
         
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #e2e8f0;
             flex-wrap: wrap;
-            gap: 8px;
         }
         
         .result-item:last-child {
@@ -397,29 +258,20 @@
         
         .score-high {
             color: #48bb78;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
-            animation: scorePop 0.5s ease;
         }
         
         .score-medium {
             color: #ed8936;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
-            animation: scorePop 0.5s ease;
         }
         
         .score-low {
             color: #fc8181;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
-            animation: scorePop 0.5s ease;
-        }
-        
-        @keyframes scorePop {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
         }
         
         .loading {
@@ -452,383 +304,103 @@
             margin-top: 15px;
             display: none;
             border: 2px solid #feb2b2;
-            animation: shake 0.5s ease;
         }
         
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .actions .btn {
-            flex: 1;
-            min-width: 130px;
-        }
-        
-        .mcq-container {
-            background: #f7fafc;
-            padding: 20px;
+        #previewImage {
+            max-width: 100%;
+            max-height: 350px;
+            margin-top: 15px;
             border-radius: 15px;
-            margin: 15px 0;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
+            display: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border: 4px solid #667eea;
         }
         
-        .mcq-container:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-        
-        .question-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-        
-        .question-options input {
-            padding: 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .question-options input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .haitham-tip {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border-right: 5px solid #f59e0b;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .haitham-tip .icon {
-            font-size: 30px;
-        }
-        
-        .haitham-tip .text {
-            color: #78350f;
-            font-size: 15px;
-            flex: 1;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-        
-        .stat-card {
-            background: white;
+        .grade-result {
+            background: #f0fff4;
             padding: 15px;
             border-radius: 12px;
-            text-align: center;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
+            margin-top: 15px;
+            border-right: 4px solid #48bb78;
         }
         
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card .number {
+        .grade-result .emoji {
             font-size: 28px;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-card .label {
-            color: #718096;
-            font-size: 13px;
-            margin-top: 5px;
         }
         
         @media (max-width: 768px) {
             .container { padding: 20px; }
-            .tabs { flex-direction: column; }
-            .tab { min-width: unset; }
-            .question-options { grid-template-columns: 1fr; }
-            .actions .btn { min-width: unset; }
             .header { flex-direction: column; gap: 10px; align-items: stretch; }
             .result-value { max-width: 100%; }
-        }
-        
-        /* تأثيرات خاصة بهيثم */
-        .haitham-float {
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
-        }
-        
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            animation: confettiFall linear forwards;
-        }
-        
-        @keyframes confettiFall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- رأس الصفحة مع هيثم -->
+    <!-- الهيدر -->
     <div class="header">
-        <h2>
-            🤖 اسأل هيثم
-            <span>v3.0</span>
-        </h2>
-        <div class="haitham-status">
-            <span class="status-dot"></span>
-            <span style="color: #2d3748; font-weight: bold;">هيثم جاهز للتصحيح</span>
-            <span style="color: #718096; font-size: 13px;">⚡ 24/7</span>
-        </div>
+        <h1>📝 تصحيح أوراق <span>هيثم AI</span></h1>
+        <button class="back-btn" onclick="window.location.href='index.html'">🔙 رجوع للرئيسية</button>
     </div>
-    
-    <!-- نصائح هيثم -->
-    <div class="haitham-tip">
-        <span class="icon">💡</span>
-        <span class="text">
-            <strong>نصيحة هيثم:</strong> ارفع صورة واضحة للورقة، وتأكد من الإضاءة الجيدة للحصول على أفضل نتائج في التصحيح!
-        </span>
+
+    <!-- نصائح -->
+    <div style="background: #fef3c7; padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; border-right: 5px solid #f59e0b;">
+        <span style="font-size: 20px;">💡</span>
+        <span style="color: #78350f; font-weight: bold;">نصيحة هيثم:</span>
+        <span style="color: #78350f;">ارفع صورة واضحة للورقة، وتأكد من الإضاءة الجيدة للحصول على أفضل نتائج!</span>
     </div>
-    
-    <!-- علامات التبويب -->
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab('essay')">📝 مقالي</button>
-        <button class="tab" onclick="switchTab('mcq')">🔘 اختيار من متعدد</button>
-        <button class="tab" onclick="switchTab('math')">🔢 رياضيات</button>
-        <button class="tab" onclick="switchTab('haitham')">🧠 اسأل هيثم</button>
+
+    <!-- رفع الصورة -->
+    <div class="upload-area" id="uploadArea">
+        <span class="icon">📸</span>
+        <p>انقر لرفع صورة ورقة الإجابة</p>
+        <p class="sub-text">يدعم: JPG, PNG (حد أقصى 10 ميجابايت)</p>
+        <input type="file" id="paperInput" accept="image/*" style="display: none;">
     </div>
-    
-    <!-- ============================================================ -->
-    <!-- تبويب المقالي -->
-    <!-- ============================================================ -->
-    <div id="tab-essay" class="tab-content active">
-        <div class="upload-area" id="uploadAreaEssay">
-            <span class="icon">📸</span>
-            <p>انقر لرفع صورة ورقة الإجابة</p>
-            <p class="sub-text">يدعم: JPG, PNG (حد أقصى 10 ميجابايت)</p>
-            <input type="file" id="paperInputEssay" accept="image/*" style="display: none;">
-        </div>
-        
-        <div class="input-group">
-            <label>👤 اسم الطالب <span class="badge badge-required">مطلوب</span></label>
-            <input type="text" id="studentNameEssay" placeholder="أدخل اسم الطالب" value="أحمد محمد">
-        </div>
-        
-        <div class="input-group">
-            <label>📋 الحل النموذجي <span class="badge badge-required">مطلوب</span></label>
-            <textarea id="answerKeyEssay" placeholder="أدخل الإجابة النموذجية...">الذكاء الاصطناعي هو محاكاة الذكاء البشري بواسطة الآلات</textarea>
-        </div>
-        
-        <div class="input-group">
-            <label>📊 عدد الكلمات المتوقع <span class="badge badge-optional">اختياري</span></label>
-            <input type="number" id="expectedWords" placeholder="مثال: 100" value="50">
-        </div>
-    </div>
-    
-    <!-- ============================================================ -->
-    <!-- تبويب الاختيار من متعدد -->
-    <!-- ============================================================ -->
-    <div id="tab-mcq" class="tab-content">
-        <div class="upload-area" id="uploadAreaMcq">
-            <span class="icon">📸</span>
-            <p>انقر لرفع صورة ورقة الإجابات</p>
-            <p class="sub-text">يدعم: JPG, PNG</p>
-            <input type="file" id="paperInputMcq" accept="image/*" style="display: none;">
-        </div>
-        
-        <div class="input-group">
-            <label>👤 اسم الطالب <span class="badge badge-required">مطلوب</span></label>
-            <input type="text" id="studentNameMcq" placeholder="أدخل اسم الطالب" value="سارة أحمد">
-        </div>
-        
-        <div class="mcq-container">
-            <h4 style="margin-bottom: 15px;">📋 أسئلة الاختيار من متعدد</h4>
-            <div id="mcqQuestions"></div>
-            
-            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <button class="btn btn-warning" onclick="addMcqQuestion()" style="flex: 1; min-width: 120px;">
-                    ➕ إضافة سؤال
-                </button>
-                <button class="btn btn-info" onclick="addBulkMcqQuestions()" style="flex: 1; min-width: 120px;">
-                    📋 إضافة 5 أسئلة
-                </button>
-                <button class="btn btn-danger" onclick="clearAllMcqQuestions()" style="flex: 1; min-width: 120px;">
-                    🗑️ مسح الكل
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- ============================================================ -->
-    <!-- تبويب الرياضيات -->
-    <!-- ============================================================ -->
-    <div id="tab-math" class="tab-content">
-        <div class="upload-area" id="uploadAreaMath">
-            <span class="icon">📸</span>
-            <p>انقر لرفع صورة المسألة الرياضية</p>
-            <p class="sub-text">يدعم: JPG, PNG</p>
-            <input type="file" id="paperInputMath" accept="image/*" style="display: none;">
-        </div>
-        
-        <div class="input-group">
-            <label>👤 اسم الطالب <span class="badge badge-required">مطلوب</span></label>
-            <input type="text" id="studentNameMath" placeholder="أدخل اسم الطالب" value="خالد علي">
-        </div>
-        
-        <div class="input-group">
-            <label>📝 المسألة الرياضية <span class="badge badge-required">مطلوب</span></label>
-            <textarea id="mathProblem" placeholder="أدخل المسألة...">حل المعادلة: 2x + 5 = 13</textarea>
-        </div>
-        
-        <div class="input-group">
-            <label>✅ الإجابة النموذجية <span class="badge badge-required">مطلوب</span></label>
-            <textarea id="mathAnswer" placeholder="أدخل الإجابة النموذجية مع الخطوات...">x = 4</textarea>
-        </div>
-        
-        <div class="input-group">
-            <label>📊 مستوى الصعوبة</label>
-            <select id="mathDifficulty">
-                <option value="easy">🌟 سهل</option>
-                <option value="medium" selected>📘 متوسط</option>
-                <option value="hard">🔥 صعب</option>
-            </select>
-        </div>
-        
-        <div class="input-group">
-            <label>🧮 نوع المسألة</label>
-            <select id="mathType">
-                <option value="equation">معادلة</option>
-                <option value="inequality">متباينة</option>
-                <option value="geometry">هندسة</option>
-                <option value="word">مسألة كلامية</option>
-            </select>
-        </div>
-    </div>
-    
-    <!-- ============================================================ -->
-    <!-- تبويب اسأل هيثم (المطور) -->
-    <!-- ============================================================ -->
-    <div id="tab-haitham" class="tab-content">
-        <div style="text-align: center; padding: 20px 0;">
-            <div style="font-size: 80px; margin-bottom: 15px;" class="haitham-float">🧠</div>
-            <h3 style="color: #1a1a2e; margin-bottom: 10px;">اسأل هيثم عن أي شيء!</h3>
-            <p style="color: #718096; margin-bottom: 20px;">اطرح سؤالك عن التصحيح، الرياضيات، أو أي موضوع تعليمي</p>
-        </div>
-        
-        <div class="input-group">
-            <label>💬 سؤالك لهيثم <span class="badge badge-required">مطلوب</span></label>
-            <textarea id="haithamQuestion" placeholder="اكتب سؤالك هنا..." rows="4">كيف يمكنني تحسين مهاراتي في حل المعادلات؟</textarea>
-        </div>
-        
-        <div class="input-group">
-            <label>📚 الموضوع</label>
-            <select id="haithamTopic">
-                <option value="general">عام</option>
-                <option value="math">رياضيات</option>
-                <option value="arabic">لغة عربية</option>
-                <option value="science">علوم</option>
-                <option value="study-tips">نصائح دراسية</option>
-            </select>
-        </div>
-        
-        <button class="btn btn-haitham" onclick="askHaitham()" style="margin-top: 20px;">
-            🧠 اسأل هيثم الآن
-        </button>
-        
-        <!-- إحصائيات هيثم -->
-        <div class="stats-grid" style="margin-top: 25px;">
-            <div class="stat-card">
-                <div class="number" id="haithamAnswersCount">0</div>
-                <div class="label">💬 إجابات هيثم</div>
-            </div>
-            <div class="stat-card">
-                <div class="number" id="haithamScore">98%</div>
-                <div class="label">⭐ دقة التصحيح</div>
-            </div>
-            <div class="stat-card">
-                <div class="number" id="haithamStudents">15</div>
-                <div class="label">👨‍🎓 طلاب تم تصحيحهم</div>
-            </div>
-            <div class="stat-card">
-                <div class="number">⚡</div>
-                <div class="label">سرعة فائقة</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- ============================================================ -->
-    <!-- المنطقة المشتركة -->
-    <!-- ============================================================ -->
-    
+
     <img id="previewImage" alt="معاينة الورقة">
-    
+
+    <!-- حقول الإدخال -->
+    <div class="input-group">
+        <label>👤 اسم الطالب <span class="badge badge-required">مطلوب</span></label>
+        <input type="text" id="studentName" placeholder="أدخل اسم الطالب" value="أحمد محمد">
+    </div>
+
+    <div class="input-group">
+        <label>📋 الحل النموذجي <span class="badge badge-required">مطلوب</span></label>
+        <textarea id="answerKey" placeholder="أدخل الإجابة النموذجية...">الذكاء الاصطناعي هو محاكاة الذكاء البشري بواسطة الآلات</textarea>
+    </div>
+
+    <div class="input-group">
+        <label>📊 عدد الكلمات المتوقع <span class="badge badge-optional">اختياري</span></label>
+        <input type="number" id="expectedWords" placeholder="مثال: 100" value="50">
+    </div>
+
+    <!-- الأزرار -->
+    <button class="btn btn-success" onclick="startCorrection()">🚀 ابدأ التصحيح</button>
+    <button class="btn btn-grade" onclick="estimateGrade()">⭐ تقدير الدرجة</button>
+
+    <!-- مؤشر التحميل -->
     <div class="loading" id="loadingIndicator">
         <div class="spinner"></div>
-        <p style="color: #4a5568;">⏳ جاري تحليل الصورة ومعالجتها...</p>
+        <p>⏳ جاري التصحيح والتحليل...</p>
         <p style="color: #a0aec0; font-size: 14px;">هيثم يعمل بجد لتصحيح إجابتك</p>
     </div>
-    
+
+    <!-- رسالة الخطأ -->
     <div class="error" id="errorMessage"></div>
-    
-    <div class="actions">
-        <button id="processBtn" class="btn btn-success" style="display: none;" onclick="processCurrentTab()">
-            ⚡ بدء التصحيح
-        </button>
-        <button id="clearBtn" class="btn btn-danger" style="display: none;" onclick="clearAll()">
-            🗑️ مسح الكل
-        </button>
-        <button id="speakBtn" class="btn btn-info" style="display: none;" onclick="speakResult()">
-            🔊 استماع للنتيجة
-        </button>
-    </div>
-    
-    <div id="resultBox" class="result-box">
-        <h4>✅ نتيجة التصحيح <span style="font-size: 14px; color: #718096;">بواسطة هيثم</span></h4>
+
+    <!-- نتيجة التصحيح -->
+    <div class="result-box" id="resultBox">
+        <h3>✅ نتيجة التصحيح</h3>
         <div class="result-item">
             <span class="result-label">👤 اسم الطالب</span>
-            <span class="result-value" id="resultStudentName">-</span>
+            <span class="result-value" id="resultStudent">-</span>
         </div>
         <div class="result-item">
-            <span class="result-label">📊 نوع الاختبار</span>
-            <span class="result-value" id="resultExamType">-</span>
+            <span class="result-label">📊 عدد الكلمات</span>
+            <span class="result-value" id="resultWords">-</span>
         </div>
         <div class="result-item">
             <span class="result-label">📊 الدرجة</span>
@@ -842,17 +414,20 @@
             <span class="result-label">📄 التفاصيل</span>
             <span class="result-value" id="resultDetails" style="font-size: 14px; max-width: 400px; word-wrap: break-word;">-</span>
         </div>
-        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="btn" onclick="saveToHistory()" style="background: linear-gradient(135deg, #4299e1, #3182ce); flex: 1; min-width: 120px;">
-                💾 حفظ في سجل الطلاب
-            </button>
-            <button class="btn" onclick="shareResult()" style="background: linear-gradient(135deg, #48bb78, #38a169); flex: 1; min-width: 120px;">
-                📤 مشاركة النتيجة
-            </button>
-            <button class="btn" onclick="printResult()" style="background: linear-gradient(135deg, #ed8936, #dd6b20); flex: 1; min-width: 120px;">
-                🖨️ طباعة
-            </button>
-        </div>
+        <div id="gradeResultContainer" style="display: none;"></div>
+    </div>
+
+    <!-- أزرار إضافية -->
+    <div style="display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap;">
+        <button class="btn" onclick="speakResult()" style="background: linear-gradient(135deg, #4299e1, #3182ce); flex: 1; min-width: 120px;">
+            🔊 استماع
+        </button>
+        <button class="btn" onclick="saveResult()" style="background: linear-gradient(135deg, #48bb78, #38a169); flex: 1; min-width: 120px;">
+            💾 حفظ
+        </button>
+        <button class="btn" onclick="printResult()" style="background: linear-gradient(135deg, #ed8936, #dd6b20); flex: 1; min-width: 120px;">
+            🖨️ طباعة
+        </button>
     </div>
 </div>
 
@@ -860,250 +435,80 @@
 <!-- السكريبتات -->
 <!-- ============================================================ -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
 
 <script>
     // =============================================
-    // 1. المتغيرات العامة
+    // 1. المتغيرات
     // =============================================
-    let currentTab = 'essay';
     let imageBase64 = null;
-    let extractedText = '';
-    let scoreResult = null;
-    let mcqQuestions = [];
-    let mcqCounter = 0;
-    let haithamAnswersCount = 0;
-    let correctionHistory = [];
-    
+    let correctionResult = null;
+
     // =============================================
-    // 2. التبديل بين التبويبات
+    // 2. رفع الصورة
     // =============================================
-    function switchTab(tab) {
-        currentTab = tab;
-        
-        document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
-        
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.getElementById(`tab-${tab}`).classList.add('active');
-        
-        document.getElementById('resultBox').style.display = 'none';
-        document.getElementById('previewImage').style.display = 'none';
-        document.getElementById('processBtn').style.display = 'none';
-        document.getElementById('clearBtn').style.display = 'none';
-        document.getElementById('speakBtn').style.display = 'none';
-        hideError();
-        
-        imageBase64 = null;
-        extractedText = '';
-        
-        // تحديث نصائح هيثم حسب التبويب
-        updateHaithamTip(tab);
-    }
-    
-    function updateHaithamTip(tab) {
-        const tips = {
-            'essay': '💡 نصيحة هيثم: تأكد من وضوح الخط في الصورة للحصول على دقة أفضل في استخراج النص!',
-            'mcq': '💡 نصيحة هيثم: ضع إجابات الطالب بصيغة "1: أ" أو "السؤال الأول: ب" ليسهل تحليلها!',
-            'math': '💡 نصيحة هيثم: اكتب المعادلات بوضوح، واستخدم الرموز الرياضية المعروفة!',
-            'haitham': '💡 نصيحة هيثم: يمكنك سؤالي عن أي موضوع تعليمي، وسأجيبك بأفضل طريقة!'
-        };
-        const tipDiv = document.querySelector('.haitham-tip .text');
-        if (tipDiv) {
-            tipDiv.innerHTML = tips[tab] || tips['essay'];
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('paperInput');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#667eea';
+        this.style.background = '#f0f2ff';
+    });
+
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#cbd5e0';
+        this.style.background = '#fafafa';
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#cbd5e0';
+        this.style.background = '#fafafa';
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleFile(file);
+        } else {
+            showError('الرجاء سحب ملف صورة فقط');
         }
-    }
-    
-    // =============================================
-    // 3. رفع الصورة
-    // =============================================
-    function setupUpload(inputId, areaId) {
-        const input = document.getElementById(inputId);
-        const area = document.getElementById(areaId);
-        
-        if (!input || !area) return;
-        
-        area.addEventListener('click', () => input.click());
-        
-        area.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.style.borderColor = '#667eea';
-            this.style.background = '#f0f2ff';
-        });
-        
-        area.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            this.style.borderColor = '#cbd5e0';
-            this.style.background = '#fafafa';
-        });
-        
-        area.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.style.borderColor = '#cbd5e0';
-            this.style.background = '#fafafa';
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                handleFile(file);
-            } else {
-                showError('الرجاء سحب ملف صورة فقط');
-            }
-        });
-        
-        input.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) handleFile(file);
-        });
-    }
-    
+    });
+
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+    });
+
     function handleFile(file) {
         if (file.size > 10 * 1024 * 1024) {
             showError('حجم الصورة كبير جداً. الرجاء اختيار صورة أقل من 10 ميجابايت.');
             return;
         }
-        
+
         const reader = new FileReader();
         reader.onload = function(e) {
             imageBase64 = e.target.result;
             const preview = document.getElementById('previewImage');
             preview.src = imageBase64;
             preview.style.display = 'block';
-            document.getElementById('processBtn').style.display = 'block';
-            document.getElementById('clearBtn').style.display = 'block';
-            document.getElementById('speakBtn').style.display = 'block';
-            document.getElementById('resultBox').style.display = 'none';
             hideError();
             
-            document.querySelectorAll('.upload-area').forEach(area => {
-                area.querySelector('p:first-of-type').textContent = '✅ تم رفع الصورة بنجاح';
-                area.style.borderColor = '#48bb78';
-                area.style.background = '#f0fff4';
-            });
-            
-            // تشغيل تأثير confetti بسيط
-            if (Math.random() > 0.7) {
-                createConfetti();
-            }
+            document.querySelector('.upload-area p:first-of-type').textContent = '✅ تم رفع الصورة بنجاح';
+            document.querySelector('.upload-area').style.borderColor = '#48bb78';
+            document.querySelector('.upload-area').style.background = '#f0fff4';
         };
         reader.readAsDataURL(file);
     }
-    
+
     // =============================================
-    // 4. إدارة أسئلة MCQ
-    // =============================================
-    function addMcqQuestion() {
-        mcqCounter++;
-        const container = document.getElementById('mcqQuestions');
-        const div = document.createElement('div');
-        div.className = 'mcq-container';
-        div.style.marginTop = '15px';
-        div.id = `mcq-${mcqCounter}`;
-        
-        div.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h5 style="color: #4a5568;">📌 سؤال ${mcqCounter}</h5>
-                <button class="btn btn-danger" onclick="removeMcqQuestion('mcq-${mcqCounter}')" style="width: auto; padding: 5px 15px; font-size: 12px;">
-                    ✖ حذف
-                </button>
-            </div>
-            <div class="input-group">
-                <label>نص السؤال</label>
-                <input type="text" class="mcq-question-text" placeholder="أدخل نص السؤال..." value="ما هو عاصمة المملكة العربية السعودية؟">
-            </div>
-            <div class="question-options">
-                <input type="text" class="mcq-option" placeholder="الخيار أ" value="الرياض">
-                <input type="text" class="mcq-option" placeholder="الخيار ب" value="جدة">
-                <input type="text" class="mcq-option" placeholder="الخيار ج" value="مكة المكرمة">
-                <input type="text" class="mcq-option" placeholder="الخيار د" value="الدمام">
-            </div>
-            <div class="input-group" style="margin-top: 10px;">
-                <label>الإجابة الصحيحة</label>
-                <select class="mcq-correct">
-                    <option value="أ">أ</option>
-                    <option value="ب" selected>ب</option>
-                    <option value="ج">ج</option>
-                    <option value="د">د</option>
-                </select>
-            </div>
-            <div class="input-group" style="margin-top: 10px;">
-                <label>الدرجة</label>
-                <input type="number" class="mcq-score" value="2" min="1" max="10">
-            </div>
-        `;
-        
-        container.appendChild(div);
-    }
-    
-    function addBulkMcqQuestions() {
-        const questions = [
-            { q: 'ما هو أكبر محيط في العالم؟', options: ['المحيط الهادئ', 'المحيط الأطلسي', 'المحيط الهندي', 'المحيط المتجمد'], correct: 'أ', score: 2 },
-            { q: 'من هو مؤسس الدولة السعودية الحديثة؟', options: ['الملك عبدالعزيز', 'الملك سعود', 'الملك فيصل', 'الملك خالد'], correct: 'أ', score: 3 },
-            { q: 'ما هو العنصر الكيميائي الذي يرمز له بـ "O"؟', options: ['الأكسجين', 'الذهب', 'الفضة', 'النحاس'], correct: 'أ', score: 2 },
-            { q: 'كم عدد الكواكب في المجموعة الشمسية؟', options: ['7', '8', '9', '10'], correct: 'ب', score: 2 },
-            { q: 'ما هي عاصمة مصر؟', options: ['الرياض', 'القاهرة', 'دمشق', 'بغداد'], correct: 'ب', score: 2 }
-        ];
-        
-        questions.forEach(q => {
-            mcqCounter++;
-            const container = document.getElementById('mcqQuestions');
-            const div = document.createElement('div');
-            div.className = 'mcq-container';
-            div.style.marginTop = '15px';
-            div.id = `mcq-${mcqCounter}`;
-            
-            div.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h5 style="color: #4a5568;">📌 سؤال ${mcqCounter}</h5>
-                    <button class="btn btn-danger" onclick="removeMcqQuestion('mcq-${mcqCounter}')" style="width: auto; padding: 5px 15px; font-size: 12px;">
-                        ✖ حذف
-                    </button>
-                </div>
-                <div class="input-group">
-                    <label>نص السؤال</label>
-                    <input type="text" class="mcq-question-text" placeholder="أدخل نص السؤال..." value="${q.q}">
-                </div>
-                <div class="question-options">
-                    <input type="text" class="mcq-option" placeholder="الخيار أ" value="${q.options[0]}">
-                    <input type="text" class="mcq-option" placeholder="الخيار ب" value="${q.options[1]}">
-                    <input type="text" class="mcq-option" placeholder="الخيار ج" value="${q.options[2]}">
-                    <input type="text" class="mcq-option" placeholder="الخيار د" value="${q.options[3]}">
-                </div>
-                <div class="input-group" style="margin-top: 10px;">
-                    <label>الإجابة الصحيحة</label>
-                    <select class="mcq-correct">
-                        <option value="أ" ${q.correct === 'أ' ? 'selected' : ''}>أ</option>
-                        <option value="ب" ${q.correct === 'ب' ? 'selected' : ''}>ب</option>
-                        <option value="ج" ${q.correct === 'ج' ? 'selected' : ''}>ج</option>
-                        <option value="د" ${q.correct === 'د' ? 'selected' : ''}>د</option>
-                    </select>
-                </div>
-                <div class="input-group" style="margin-top: 10px;">
-                    <label>الدرجة</label>
-                    <input type="number" class="mcq-score" value="${q.score}" min="1" max="10">
-                </div>
-            `;
-            
-            container.appendChild(div);
-        });
-    }
-    
-    function removeMcqQuestion(id) {
-        document.getElementById(id).remove();
-    }
-    
-    function clearAllMcqQuestions() {
-        document.getElementById('mcqQuestions').innerHTML = '';
-        mcqCounter = 0;
-        addMcqQuestion();
-    }
-    
-    // =============================================
-    // 5. استخراج النص من الصورة
+    // 3. استخراج النص من الصورة (OCR)
     // =============================================
     async function extractTextFromImage() {
         if (!imageBase64) {
             throw new Error('لا توجد صورة للتحليل');
         }
-        
+
         const result = await Tesseract.recognize(
             imageBase64,
             'ara+eng',
@@ -1115,558 +520,252 @@
                 }
             }
         );
-        
+
         return result.data.text;
     }
-    
+
     // =============================================
-    // 6. معالجة المقالي
+    // 4. دالة التصحيح الرئيسية
     // =============================================
-    async function processEssay() {
-        const studentName = document.getElementById('studentNameEssay').value || 'غير معروف';
-        const answerKey = document.getElementById('answerKeyEssay').value || '';
+    async function startCorrection() {
+        const studentName = document.getElementById('studentName').value || 'غير معروف';
+        const answerKey = document.getElementById('answerKey').value || '';
         const expectedWords = parseInt(document.getElementById('expectedWords').value) || 50;
-        
-        if (!answerKey.trim()) {
-            throw new Error('الرجاء إدخال الحل النموذجي');
-        }
-        
-        const text = await extractTextFromImage();
-        extractedText = text;
-        
-        // حساب عدد الكلمات
-        const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
-        const wordRatio = Math.min(wordCount / expectedWords, 1);
-        
-        // حساب التشابه
-        const score = calculateScore(text, answerKey);
-        const adjustedScore = Math.round(score * (0.7 + 0.3 * wordRatio));
-        const finalScore = Math.min(adjustedScore, 20);
-        
-        const feedback = generateFeedback(finalScore, 'essay');
-        
-        return {
-            studentName: studentName,
-            examType: `📝 مقالي (${wordCount} كلمة)`,
-            score: `${finalScore}/20`,
-            feedback: feedback,
-            details: `النص المستخرج: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}\nعدد الكلمات: ${wordCount}`
-        };
-    }
-    
-    // =============================================
-    // 7. معالجة MCQ
-    // =============================================
-    async function processMcq() {
-        const studentName = document.getElementById('studentNameMcq').value || 'غير معروف';
-        
-        const questions = [];
-        const questionDivs = document.querySelectorAll('#mcqQuestions .mcq-container');
-        
-        questionDivs.forEach(div => {
-            const questionText = div.querySelector('.mcq-question-text').value;
-            const options = [];
-            div.querySelectorAll('.mcq-option').forEach(opt => options.push(opt.value));
-            const correct = div.querySelector('.mcq-correct').value;
-            const score = parseInt(div.querySelector('.mcq-score').value) || 2;
-            questions.push({ questionText, options, correct, score });
-        });
-        
-        if (questions.length === 0) {
-            throw new Error('الرجاء إضافة أسئلة');
-        }
-        
-        const text = await extractTextFromImage();
-        extractedText = text;
-        
-        const studentAnswers = parseMcqAnswers(text, questions.length);
-        
-        let totalScore = 0;
-        let maxScore = 0;
-        let details = '';
-        let correctCount = 0;
-        
-        questions.forEach((q, idx) => {
-            const studentAnswer = studentAnswers[idx] || 'لم يجب';
-            const isCorrect = studentAnswer === q.correct;
-            const earned = isCorrect ? q.score : 0;
-            totalScore += earned;
-            maxScore += q.score;
-            if (isCorrect) correctCount++;
-            
-            details += `سؤال ${idx+1}: "${q.questionText.substring(0, 30)}..." - إجابة الطالب "${studentAnswer}" - ${isCorrect ? '✅ صحيح (+' + q.score + ')' : '❌ خطأ (0)'}\n`;
-        });
-        
-        const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
-        const feedback = generateFeedback(percentage, 'mcq');
-        
-        // تحديث إحصائيات هيثم
-        haithamAnswersCount++;
-        document.getElementById('haithamAnswersCount').textContent = haithamAnswersCount;
-        
-        return {
-            studentName: studentName,
-            examType: `🔘 اختيار من متعدد (${questions.length} أسئلة)`,
-            score: `${totalScore}/${maxScore} (${percentage}%)`,
-            feedback: feedback + ` (${correctCount}/${questions.length} إجابات صحيحة)`,
-            details: details
-        };
-    }
-    
-    function parseMcqAnswers(text, numQuestions) {
-        const answers = [];
-        const cleanText = text.toUpperCase();
-        
-        for (let i = 1; i <= numQuestions; i++) {
-            const patterns = [
-                new RegExp(`${i}\\s*[:.ـ)]\\s*([أ-د])`),
-                new RegExp(`السؤال\\s*${i}\\s*[:.ـ)]\\s*([أ-د])`),
-                new RegExp(`س${i}\\s*[:.ـ)]\\s*([أ-د])`),
-                new RegExp(`Q${i}\\s*[:.ـ)]\\s*([A-D])`),
-                new RegExp(`(${i})[:.ـ)]\\s*([أ-د])`)
-            ];
-            
-            let found = false;
-            for (let pattern of patterns) {
-                const match = cleanText.match(pattern);
-                if (match) {
-                    const answer = match[1] || match[2];
-                    answers.push(answer);
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (!found) {
-                const letters = ['أ', 'ب', 'ج', 'د'];
-                let bestMatch = null;
-                for (let letter of letters) {
-                    if (cleanText.includes(letter) && !answers.includes(letter)) {
-                        bestMatch = letter;
-                        break;
-                    }
-                }
-                answers.push(bestMatch || '؟');
-            }
-        }
-        
-        return answers;
-    }
-    
-    // =============================================
-    // 8. معالجة الرياضيات
-    // =============================================
-    async function processMath() {
-        const studentName = document.getElementById('studentNameMath').value || 'غير معروف';
-        const problem = document.getElementById('mathProblem').value || '';
-        const modelAnswer = document.getElementById('mathAnswer').value || '';
-        const difficulty = document.getElementById('mathDifficulty').value;
-        const mathType = document.getElementById('mathType').value;
-        
-        if (!problem.trim()) {
-            throw new Error('الرجاء إدخال المسألة الرياضية');
-        }
-        
-        if (!modelAnswer.trim()) {
-            throw new Error('الرجاء إدخال الإجابة النموذجية');
-        }
-        
-        const text = await extractTextFromImage();
-        extractedText = text;
-        
-        const studentAnswer = extractMathAnswer(text);
-        
-        const isCorrect = compareMathAnswers(studentAnswer, modelAnswer);
-        const score = isCorrect ? 20 : (studentAnswer ? 8 : 2);
-        const feedback = isCorrect ? 
-            '✅ إجابة صحيحة! حل ممتاز.' : 
-            (studentAnswer ? '⚠️ إجابة غير صحيحة. راجع الحل النموذجي.' : '❌ لم يتم العثور على إجابة واضحة. حاول كتابة الإجابة بشكل أوضح.');
-        
-        let details = `المسألة: ${problem}\n`;
-        details += `النوع: ${mathType === 'equation' ? 'معادلة' : mathType === 'inequality' ? 'متباينة' : mathType === 'geometry' ? 'هندسة' : 'مسألة كلامية'}\n`;
-        details += `المستوى: ${difficulty === 'easy' ? 'سهل' : difficulty === 'medium' ? 'متوسط' : 'صعب'}\n`;
-        details += `إجابة الطالب: ${studentAnswer || 'غير موجودة'}\n`;
-        details += `الحل النموذجي: ${modelAnswer}\n`;
-        details += `النتيجة: ${isCorrect ? '✅ صحيح' : '❌ خطأ'}`;
-        
-        return {
-            studentName: studentName,
-            examType: `🔢 رياضيات - ${mathType === 'equation' ? 'معادلة' : mathType === 'inequality' ? 'متباينة' : mathType === 'geometry' ? 'هندسة' : 'مسألة كلامية'}`,
-            score: `${score}/20`,
-            feedback: feedback,
-            details: details
-        };
-    }
-    
-    function extractMathAnswer(text) {
-        const patterns = [
-            /=\s*([\d.]+)/,
-            /الناتج\s*[:.ـ]\s*([\d.]+)/,
-            /الحل\s*[:.ـ]\s*([\d.]+)/,
-            /([\d.]+)\s*$/m,
-            /x\s*=\s*([\d.]+)/,
-            /قيمة\s*x\s*[:.ـ]\s*([\d.]+)/
-        ];
-        
-        for (let pattern of patterns) {
-            const match = text.match(pattern);
-            if (match) return match[1];
-        }
-        
-        const mathPattern = /([\d+\-*/.()]+)/;
-        const match = text.match(mathPattern);
-        if (match) {
-            try {
-                const result = math.evaluate(match[1]);
-                return result.toString();
-            } catch(e) {}
-        }
-        
-        return null;
-    }
-    
-    function compareMathAnswers(student, model) {
-        if (!student || !model) return false;
-        
-        const cleanStudent = student.trim().replace(/\s/g, '');
-        const cleanModel = model.trim().replace(/\s/g, '');
-        
-        if (cleanStudent === cleanModel) return true;
-        
-        try {
-            const studentNum = parseFloat(cleanStudent);
-            const modelNum = parseFloat(cleanModel);
-            if (!isNaN(studentNum) && !isNaN(modelNum)) {
-                return Math.abs(studentNum - modelNum) < 0.001;
-            }
-        } catch(e) {}
-        
-        return false;
-    }
-    
-    // =============================================
-    // 9. اسأل هيثم
-    // =============================================
-    function askHaitham() {
-        const question = document.getElementById('haithamQuestion').value.trim();
-        const topic = document.getElementById('haithamTopic').value;
-        
-        if (!question) {
-            showError('الرجاء كتابة سؤالك أولاً');
+
+        if (!imageBase64) {
+            showError('❌ الرجاء رفع صورة الورقة أولاً');
             return;
         }
-        
+
+        if (!answerKey.trim()) {
+            showError('❌ الرجاء إدخال الحل النموذجي');
+            return;
+        }
+
         // إظهار مؤشر التحميل
         document.getElementById('loadingIndicator').style.display = 'block';
-        
-        setTimeout(() => {
-            document.getElementById('loadingIndicator').style.display = 'none';
-            
-            const answers = {
-                'math': {
-                    'معادلات': 'لحل المعادلات، اتبع هذه الخطوات:\n1. اكتب المعادلة بوضوح\n2. انقل المتغيرات إلى طرف والأعداد إلى الطرف الآخر\n3. اقسم الطرفين على معامل المتغير\n4. تحقق من الحل بتعويض القيمة في المعادلة الأصلية',
-                    'هندسة': 'في الهندسة، تذكر:\n- مساحة المربع = طول الضلع × نفسه\n- مساحة المستطيل = الطول × العرض\n- مساحة المثلث = (القاعدة × الارتفاع) / 2\n- محيط الدائرة = 2 × π × نصف القطر',
-                },
-                'arabic': 'لتحسين لغتك العربية:\n1. اقرأ يومياً لمدة 15 دقيقة\n2. اكتب جمل قصيرة ثم طوّلها تدريجياً\n3. استخدم القاموس للبحث عن الكلمات الجديدة\n4. استمع إلى المحتوى العربي لتحسين النطق',
-                'science': 'في العلوم، الطريقة العلمية هي:\n1. الملاحظة\n2. طرح السؤال\n3. وضع الفرضية\n4. التجربة\n5. تحليل النتائج\n6. الاستنتاج',
-                'study-tips': 'نصائح دراسية فعّالة:\n1. حدد وقتاً محدداً للمذاكرة يومياً\n2. قسم المواد إلى أجزاء صغيرة\n3. استخدم تقنية البومودورو (25 دقيقة دراسة، 5 دقائق راحة)\n4. راجع ما درسته بعد 24 ساعة\n5. كافئ نفسك بعد إنجاز المهام',
-                'general': 'شكراً لسؤالك! هيثم هنا لمساعدتك. 😊\n\nسأجيبك بأفضل طريقة ممكنة. تذكر أن الممارسة المستمرة هي مفتاح النجاح في أي مجال.\n\nهل لديك سؤال محدد آخر؟'
+        document.getElementById('resultBox').style.display = 'none';
+        document.getElementById('gradeResultContainer').style.display = 'none';
+        hideError();
+
+        try {
+            // استخراج النص من الصورة
+            const extractedText = await extractTextFromImage();
+            console.log('📝 النص المستخرج:', extractedText);
+
+            // حساب عدد الكلمات
+            const wordCount = extractedText.split(/\s+/).filter(w => w.length > 0).length;
+            const wordRatio = Math.min(wordCount / expectedWords, 1);
+
+            // حساب درجة التشابه
+            const score = calculateSimilarity(extractedText, answerKey);
+            const adjustedScore = Math.round(score * (0.7 + 0.3 * wordRatio));
+            const finalScore = Math.min(adjustedScore, 20);
+
+            // إنشاء الملاحظات
+            const feedback = generateFeedback(finalScore);
+
+            // تخزين النتيجة
+            correctionResult = {
+                studentName: studentName,
+                wordCount: wordCount,
+                score: finalScore,
+                maxScore: 20,
+                feedback: feedback,
+                extractedText: extractedText.substring(0, 300) + (extractedText.length > 300 ? '...' : '')
             };
-            
-            let answer = '';
-            let topicName = '';
-            
-            if (topic === 'math') {
-                topicName = 'الرياضيات';
-                if (question.includes('معادلة') || question.includes('حل')) {
-                    answer = answers.math['معادلات'];
-                } else if (question.includes('هندسة') || question.includes('مساحة') || question.includes('محيط')) {
-                    answer = answers.math['هندسة'];
-                } else {
-                    answer = answers.math['معادلات'] + '\n\n' + answers.math['هندسة'];
-                }
-            } else if (topic === 'arabic') {
-                topicName = 'اللغة العربية';
-                answer = answers.arabic;
-            } else if (topic === 'science') {
-                topicName = 'العلوم';
-                answer = answers.science;
-            } else if (topic === 'study-tips') {
-                topicName = 'النصائح الدراسية';
-                answer = answers['study-tips'];
-            } else {
-                topicName = 'العام';
-                answer = answers.general;
-            }
-            
-            // عرض الإجابة في صندوق النتائج
-            document.getElementById('resultStudentName').textContent = '🧠 هيثم';
-            document.getElementById('resultExamType').textContent = `📚 ${topicName}`;
-            document.getElementById('resultScore').textContent = '✨';
-            document.getElementById('resultScore').className = 'result-value score-high';
-            document.getElementById('resultFeedback').textContent = answer;
-            document.getElementById('resultDetailsContainer').style.display = 'none';
-            document.getElementById('resultBox').style.display = 'block';
-            
-            // تحديث الإحصائيات
-            haithamAnswersCount++;
-            document.getElementById('haithamAnswersCount').textContent = haithamAnswersCount;
-            
-            // تشغيل تأثير confetti
-            createConfetti();
-            
-            // قراءة الإجابة بصوت عالٍ
-            if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance(answer);
-                msg.lang = 'ar-SA';
-                msg.rate = 0.9;
-                speechSynthesis.speak(msg);
-            }
-            
-            hideError();
-        }, 1500);
+
+            // عرض النتيجة
+            displayResult(correctionResult);
+
+        } catch (error) {
+            console.error('❌ خطأ:', error);
+            showError('حدث خطأ أثناء التصحيح: ' + error.message);
+        } finally {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
     }
-    
+
     // =============================================
-    // 10. دوال حساب الدرجة
+    // 5. حساب درجة التشابه
     // =============================================
-    function calculateScore(studentAnswer, modelAnswer) {
+    function calculateSimilarity(studentAnswer, modelAnswer) {
         if (!studentAnswer || !modelAnswer) return 0;
-        
+
         const cleanStudent = studentAnswer.trim().toLowerCase();
         const cleanModel = modelAnswer.trim().toLowerCase();
-        
+
         const studentWords = cleanStudent.split(/\s+/);
         const modelWords = cleanModel.split(/\s+/);
-        
+
         if (modelWords.length === 0) return 0;
-        
+
         let matchCount = 0;
         for (let word of studentWords) {
             if (modelWords.includes(word)) {
                 matchCount++;
             }
         }
-        
+
         const similarity = matchCount / modelWords.length;
         let score = Math.round(similarity * 20);
-        
+
+        // منح درجة حد أدنى إذا كان هناك نص مقروء
         if (studentAnswer.length > 10 && score < 2) score = 2;
-        
+
         return Math.min(score, 20);
     }
-    
-    function generateFeedback(score, type) {
-        if (type === 'essay') {
-            if (score >= 18) return '🌟 ممتاز! إجابة متقنة وشاملة. هيثم فخور بك!';
-            if (score >= 15) return '👍 جيد جداً، لكن يمكن تحسين بعض النقاط. استمر!';
-            if (score >= 10) return '📖 جيد، تحتاج إلى مراجعة بعض الأجزاء.';
-            if (score >= 5) return '⚠️ يحتاج إلى تحسين كبير في الإجابة.';
-            return '📚 يرجى مراجعة المادة جيداً والمحاولة مرة أخرى.';
-        } else if (type === 'mcq') {
-            if (score >= 90) return '🌟 ممتاز! أداء رائع في الاختيار من متعدد!';
-            if (score >= 70) return '👍 جيد جداً، بعض الأسئلة تحتاج إلى مراجعة.';
-            if (score >= 50) return '📖 جيد، لكن حاول التركيز أكثر في المرة القادمة.';
-            return '📚 يحتاج إلى مزيد من التدريب على الاختيار من متعدد.';
-        } else {
-            if (score >= 18) return '🌟 حل رياضي متكامل! إجابة صحيحة 100%';
-            if (score >= 14) return '👍 جيد، لكن تأكد من الخطوات.';
-            if (score >= 10) return '📖 بعض الأخطاء في الحل، راجع القوانين.';
-            return '📚 يحتاج إلى مراجعة قواعد الرياضيات الأساسية.';
-        }
+
+    // =============================================
+    // 6. إنشاء الملاحظات
+    // =============================================
+    function generateFeedback(score) {
+        if (score >= 18) return '🌟 ممتاز! إجابة متقنة وشاملة. هيثم فخور بك!';
+        if (score >= 15) return '👍 جيد جداً، لكن يمكن تحسين بعض النقاط. استمر!';
+        if (score >= 10) return '📖 جيد، تحتاج إلى مراجعة بعض الأجزاء.';
+        if (score >= 5) return '⚠️ يحتاج إلى تحسين كبير في الإجابة.';
+        return '📚 يرجى مراجعة المادة جيداً والمحاولة مرة أخرى.';
     }
-    
+
     // =============================================
-    // 11. معالجة التبويب الحالي
-    // =============================================
-    async function processCurrentTab() {
-        if (!imageBase64) {
-            showError('الرجاء رفع صورة أولاً');
-            return;
-        }
-        
-        document.getElementById('loadingIndicator').style.display = 'block';
-        document.getElementById('processBtn').disabled = true;
-        document.getElementById('resultBox').style.display = 'none';
-        hideError();
-        
-        try {
-            let result = null;
-            
-            switch(currentTab) {
-                case 'essay':
-                    result = await processEssay();
-                    break;
-                case 'mcq':
-                    result = await processMcq();
-                    break;
-                case 'math':
-                    result = await processMath();
-                    break;
-                default:
-                    throw new Error('تبويب غير معروف');
-            }
-            
-            if (result) {
-                displayResult(result);
-                // تشغيل تأثير confetti إذا كانت النتيجة ممتازة
-                const scoreNum = parseInt(result.score);
-                if (!isNaN(scoreNum) && scoreNum >= 18) {
-                    createConfetti();
-                }
-            }
-        } catch (error) {
-            console.error('❌ خطأ:', error);
-            showError('حدث خطأ أثناء المعالجة: ' + error.message);
-        } finally {
-            document.getElementById('loadingIndicator').style.display = 'none';
-            document.getElementById('processBtn').disabled = false;
-        }
-    }
-    
-    // =============================================
-    // 12. عرض النتيجة
+    // 7. عرض النتيجة
     // =============================================
     function displayResult(result) {
-        document.getElementById('resultStudentName').textContent = result.studentName;
-        document.getElementById('resultExamType').textContent = result.examType;
-        
+        document.getElementById('resultStudent').textContent = result.studentName;
+        document.getElementById('resultWords').textContent = result.wordCount + ' كلمة';
+
         const scoreElement = document.getElementById('resultScore');
-        scoreElement.textContent = result.score;
+        scoreElement.textContent = `${result.score}/${result.maxScore}`;
         scoreElement.className = 'result-value';
-        
-        const scoreNum = parseInt(result.score);
-        if (!isNaN(scoreNum)) {
-            if (scoreNum >= 15) {
-                scoreElement.classList.add('score-high');
-            } else if (scoreNum >= 10) {
-                scoreElement.classList.add('score-medium');
-            } else {
-                scoreElement.classList.add('score-low');
-            }
+
+        if (result.score >= 15) {
+            scoreElement.classList.add('score-high');
+        } else if (result.score >= 10) {
+            scoreElement.classList.add('score-medium');
+        } else {
+            scoreElement.classList.add('score-low');
         }
-        
+
         document.getElementById('resultFeedback').textContent = result.feedback;
-        
-        if (result.details) {
-            document.getElementById('resultDetails').textContent = result.details;
+
+        if (result.extractedText) {
+            document.getElementById('resultDetails').textContent = result.extractedText;
             document.getElementById('resultDetailsContainer').style.display = 'flex';
         } else {
             document.getElementById('resultDetailsContainer').style.display = 'none';
         }
-        
+
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
         
-        // حفظ النتيجة في السجل
-        scoreResult = result;
-        correctionHistory.push(result);
-        
-        // تحديث عدد الطلاب
-        document.getElementById('haithamStudents').textContent = correctionHistory.length;
+        // إخفاء التقدير السابق
+        document.getElementById('gradeResultContainer').style.display = 'none';
     }
-    
+
     // =============================================
-    // 13. دوال إضافية
+    // 8. دالة تقدير الدرجة
     // =============================================
-    function clearAll() {
-        imageBase64 = null;
-        extractedText = '';
-        scoreResult = null;
-        document.getElementById('previewImage').style.display = 'none';
-        document.getElementById('previewImage').src = '';
-        document.getElementById('processBtn').style.display = 'none';
-        document.getElementById('clearBtn').style.display = 'none';
-        document.getElementById('speakBtn').style.display = 'none';
-        document.getElementById('resultBox').style.display = 'none';
-        document.getElementById('loadingIndicator').style.display = 'none';
-        hideError();
+    function estimateGrade() {
+        if (!correctionResult) {
+            showError('❌ لازم تصحح الورقة أولاً');
+            return;
+        }
+
+        const score = correctionResult.score;
+        const maxScore = correctionResult.maxScore;
+        const percentage = (score / maxScore) * 100;
+
+        let grade = '';
+        let emoji = '';
+        let recommendation = '';
+
+        if (percentage >= 90) {
+            grade = 'ممتاز';
+            emoji = '⭐';
+            recommendation = 'أداء رائع، استمر بهذا المستوى!';
+        } else if (percentage >= 75) {
+            grade = 'جيد جداً';
+            emoji = '🌟';
+            recommendation = 'أداء مميز، ركز على النقاط التي أخطأت فيها';
+        } else if (percentage >= 60) {
+            grade = 'جيد';
+            emoji = '👍';
+            recommendation = 'أداء جيد، أنصحك بمراجعة الأخطاء';
+        } else if (percentage >= 45) {
+            grade = 'مقبول';
+            emoji = '📖';
+            recommendation = 'تحتاج إلى مراجعة الدروس مع المعلم';
+        } else {
+            grade = 'ضعيف';
+            emoji = '📚';
+            recommendation = 'بحاجة إلى خطة علاجية فورية';
+        }
+
+        const container = document.getElementById('gradeResultContainer');
+        container.innerHTML = `
+            <div class="grade-result">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="emoji">${emoji}</span>
+                    <div>
+                        <strong style="font-size: 20px; color: #1a1a2e;">التقدير: ${grade}</strong><br>
+                        <span style="color: #4a5568;">${score} من ${maxScore} (${Math.round(percentage)}%)</span><br>
+                        <span style="color: #718096; font-size: 14px;">💡 ${recommendation}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.style.display = 'block';
         
-        document.querySelectorAll('.upload-area').forEach(area => {
-            area.querySelector('p:first-of-type').textContent = 'انقر لرفع الصورة';
-            area.style.borderColor = '#cbd5e0';
-            area.style.background = '#fafafa';
-        });
-        
-        // إعادة تعيين حقول الإدخال حسب التبويب
-        const inputs = document.querySelectorAll('input[type="text"], textarea');
-        inputs.forEach(input => {
-            if (input.id.includes('Name')) {
-                input.value = '';
-            }
-        });
+        // تشغيل تأثير confetti إذا كان التقدير ممتاز
+        if (percentage >= 90) {
+            createConfetti();
+        }
     }
-    
+
+    // =============================================
+    // 9. دوال إضافية
+    // =============================================
     function speakResult() {
-        const feedback = document.getElementById('resultFeedback').textContent;
-        const score = document.getElementById('resultScore').textContent;
-        const studentName = document.getElementById('resultStudentName').textContent;
-        
-        if (!feedback || feedback === '-') {
+        if (!correctionResult) {
             showError('لا توجد نتيجة للتحدث');
             return;
         }
+
+        const text = `الطالب ${correctionResult.studentName}، الدرجة ${correctionResult.score} من ${correctionResult.maxScore}. ${correctionResult.feedback}`;
         
         if ('speechSynthesis' in window) {
-            const msg = new SpeechSynthesisUtterance(
-                `الطالب ${studentName}، الدرجة ${score}. ${feedback}`
-            );
+            const msg = new SpeechSynthesisUtterance(text);
             msg.lang = 'ar-SA';
             msg.rate = 0.9;
-            msg.pitch = 1;
             speechSynthesis.speak(msg);
         } else {
             showError('المتصفح لا يدعم خاصية النطق');
         }
     }
-    
-    function saveToHistory() {
-        if (!scoreResult) {
+
+    function saveResult() {
+        if (!correctionResult) {
             showError('لا توجد نتيجة للحفظ');
             return;
         }
-        
-        // حفظ في localStorage
-        const history = JSON.parse(localStorage.getItem('haithamHistory') || '[]');
+
+        const history = JSON.parse(localStorage.getItem('correctionHistory') || '[]');
         history.push({
-            ...scoreResult,
-            date: new Date().toISOString()
+            ...correctionResult,
+            date: new Date().toLocaleString('ar-SA')
         });
-        localStorage.setItem('haithamHistory', JSON.stringify(history));
-        
-        alert(`✅ تم حفظ نتيجة ${scoreResult.studentName} بنجاح!`);
-        console.log('📊 التاريخ:', history);
+        localStorage.setItem('correctionHistory', JSON.stringify(history));
+
+        alert(`✅ تم حفظ نتيجة ${correctionResult.studentName} بنجاح!`);
+        console.log('📊 السجل:', history);
     }
-    
-    function shareResult() {
-        if (!scoreResult) {
-            showError('لا توجد نتيجة للمشاركة');
-            return;
-        }
-        
-        const text = `📊 نتيجة التصحيح بواسطة هيثم\n👤 الطالب: ${scoreResult.studentName}\n📚 النوع: ${scoreResult.examType}\n⭐ الدرجة: ${scoreResult.score}\n📝 الملاحظات: ${scoreResult.feedback}`;
-        
-        if (navigator.share) {
-            navigator.share({
-                title: 'نتيجة التصحيح',
-                text: text
-            }).catch(() => {});
-        } else {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ تم نسخ النتيجة للحافظة!');
-            }).catch(() => {
-                prompt('انسخ النتيجة:', text);
-            });
-        }
-    }
-    
+
     function printResult() {
-        const resultBox = document.getElementById('resultBox');
-        if (resultBox.style.display === 'none') {
+        if (!correctionResult) {
             showError('لا توجد نتيجة للطباعة');
             return;
         }
-        
+
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
             <html dir="rtl">
@@ -1677,57 +776,83 @@
                 .item { margin: 15px 0; padding: 10px; border-bottom: 1px solid #ddd; }
                 .label { font-weight: bold; color: #4a5568; }
                 .value { color: #2d3748; }
+                .grade-box { background: #f0f8ff; padding: 15px; border-radius: 12px; margin-top: 10px; border-right: 4px solid #4A90D9; }
             </style>
             </head>
             <body>
-                <h2>📊 نتيجة التصحيح - هيثم</h2>
-                <div class="item"><span class="label">👤 اسم الطالب:</span> <span class="value">${document.getElementById('resultStudentName').textContent}</span></div>
-                <div class="item"><span class="label">📊 نوع الاختبار:</span> <span class="value">${document.getElementById('resultExamType').textContent}</span></div>
-                <div class="item"><span class="label">⭐ الدرجة:</span> <span class="value">${document.getElementById('resultScore').textContent}</span></div>
-                <div class="item"><span class="label">📝 الملاحظات:</span> <span class="value">${document.getElementById('resultFeedback').textContent}</span></div>
-                <div class="item"><span class="label">📄 التفاصيل:</span> <span class="value">${document.getElementById('resultDetails').textContent || 'لا توجد تفاصيل إضافية'}</span></div>
+                <h2>📊 نتيجة التصحيح - هيثم AI</h2>
+                <div class="item"><span class="label">👤 اسم الطالب:</span> <span class="value">${correctionResult.studentName}</span></div>
+                <div class="item"><span class="label">📊 عدد الكلمات:</span> <span class="value">${correctionResult.wordCount} كلمة</span></div>
+                <div class="item"><span class="label">⭐ الدرجة:</span> <span class="value">${correctionResult.score}/${correctionResult.maxScore}</span></div>
+                <div class="item"><span class="label">📝 الملاحظات:</span> <span class="value">${correctionResult.feedback}</span></div>
+                <div class="item"><span class="label">📄 النص المستخرج:</span> <span class="value">${correctionResult.extractedText || 'لا توجد تفاصيل إضافية'}</span></div>
                 <hr>
-                <p style="color: #718096; font-size: 14px;">تم التصحيح بواسطة 🤖 اسأل هيثم</p>
+                <p style="color: #718096; font-size: 14px;">تم التصحيح بواسطة 🤖 هيثم AI</p>
             </body>
             </html>
         `);
         printWindow.document.close();
         printWindow.print();
     }
-    
+
     function createConfetti() {
         const container = document.createElement('div');
         container.className = 'confetti-container';
         document.body.appendChild(container);
-        
+
         const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6', '#845ec2'];
-        
+
         for (let i = 0; i < 50; i++) {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.width = (Math.random() * 8 + 4) + 'px';
-            confetti.style.height = (Math.random() * 8 + 4) + 'px';
-            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            confetti.style.animationDelay = (Math.random() * 1.5) + 's';
+            confetti.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                width: ${Math.random() * 8 + 4}px;
+                height: ${Math.random() * 8 + 4}px;
+                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
+                animation-delay: ${Math.random() * 1.5}s;
+            `;
             container.appendChild(confetti);
         }
-        
-        setTimeout(() => {
-            container.remove();
-        }, 4000);
+
+        setTimeout(() => container.remove(), 4000);
     }
-    
+
     function showError(message) {
         const errorDiv = document.getElementById('errorMessage');
         errorDiv.textContent = '❌ ' + message;
         errorDiv.style.display = 'block';
     }
-    
+
     function hideError() {
         document.getElementById('errorMessage').style.display = 'none';
     }
-    
+
     // =============================================
+    // 10. إضافة أنماط الـ Confetti (ديناميكية)
+    // =============================================
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+</script>
+
+</body>
+</html>
