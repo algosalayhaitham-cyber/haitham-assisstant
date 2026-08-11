@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل: أقسام ومكتبة + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+// app.js - هيثم AI (شامل: ثيم داكن/فاتح + أقسام ومكتبة + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -10,6 +10,25 @@ if ('serviceWorker' in navigator) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  // --- 1. إدارة الثيم (الوضع الداكن / الفاتح) ---
+  const themeToggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('haitham_theme') || 'dark';
+
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    if (themeToggle) themeToggle.innerHTML = '☀️';
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      themeToggle.innerHTML = isLight ? '☀️' : '🌙';
+      localStorage.setItem('haitham_theme', isLight ? 'light' : 'dark');
+    });
+  }
+
+  // --- 2. إعداد العناصر الأساسية ---
   const form = document.getElementById('chatForm');
   const input = document.getElementById('input');
   const messages = document.getElementById('messages');
@@ -27,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let isRecording = false;
   let recognition = null;
 
-  // إعداد الإملاء الصوتي
+  // --- 3. إعداد الإملاء الصوتي ---
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (SpeechRecognition) {
@@ -82,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // تحميل المحادثات المحفوظة
   loadChatHistory();
 
-  // أزرار القوالب
+  // --- 4. أزرار القوالب والأقسام ---
   document.querySelectorAll('[data-prompt]').forEach(button => {
     button.addEventListener('click', function () {
       input.value = this.dataset.prompt;
@@ -113,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // معالجة اختيار صورة
+  // --- 5. معالجة اختيار وإلغاء الصور ---
   if (imageInput) {
     imageInput.addEventListener('change', function (e) {
       const file = e.target.files[0];
@@ -129,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // إلغاء تحديد الصورة
   if (removeImageBtn) {
     removeImageBtn.addEventListener('click', function () {
       selectedBase64Image = null;
@@ -138,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // بدء محادثة جديدة
+  // --- 6. بدء محادثة جديدة ---
   if (clearChatBtn) {
     clearChatBtn.addEventListener('click', function () {
       if (confirm('هل تريد بدء محادثة جديدة ومسح السجل الحالي؟')) {
@@ -152,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!form || !input || !messages) return;
 
-  // إرسال الرسالة
+  // --- 7. إرسال الرسالة ---
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -168,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const sentCat = currentCategory;
-    currentCategory = 'عام'; // إعادة الضبط لعام بعد الإرسال
+    currentCategory = 'عام'; // إعادة الضبط بعد الإرسال
     input.value = '';
     selectedBase64Image = null;
     if (imageInput) imageInput.value = '';
@@ -208,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
     messages.scrollTop = messages.scrollHeight;
   });
 
-  // إضافة الرسالة للعرض
+  // --- 8. بناء وإضافة الرسائل للمستند ---
   function appendMessage(role, text, image = null, category = 'عام') {
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg ${role}`;
@@ -284,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
     chatHistory.push({ role, text, image, category });
   }
 
-  // دالة النسخ السريع إلى الحافظة
+  // --- 9. الأدوات المساعدة (نسخ، صوت، حفظ، تصدير) ---
   function copyToClipboard(text, btnElement) {
     const cleanText = text.replace(/[*#`]/g, '');
     navigator.clipboard.writeText(cleanText).then(() => {
@@ -297,12 +315,11 @@ document.addEventListener('DOMContentLoaded', function () {
         btnElement.style.borderColor = '';
         btnElement.style.color = '';
       }, 2000);
-    }).catch(err => {
+    }).catch(() => {
       alert('تعذر النسخ تلقائياً، يرجى تحديد النص ونسخه يدويًا.');
     });
   }
 
-  // النطق الصوتي للرد
   function speakText(text) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -317,5 +334,73 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function saveChatHistory() {
-    localStorage.setItem('haitham_chat
- 
+    localStorage.setItem('haitham_chat_history', JSON.stringify(chatHistory));
+  }
+
+  function loadChatHistory() {
+    const saved = localStorage.getItem('haitham_chat_history');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        messages.innerHTML = '';
+        parsed.forEach(item => appendMessage(item.role, item.text, item.image, item.category || 'عام'));
+        chatHistory = parsed;
+      } catch (e) {
+        renderWelcomeMessage();
+      }
+    } else {
+      renderWelcomeMessage();
+    }
+  }
+
+  function renderWelcomeMessage() {
+    messages.innerHTML = `
+      <div class="msg ai" data-category="عام">
+        <b>هيثم AI</b>
+        <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.</p>
+      </div>
+    `;
+    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.', category: 'عام' }];
+  }
+
+  function exportToPDF(element) {
+    if (typeof html2pdf === 'undefined') {
+      alert('مكتبة التصدير غير متحملة بعد.');
+      return;
+    }
+    const opt = {
+      margin: 10,
+      filename: 'هيثم_AI_مستند.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  }
+
+  function exportToWord(text) {
+    const cleanText = text.replace(/[*#`]/g, '');
+    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+      "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+      "xmlns='http://www.w3.org/TR/REC-html40'>"+
+      "<head><meta charset='utf-8'><title>مستند هيثم AI</title>"+
+      "<style>body { font-family: 'Arial', sans-serif; direction: rtl; text-align: right; }</style>"+
+      "</head><body>";
+    const footer = "</body></html>";
+    const sourceHTML = header + "<div>" + cleanText.replace(/\n/g, "<br>") + "</div>" + footer;
+
+    const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+    const fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = 'هيثم_AI_مستند.doc';
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+});
