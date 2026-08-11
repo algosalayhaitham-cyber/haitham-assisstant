@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل: أقسام ومكتبة + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+// app.js - هيثم AI (شامل: أقسام ومكتبة + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -246,9 +246,14 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI ${catBadge}</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // أزرار الإجراءات (PDF + Word + قراءة صوتية)
+      // أزرار الإجراءات (نسخ + PDF + Word + قراءة صوتية)
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'action-btn';
+      copyBtn.innerHTML = '📋 نسخ النص';
+      copyBtn.onclick = function () { copyToClipboard(text, copyBtn); };
 
       const pdfBtn = document.createElement('button');
       pdfBtn.className = 'action-btn';
@@ -265,6 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
       speakBtn.innerHTML = '🔊 قراءة صوتية';
       speakBtn.onclick = function () { speakText(text); };
 
+      actionsDiv.appendChild(copyBtn);
       actionsDiv.appendChild(pdfBtn);
       actionsDiv.appendChild(wordBtn);
       actionsDiv.appendChild(speakBtn);
@@ -276,6 +282,24 @@ document.addEventListener('DOMContentLoaded', function () {
     messages.scrollTop = messages.scrollHeight;
 
     chatHistory.push({ role, text, image, category });
+  }
+
+  // دالة النسخ السريع إلى الحافظة
+  function copyToClipboard(text, btnElement) {
+    const cleanText = text.replace(/[*#`]/g, '');
+    navigator.clipboard.writeText(cleanText).then(() => {
+      const originalHTML = btnElement.innerHTML;
+      btnElement.innerHTML = '✅ تم النسخ!';
+      btnElement.style.borderColor = '#10b981';
+      btnElement.style.color = '#10b981';
+      setTimeout(() => {
+        btnElement.innerHTML = originalHTML;
+        btnElement.style.borderColor = '';
+        btnElement.style.color = '';
+      }, 2000);
+    }).catch(err => {
+      alert('تعذر النسخ تلقائياً، يرجى تحديد النص ونسخه يدويًا.');
+    });
   }
 
   // النطق الصوتي للرد
@@ -293,75 +317,5 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function saveChatHistory() {
-    localStorage.setItem('haitham_chat_history', JSON.stringify(chatHistory));
-  }
-
-  function loadChatHistory() {
-    const saved = localStorage.getItem('haitham_chat_history');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        messages.innerHTML = '';
-        parsed.forEach(item => appendMessage(item.role, item.text, item.image, item.category || 'عام'));
-        chatHistory = parsed;
-      } catch (e) {
-        renderWelcomeMessage();
-      }
-    } else {
-      renderWelcomeMessage();
-    }
-  }
-
-  function renderWelcomeMessage() {
-    messages.innerHTML = `
-      <div class="msg ai" data-category="عام">
-        <b>هيثم AI</b>
-        <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.</p>
-      </div>
-    `;
-    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.', category: 'عام' }];
-  }
-
-  // دالة تصدير PDF
-  function exportToPDF(element) {
-    if (typeof html2pdf === 'undefined') {
-      alert('مكتبة التصدير غير متحملة بعد.');
-      return;
-    }
-    const opt = {
-      margin: 10,
-      filename: 'هيثم_AI_مستند.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
-  }
-
-  // دالة تصدير Word (.doc)
-  function exportToWord(text) {
-    const cleanText = text.replace(/[*#`]/g, '');
-    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-      "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-      "xmlns='http://www.w3.org/TR/REC-html40'>"+
-      "<head><meta charset='utf-8'><title>مستند هيثم AI</title>"+
-      "<style>body { font-family: 'Arial', sans-serif; direction: rtl; text-align: right; }</style>"+
-      "</head><body>";
-    const footer = "</body></html>";
-    const sourceHTML = header + "<div>" + cleanText.replace(/\n/g, "<br>") + "</div>" + footer;
-
-    const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-    const fileDownload = document.createElement("a");
-    document.body.appendChild(fileDownload);
-    fileDownload.href = source;
-    fileDownload.download = 'هيثم_AI_مستند.doc';
-    fileDownload.click();
-    document.body.removeChild(fileDownload);
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-});
+    localStorage.setItem('haitham_chat
+ 
