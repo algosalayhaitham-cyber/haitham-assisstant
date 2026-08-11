@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل ومكتمل العناصر)
+// app.js - هيثم AI (شامل: مشاركة واتساب + رموز رياضية + ثيم داكن/فاتح + أقسام + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -281,9 +281,14 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI ${catBadge}</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // أزرار الإجراءات (نسخ + PDF + Word + قراءة صوتية)
+      // أزرار الإجراءات (مشاركة واتساب + نسخ + PDF + Word + قراءة صوتية)
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
+
+      const waBtn = document.createElement('button');
+      waBtn.className = 'action-btn whatsapp-btn';
+      waBtn.innerHTML = '📲 مشاركة واتساب';
+      waBtn.onclick = function () { shareToWhatsApp(text); };
 
       const copyBtn = document.createElement('button');
       copyBtn.className = 'action-btn';
@@ -305,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
       speakBtn.innerHTML = '🔊 قراءة صوتية';
       speakBtn.onclick = function () { speakText(text); };
 
+      actionsDiv.appendChild(waBtn);
       actionsDiv.appendChild(copyBtn);
       actionsDiv.appendChild(pdfBtn);
       actionsDiv.appendChild(wordBtn);
@@ -320,6 +326,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- 10. الأدوات المساعدة ---
+
+  // دالة المشاركة المباشرة عبر الواتساب (رقم 1)
+  function shareToWhatsApp(text) {
+    const cleanText = text.replace(/[*#`]/g, '');
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(cleanText)}`;
+    window.open(waUrl, '_blank');
+  }
+
   function copyToClipboard(text, btnElement) {
     const cleanText = text.replace(/[*#`]/g, '');
     navigator.clipboard.writeText(cleanText).then(() => {
@@ -421,3 +435,4 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML;
   }
 });
+ 
