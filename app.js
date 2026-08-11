@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل: طباعة مباشرة + مشاركة واتساب + رموز رياضية + ثيم داكن/فاتح + أقسام + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+// app.js - هيثم AI (شامل: بحث في السجل + طباعة مباشرة + مشاركة واتساب + رموز رياضية + ثيم داكن/فاتح + أقسام + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const removeImageBtn = document.getElementById('removeImageBtn');
   const clearChatBtn = document.getElementById('clearChatBtn');
   const voiceBtn = document.getElementById('voiceBtn');
+  const searchInput = document.getElementById('searchInput');
 
   let selectedBase64Image = null;
   let chatHistory = [];
@@ -133,15 +134,29 @@ document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       activeFilter = this.dataset.filter;
-      filterMessages(activeFilter);
+      filterAndSearchMessages();
     });
   });
 
-  function filterMessages(filter) {
+  // --- ميزة رقم 3: تفعيل محرك البحث الداخلي ---
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      filterAndSearchMessages();
+    });
+  }
+
+  function filterAndSearchMessages() {
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
     const allMsgs = messages.querySelectorAll('.msg');
+
     allMsgs.forEach(msg => {
       const cat = msg.dataset.category;
-      if (filter === 'all' || cat === filter || !cat) {
+      const text = msg.textContent.toLowerCase();
+
+      const matchesCat = (activeFilter === 'all' || cat === activeFilter || !cat);
+      const matchesSearch = (!query || text.includes(query));
+
+      if (matchesCat && matchesSearch) {
         msg.style.display = 'block';
       } else {
         msg.style.display = 'none';
@@ -325,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     messages.appendChild(msgDiv);
-    filterMessages(activeFilter);
+    filterAndSearchMessages();
     messages.scrollTop = messages.scrollHeight;
 
     chatHistory.push({ role, text, image, category });
@@ -333,7 +348,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // --- 10. الأدوات المساعدة ---
 
-  // دالة الطباعة المباشرة (رقم 2)
   function printMessage(contentElement) {
     const printWindow = window.open('', '_blank');
     const htmlContent = `
@@ -365,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function () {
     printWindow.document.close();
   }
 
-  // دالة المشاركة المباشرة عبر الواتساب (رقم 1)
   function shareToWhatsApp(text) {
     const cleanText = text.replace(/[*#`]/g, '');
     const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(cleanText)}`;
@@ -473,3 +486,4 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML;
   }
 });
+ 
