@@ -1,4 +1,4 @@
-// app.js - هيثم AI (مع دعم كامل للصور والمعادلات)
+// app.js - هيثم AI (مع دعم الصور والمعادلات وتصدير PDF)
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -57,10 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const message = input.value.trim();
 
-    // منع الإرسال إذا كان النص والصورة فارغين
     if (!message && !selectedBase64Image) return;
 
-    // عرض رسالة المستخدم (صورة + نص)
+    // عرض رسالة المستخدم
     const userMsg = document.createElement('div');
     userMsg.className = 'msg user';
 
@@ -79,13 +78,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     messages.appendChild(userMsg);
 
-    // تجهيز البيانات لإرسالها للـ API
+    // تجهيز البيانات لإرسالها
     const payload = {
       message: message,
       image: selectedBase64Image
     };
 
-    // تنظيف المداخلات ومعاينة الصورة
+    // تنظيف المداخلات
     input.value = '';
     selectedBase64Image = null;
     if (imageInput) imageInput.value = '';
@@ -121,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
         throw new Error(text || 'السيرفر لم يرجع استجابة صحيحة');
       }
 
-      // حذف رسالة الانتظار
       loading.remove();
 
       if (!response.ok) {
@@ -134,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const replyText = data.reply || 'لم يصل رد.';
       const contentContainer = document.createElement('div');
+      contentContainer.className = 'pdf-export-content';
 
       // 1. تحويل الماركداون إلى HTML
       if (typeof marked !== 'undefined') {
@@ -158,6 +157,15 @@ document.addEventListener('DOMContentLoaded', function () {
       aiMsg.innerHTML = `<b>هيثم AI</b>`;
       aiMsg.appendChild(contentContainer);
 
+      // 3. إضافة زر تحميل الـ PDF
+      const pdfBtn = document.createElement('button');
+      pdfBtn.className = 'pdf-download-btn';
+      pdfBtn.innerHTML = '📄 تحميل PDF';
+      pdfBtn.onclick = function () {
+        exportToPDF(contentContainer);
+      };
+
+      aiMsg.appendChild(pdfBtn);
       messages.appendChild(aiMsg);
 
     } catch (error) {
@@ -177,6 +185,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     messages.scrollTop = messages.scrollHeight;
   });
+
+  // دالة تصدير العنصر إلى PDF
+  function exportToPDF(element) {
+    if (typeof html2pdf === 'undefined') {
+      alert('مكتبة التصدير غير متحملة بعد، يرجى المحاولة بعد لحظات.');
+      return;
+    }
+
+    const opt = {
+      margin:       10,
+      filename:     'هيثم_AI_مستند.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  }
 
   // حماية النص من HTML
   function escapeHtml(text) {
