@@ -1,126 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0f172a">
-  <title>هيثم AI</title>
+  <title>هيثم AI - المساعد التعليمي</title>
   <link rel="manifest" href="/manifest.json">
-  <link rel="stylesheet" href="./styles.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+  <meta name="theme-color" content="#0f172a">
+  <link rel="stylesheet" href="styles.css">
+  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
+
+  <div class="topbar">
     <div>
       <div class="brand">هيثم <span>AI</span></div>
-      <div class="subtitle">المساعد التعليمي الذكي</div>
+      <div class="subtitle">المساعد الذكي للمدرسين والطلاب</div>
     </div>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <button id="themeToggle" class="theme-toggle-btn" title="تبديل المظهر">🌙</button>
-      <div class="badge">الإصدار 1.0</div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span class="badge">v2.5</span>
+      <button id="themeToggle" class="theme-toggle-btn" title="تبديل الثيم">🌙</button>
     </div>
-  </header>
+  </div>
 
-  <main class="container">
-    <section class="hero">
+  <div class="container">
+
+    <div class="hero">
       <div>
-        <p class="eyebrow">مرحبًا بك أستاذ هيثم</p>
-        <h1>ماذا تريد أن تنجز اليوم؟</h1>
-        <p>مساعدك الذكي لإعداد التحضير، بنوك الأسئلة، الشروحات الرياضية، والأعمال المدرسية.</p>
+        <div class="eyebrow">مرحباً بك أستاذ هيثم</div>
+        <h1>منصة هيثم AI للتعليم الذكي</h1>
+        <p>قم بتحضير الدروس، صياغة الاختبارات، وحل المسائل الرياضية بكل سهولة وسرعة.</p>
       </div>
       <div class="hero-mark">∑</div>
-    </section>
+    </div>
 
-    <section class="grid">
-      <button class="card" data-category="تحضير" data-prompt="أريد تحضير درس رياضيات شامل ومكتمل العناصر (الأهداف، التمهيد، الاستراتيجيات، الوسائل، التقويم، الواجب). اطلب مني الصف واسم الدرس أولاً.">
-        <b>📚</b><strong>تحضير درس</strong><small>خطة درس معتمدة ومكتملة</small>
-      </button>
+    <div class="grid">
+      <div class="card" data-prompt="اكتب لي خطة تحضير درس رياضيات لصفوف مرحلة التعليم الأساسي" data-category="تحضير">
+        <b>📚</b>
+        <strong>تحضير درس</strong>
+        <small>إنشاء خطة درس متكاملة</small>
+      </div>
+      <div class="card" data-prompt="صغ لي اختبار رياضيات مع نموذج الإجابة للسطر الأول والأنشطة" data-category="اختبارات">
+        <b>📝</b>
+        <strong>صياغة اختبار</strong>
+        <small>أسئلة متنوعة مع الحلول</small>
+      </div>
+      <div class="card" data-prompt="اشرح هذه المسألة الرياضية بخطوات واضحة وبسيطة" data-category="رياضيات">
+        <b>📐</b>
+        <strong>حل مسألة</strong>
+        <small>خطوات تفصيلية مع القوانين</small>
+      </div>
+    </div>
 
-      <button class="card" data-category="اختبارات" data-prompt="أريد إنشاء اختبار رياضيات متكامل مع نموذج الإجابة وسلم الدرجات. اطلب مني تحديد الصف، الدروس، وعدد الأسئلة.">
-        <b>📝</b><strong>إنشاء اختبار</strong><small>أسئلة متنوعة + نموذج الإجابة</small>
-      </button>
-
-      <button class="card" data-category="مواصفات" data-prompt="أريد جدول مواصفات اختبار رياضيات متكامل في جدول منظم يحتوي على (الوحدات، الدروس، الوزن النسبي، مستويات الأهداف، عدد الأسئلة والدرجات). اطلب مني الصف والمواضيع.">
-        <b>📊</b><strong>جدول مواصفات</strong><small>توزيع الدرجات والأهداف</small>
-      </button>
-
-      <button class="card" data-category="حل مسائل" data-prompt="أريد شرح خطوات حل مسألة رياضية بالخطوات بالتفصيل والرموز الدقيقة. اطلب مني إرسال المسألة الآن.">
-        <b>📐</b><strong>حل مسألة</strong><small>خطوات تفصيلية + شرح تعليمي</small>
-      </button>
-
-      <button class="card" data-category="إعلانات" data-prompt="أريد صياغة تعميم أو إعلان مدرسي رسمي ومحفز للطلاب والأولياء. اطلب مني التفاصيل والمناسبة.">
-        <b>🏫</b><strong>إعلان مدرسي</strong><small>تعاميم ونشرات رسمية</small>
-      </button>
-
-      <button class="card" data-category="خطط علاجية" data-prompt="أريد خطة علاجية لرفع مستوى الطلاب ضعاف التحصيل في الرياضيات. اطلب مني تحديد المهارة المستهدفة والصف.">
-        <b>🎓</b><strong>خطة علاجية</strong><small>استراتيجيات ودعم للطلاب</small>
-      </button>
-
-      <button class="card" data-category="تنبيهات" data-prompt="أعطني خطة تنظيم وتذكير يومية ومقترحات لإنجاز أعمالي المدرسية بفعالية هذا الأسبوع.">
-        <b>🔔</b><strong>تنبيهات وتذكير</strong><small>تنسيق وتذكير بالمهام اليومية</small>
-      </button>
-    </section>
-
-    <section class="chat">
+    <div class="chat">
       <div class="chat-header">
         <div class="category-tabs">
           <button class="tab-btn active" data-filter="all">الكل</button>
           <button class="tab-btn" data-filter="تحضير">📚 تحضير</button>
           <button class="tab-btn" data-filter="اختبارات">📝 اختبارات</button>
-          <button class="tab-btn" data-filter="حل مسائل">📐 مسائل</button>
-          <button class="tab-btn" data-filter="إعلانات">🏫 إعلانات</button>
+          <button class="tab-btn" data-filter="رياضيات">📐 رياضيات</button>
         </div>
-        <button id="clearChatBtn" class="clear-chat-btn">محادثة جديدة ➕</button>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="🔍 بحث في السجل..." />
+        </div>
+
+        <button id="clearChatBtn" class="clear-chat-btn">🗑️ محادثة جديدة</button>
       </div>
 
-      <div id="messages" class="messages"></div>
-
-      <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
-        <img id="imagePreview" src="" alt="المعاينة">
-        <button type="button" id="removeImageBtn" class="remove-img-btn">✕</button>
-      </div>
+      <div class="messages" id="messages"></div>
 
       <div class="math-pad">
-        <button type="button" class="math-btn" data-symbol="\sqrt{}">√x</button>
-        <button type="button" class="math-btn" data-symbol="\frac{}{}">a/b</button>
-        <button type="button" class="math-btn" data-symbol="^2">x²</button>
-        <button type="button" class="math-btn" data-symbol="\sum">∑</button>
-        <button type="button" class="math-btn" data-symbol="\int">∫</button>
-        <button type="button" class="math-btn" data-symbol="\pi">π</button>
-        <button type="button" class="math-btn" data-symbol="\theta">θ</button>
+        <button class="math-btn" data-symbol="√">√</button>
+        <button class="math-btn" data-symbol="π">π</button>
+        <button class="math-btn" data-symbol="∫">∫</button>
+        <button class="math-btn" data-symbol="∑">∑</button>
+        <button class="math-btn" data-symbol="∞">∞</button>
+        <button class="math-btn" data-symbol="≠">≠</button>
+        <button class="math-btn" data-symbol="≤">≤</button>
+        <button class="math-btn" data-symbol="≥">≥</button>
+        <button class="math-btn" data-symbol="x²">x²</button>
+        <button class="math-btn" data-symbol="±">±</button>
+        <button class="math-btn" data-symbol="÷">÷</button>
+      </div>
 
-        <button type="button" class="math-btn" data-symbol=" \le ">≤</button>
-        <button type="button" class="math-btn" data-symbol=" \ge ">≥</button>
-        <button type="button" class="math-btn" data-symbol=" \neq ">≠</button>
-        <button type="button" class="math-btn" data-symbol=" \pm ">±</button>
-        <button type="button" class="math-btn" data-symbol=" \infty ">∞</button>
+      <div id="imagePreviewContainer" class="image-preview-container" style="display:none;">
+        <img id="imagePreview" src="" alt="معاينة الصورة">
+        <button id="removeImageBtn" class="remove-img-btn">✕</button>
       </div>
 
       <form id="chatForm" class="composer">
-        <label for="imageInput" class="upload-btn" title="أرفق صورة مسألة أو مستند">
+        <label class="upload-btn" title="إرفاق صورة">
           📷
-          <input type="file" id="imageInput" accept="image/*" style="display: none;">
+          <input type="file" id="imageInput" accept="image/*" style="display:none;">
         </label>
-
-        <button type="button" id="voiceBtn" class="voice-btn" title="تحدث بالصوت">🎤</button>
-
-        <textarea id="input" rows="2" placeholder="اكتب طلبك هنا أو اضغط 🎤 للتحدث..." required></textarea>
-        <button type="submit">إرسال ➤</button>
+        <button type="button" id="voiceBtn" class="voice-btn" title="إملاء صوتي">🎤</button>
+        <textarea id="input" rows="1" placeholder="اكتب سؤالك، تحضيرك، أو مسألتك هنا..."></textarea>
+        <button type="submit">إرسال</button>
       </form>
-    </section>
-  </main>
+    </div>
 
-  <footer>هيثم AI — ذكاءٌ يصنع التعلُّم</footer>
-  <script src="/app.js"></script>
+  </div>
+
+  <footer>
+    تطبيق هيثم AI &copy; 2026 - جميع الحقوق محفوظة
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
  
