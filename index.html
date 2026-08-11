@@ -1,277 +1,1371 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>هيثم AI - المساعد التعليمي</title>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <link rel="stylesheet" href="styles.css">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="تطبيق اسأل هيثم - تصحيح الاختبارات الذكي">
+    
+    <title>اسأل هيثم - التطبيق</title>
+    
+    <!-- أيقونات التطبيق -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        /* ===== إعدادات التطبيق ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --danger: #fc8181;
+            --warning: #ed8936;
+            --dark: #1a1a2e;
+            --light: #f7fafc;
+            --radius: 16px;
+            --shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        
+        body {
+            font-family: -apple-system, 'Segoe UI', 'Tahoma', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 12px;
+            padding-bottom: 80px;
+            color: #2d3748;
+            overflow-x: hidden;
+        }
+        
+        /* ===== شريط التطبيق العلوي ===== */
+        .app-bar {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            padding: 12px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .app-bar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .app-bar .logo span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2px 12px;
+            border-radius: 50px;
+            color: white;
+            font-size: 11px;
+        }
+        
+        .app-bar .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        
+        /* ===== الحاوية الرئيسية ===== */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ===== علامات التبويب (أسفل) ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 12px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 11px;
+            color: #a0aec0;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            min-width: 60px;
+            position: relative;
+        }
+        
+        .bottom-nav .nav-item .icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .bottom-nav .nav-item .label {
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .bottom-nav .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .bottom-nav .nav-item.active .icon {
+            transform: scale(1.1);
+        }
+        
+        .bottom-nav .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .bottom-nav .nav-item .badge-nav {
+            position: absolute;
+            top: 0;
+            right: 4px;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 50px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        /* ===== محتوى التبويبات ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ===== منطقة رفع الصورة ===== */
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: var(--radius);
+            padding: 25px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:active {
+            transform: scale(0.97);
+        }
+        
+        .upload-area .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .upload-area p {
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        .upload-area .sub-text {
+            color: #a0aec0;
+            font-size: 12px;
+        }
+        
+        /* ===== الأزرار ===== */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            transform: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #38a169);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #f56565);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #dd6b20);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+        }
+        
+        .btn-haitham {
+            background: linear-gradient(135deg, #f6ad55, #ed8936);
+            font-size: 17px;
+            padding: 16px;
+        }
+        
+        .btn-sm {
+            padding: 10px 16px;
+            font-size: 13px;
+            width: auto;
+            flex: 1;
+        }
+        
+        /* ===== حقول الإدخال ===== */
+        .input-group {
+            margin-top: 14px;
+            text-align: right;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #2d3748;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #f7fafc;
+            -webkit-appearance: none;
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+        
+        .input-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        /* ===== صندوق النتيجة ===== */
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f6f9fc, #e8f0fe);
+            border-radius: var(--radius);
+            display: none;
+            border-right: 5px solid var(--primary);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-box h4 {
+            color: var(--dark);
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #4a5568;
+            font-weight: bold;
+        }
+        
+        .result-value {
+            color: #2d3748;
+            text-align: left;
+            max-width: 60%;
+            word-break: break-word;
+        }
+        
+        .score-high {
+            color: var(--success);
+            font-size: 26px;
+            font-weight: bold;
+        }
+        
+        .score-medium {
+            color: var(--warning);
+            font-size: 26px;
+            font-weight: bold;
+        }
+        
+        .score-low {
+            color: var(--danger);
+            font-size: 26px;
+            font-weight: bold;
+        }
+        
+        /* ===== مؤشر التحميل ===== */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 25px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ===== رسالة الخطأ ===== */
+        .error {
+            color: var(--danger);
+            background: #fff5f5;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 12px;
+            display: none;
+            border: 2px solid #feb2b2;
+            font-size: 14px;
+        }
+        
+        /* ===== MCQ ===== */
+        .mcq-container {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .question-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .question-options input {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        
+        /* ===== نصائح هيثم ===== */
+        .haitham-tip {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+            border-right: 4px solid #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .haitham-tip .icon {
+            font-size: 24px;
+        }
+        
+        .haitham-tip .text {
+            color: #78350f;
+            flex: 1;
+        }
+        
+        /* ===== إحصائيات ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 14px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:active {
+            transform: scale(0.95);
+        }
+        
+        .stat-card .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-card .label {
+            color: #718096;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        /* ===== معاينة الصورة ===== */
+        #previewImage {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 14px;
+            border-radius: 12px;
+            display: none;
+            box-shadow: var(--shadow);
+            border: 3px solid var(--primary);
+        }
+        
+        /* ===== أزرار الإجراءات ===== */
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .actions .btn {
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        /* ===== تحسينات للتطبيق ===== */
+        .badge-required {
+            background: var(--danger);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        
+        .badge-optional {
+            background: #a0aec0;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        
+        /* ===== التجاوب ===== */
+        @media (max-width: 480px) {
+            .container { padding: 14px; }
+            .app-bar .logo { font-size: 17px; }
+            .app-bar .status { font-size: 11px; }
+            .question-options { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .result-value { max-width: 100%; }
+            .bottom-nav .nav-item { min-width: 50px; }
+            .bottom-nav .nav-item .label { font-size: 9px; }
+        }
+        
+        /* ===== تأثيرات خاصة بالهاتف ===== */
+        .swipe-indicator {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 12px;
+            margin: 8px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+        
+        /* ===== الـ Confetti ===== */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            animation: confettiFall linear forwards;
+        }
+        
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="topbar">
-    <div>
-      <div class="brand">هيثم <span>AI</span></div>
-      <div class="subtitle">المساعد الذكي للمدرسين والطلاب</div>
+<!-- ===== شريط التطبيق ===== -->
+<div class="app-bar">
+    <div class="logo">
+        🤖 اسأل هيثم
+        <span>v3.0</span>
     </div>
-    <div style="display:flex; align-items:center; gap:8px;">
-      <span class="badge">v2.5</span>
-      <button id="themeToggle" class="theme-toggle-btn" title="تبديل الثيم">🌙</button>
+    <div class="status">
+        <span class="status-dot"></span>
+        <span>جاهز</span>
     </div>
-  </div>
+</div>
 
-  <div class="container">
-
-    <div class="hero">
-      <div>
-        <div class="eyebrow">مرحباً بك أستاذ هيثم</div>
-        <h1>منصة هيثم AI للتعليم الذكي</h1>
-        <p>قم بتحضير الدروس، صياغة الاختبارات، وحل المسائل الرياضية بكل سهولة وسرعة.</p>
-      </div>
-      <div class="hero-mark">∑</div>
+<!-- ===== الحاوية الرئيسية ===== -->
+<div class="container" id="mainContainer">
+    
+    <!-- نصائح هيثم -->
+    <div class="haitham-tip" id="haithamTip">
+        <span class="icon">💡</span>
+        <span class="text"><strong>نصيحة هيثم:</strong> ارفع صورة واضحة للورقة للحصول على أفضل نتائج!</span>
     </div>
-
-    <div class="grid">
-      <div class="card" data-prompt="اكتب لي خطة تحضير درس رياضيات لصفوف مرحلة التعليم الأساسي" data-category="تحضير">
-        <b>📚</b>
-        <strong>تحضير درس</strong>
-        <small>إنشاء خطة درس متكاملة</small>
-      </div>
-      <div class="card" data-prompt="صغ لي اختبار رياضيات مع نموذج الإجابة للسطر الأول والأنشطة" data-category="اختبارات">
-        <b>📝</b>
-        <strong>صياغة اختبار</strong>
-        <small>أسئلة متنوعة مع الحلول</small>
-      </div>
-      <div class="card" data-prompt="اشرح هذه المسألة الرياضية بخطوات واضحة وبسيطة" data-category="رياضيات">
-        <b>📐</b>
-        <strong>حل مسألة</strong>
-        <small>خطوات تفصيلية مع القوانين</small>
-      </div>
-      
-      <!-- ✅ البطاقة الجديدة: تصحيح أوراق -->
-      <div class="card" id="correctionCard" style="border: 2px solid #4A90D9; background: #f8faff;">
-        <span style="position:absolute; top:10px; left:10px; background:#4A90D9; color:white; font-size:10px; padding:2px 12px; border-radius:20px; font-weight:bold;">جديد</span>
-        <b>📝</b>
-        <strong>تصحيح أوراق</strong>
-        <small>رفع صورة + تصحيح تفصيلي</small>
-      </div>
-    </div>
-
-    <!-- ========================================= -->
-    <!-- ✅ نافذة تصحيح الأوراق المنبثقة (مودال)   -->
-    <!-- ========================================= -->
-    <div id="correctionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); justify-content:center; align-items:center; z-index:1000;">
-      <div style="background:white; border-radius:24px; padding:35px; max-width:550px; width:90%; box-shadow:0 30px 60px rgba(0,0,0,0.3); animation:fadeUp 0.3s ease; position:relative;">
-        
-        <button onclick="closeCorrectionModal()" style="position:absolute; top:15px; left:20px; background:transparent; border:none; font-size:24px; color:#95a5a6; cursor:pointer;">✕</button>
-        
-        <h2 style="color:#2c3e50; margin-bottom:8px;">📝 تصحيح أوراق</h2>
-        <p style="color:#7f8c8d; margin-bottom:20px;">ارفع صورة الورقة أو ملف PDF، وسيقوم هيثم AI بتصحيحها مع نموذج الإجابة إن وجد.</p>
-
-        <label style="display:block; font-weight:bold; color:#2c3e50; margin:15px 0 5px;">📄 صورة الورقة (JPG / PNG / PDF)</label>
-        <input type="file" accept=".jpg,.jpeg,.png,.pdf" id="examFile" style="width:100%; padding:12px; border:2px dashed #dce1e8; border-radius:12px; background:#fafbfc; cursor:pointer;">
-
-        <label style="display:block; font-weight:bold; color:#2c3e50; margin:15px 0 5px;">📋 نموذج الإجابة (اختياري)</label>
-        <input type="file" accept=".jpg,.jpeg,.png,.pdf" id="answerFile" style="width:100%; padding:12px; border:2px dashed #dce1e8; border-radius:12px; background:#fafbfc; cursor:pointer;">
-
-        <button onclick="startCorrection()" style="background:#4A90D9; color:white; border:none; padding:14px 30px; border-radius:30px; font-size:16px; font-weight:bold; width:100%; margin-top:20px; cursor:pointer;">🚀 ابدأ التصحيح</button>
-        
-        <button onclick="estimateGrade()" style="background:#27ae60; color:white; border:none; padding:14px 30px; border-radius:30px; font-size:16px; font-weight:bold; width:100%; margin-top:10px; cursor:pointer;">⭐ تقدير الدرجة</button>
-
-        <div id="correctionResult" style="margin-top:20px; font-size:14px; color:#2c3e50;"></div>
-      </div>
-    </div>
-
-    <div class="chat">
-      <div class="chat-header">
-        <div class="category-tabs">
-          <button class="tab-btn active" data-filter="all">الكل</button>
-          <button class="tab-btn" data-filter="fav">⭐ المفضلة</button>
-          <button class="tab-btn" data-filter="تحضير">📚 تحضير</button>
-          <button class="tab-btn" data-filter="اختبارات">📝 اختبارات</button>
-          <button class="tab-btn" data-filter="رياضيات">📐 رياضيات</button>
+    
+    <!-- ============================================================ -->
+    <!-- تبويب المقالي -->
+    <!-- ============================================================ -->
+    <div id="tab-essay" class="tab-content active">
+        <div class="upload-area" id="uploadAreaEssay">
+            <span class="icon">📸</span>
+            <p>انقر لرفع صورة الإجابة</p>
+            <p class="sub-text">JPG, PNG (حتى 10 ميجابايت)</p>
+            <input type="file" id="paperInputEssay" accept="image/*" capture="environment" style="display: none;">
         </div>
-
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="🔍 بحث في السجل..." />
+        
+        <div class="input-group">
+            <label>👤 اسم الطالب <span class="badge-required">مطلوب</span></label>
+            <input type="text" id="studentNameEssay" placeholder="أدخل اسم الطالب" value="أحمد">
         </div>
-
-        <div style="display:flex; gap:6px;">
-          <button id="exportBackupBtn" class="clear-chat-btn" title="حفظ نسخة احتياطية من السجل">💾 نسخ</button>
-          <button id="clearChatBtn" class="clear-chat-btn">🗑️ جديد</button>
+        
+        <div class="input-group">
+            <label>📋 الحل النموذجي <span class="badge-required">مطلوب</span></label>
+            <textarea id="answerKeyEssay" placeholder="أدخل الإجابة النموذجية...">الذكاء الاصطناعي هو محاكاة الذكاء البشري</textarea>
         </div>
-      </div>
-
-      <div class="messages" id="messages"></div>
-
-      <div class="math-pad">
-        <button class="math-btn" data-symbol="√">√</button>
-        <button class="math-btn" data-symbol="π">π</button>
-        <button class="math-btn" data-symbol="∫">∫</button>
-        <button class="math-btn" data-symbol="∑">∑</button>
-        <button class="math-btn" data-symbol="∞">∞</button>
-        <button class="math-btn" data-symbol="≠">≠</button>
-        <button class="math-btn" data-symbol="≤">≤</button>
-        <button class="math-btn" data-symbol="≥">≥</button>
-        <button class="math-btn" data-symbol="x²">x²</button>
-        <button class="math-btn" data-symbol="±">±</button>
-        <button class="math-btn" data-symbol="÷">÷</button>
-      </div>
-
-      <div id="imagePreviewContainer" class="image-preview-container" style="display:none;">
-        <img id="imagePreview" src="" alt="معاينة الصورة">
-        <button id="removeImageBtn" class="remove-img-btn">✕</button>
-      </div>
-
-      <form id="chatForm" class="composer">
-        <label class="upload-btn" title="إرفاق صورة">
-          📷
-          <input type="file" id="imageInput" accept="image/*" style="display:none;">
-        </label>
-        <button type="button" id="voiceBtn" class="voice-btn" title="إملاء صوتي">🎤</button>
-        <textarea id="input" rows="1" placeholder="اكتب سؤالك، تحضيرك، أو مسألتك هنا..."></textarea>
-        <button type="submit">إرسال</button>
-      </form>
     </div>
+    
+    <!-- ============================================================ -->
+    <!-- تبويب الاختيار من متعدد -->
+    <!-- ============================================================ -->
+    <div id="tab-mcq" class="tab-content">
+        <div class="upload-area" id="uploadAreaMcq">
+            <span class="icon">📸</span>
+            <p>انقر لرفع صورة الإجابات</p>
+            <p class="sub-text">JPG, PNG</p>
+            <input type="file" id="paperInputMcq" accept="image/*" capture="environment" style="display: none;">
+        </div>
+        
+        <div class="input-group">
+            <label>👤 اسم الطالب <span class="badge-required">مطلوب</span></label>
+            <input type="text" id="studentNameMcq" placeholder="أدخل اسم الطالب" value="سارة">
+        </div>
+        
+        <div id="mcqQuestions"></div>
+        
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+            <button class="btn btn-warning btn-sm" onclick="addMcqQuestion()">➕ إضافة</button>
+            <button class="btn btn-info btn-sm" onclick="addBulkMcqQuestions()">📋 5 أسئلة</button>
+            <button class="btn btn-danger btn-sm" onclick="clearAllMcqQuestions()">🗑️ مسح</button>
+        </div>
+    </div>
+    
+    <!-- ============================================================ -->
+    <!-- تبويب الرياضيات -->
+    <!-- ============================================================ -->
+    <div id="tab-math" class="tab-content">
+        <div class="upload-area" id="uploadAreaMath">
+            <span class="icon">📸</span>
+            <p>انقر لرفع صورة المسألة</p>
+            <p class="sub-text">JPG, PNG</p>
+            <input type="file" id="paperInputMath" accept="image/*" capture="environment" style="display: none;">
+        </div>
+        
+        <div class="input-group">
+            <label>👤 اسم الطالب <span class="badge-required">مطلوب</span></label>
+            <input type="text" id="studentNameMath" placeholder="أدخل اسم الطالب" value="خالد">
+        </div>
+        
+        <div class="input-group">
+            <label>📝 المسألة <span class="badge-required">مطلوب</span></label>
+            <textarea id="mathProblem" placeholder="أدخل المسألة...">2x + 5 = 13</textarea>
+        </div>
+        
+        <div class="input-group">
+            <label>✅ الإجابة النموذجية <span class="badge-required">مطلوب</span></label>
+            <textarea id="mathAnswer" placeholder="أدخل الإجابة...">x = 4</textarea>
+        </div>
+        
+        <div class="input-group">
+            <label>📊 المستوى</label>
+            <select id="mathDifficulty">
+                <option value="easy">🌟 سهل</option>
+                <option value="medium" selected>📘 متوسط</option>
+                <option value="hard">🔥 صعب</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- ============================================================ -->
+    <!-- تبويب اسأل هيثم -->
+    <!-- ============================================================ -->
+    <div id="tab-haitham" class="tab-content">
+        <div style="text-align: center; padding: 10px 0;">
+            <div style="font-size: 60px; margin-bottom: 8px; animation: float 3s infinite;">🧠</div>
+            <h3 style="color: var(--dark);">اسأل هيثم</h3>
+            <p style="color: #718096; font-size: 14px;">اطرح سؤالك التعليمي</p>
+        </div>
+        
+        <div class="input-group">
+            <label>💬 سؤالك <span class="badge-required">مطلوب</span></label>
+            <textarea id="haithamQuestion" placeholder="اكتب سؤالك هنا..." rows="3">كيف أحل المعادلات؟</textarea>
+        </div>
+        
+        <div class="input-group">
+            <label>📚 الموضوع</label>
+            <select id="haithamTopic">
+                <option value="general">عام</option>
+                <option value="math">رياضيات</option>
+                <option value="arabic">لغة عربية</option>
+                <option value="science">علوم</option>
+                <option value="study-tips">نصائح دراسية</option>
+            </select>
+        </div>
+        
+        <button class="btn btn-haitham" onclick="askHaitham()" style="margin-top: 12px;">
+            🧠 اسأل هيثم
+        </button>
+        
+        <div class="stats-grid" style="margin-top: 16px;">
+            <div class="stat-card">
+                <div class="number" id="haithamAnswersCount">0</div>
+                <div class="label">💬 إجابات</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="haithamStudents">0</div>
+                <div class="label">👨‍🎓 طلاب</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============================================================ -->
+    <!-- المنطقة المشتركة -->
+    <!-- ============================================================ -->
+    
+    <img id="previewImage" alt="معاينة الورقة">
+    
+    <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <p style="color: #4a5568;">⏳ جاري التصحيح...</p>
+        <p style="color: #a0aec0; font-size: 13px;">هيثم يعمل بجد</p>
+    </div>
+    
+    <div class="error" id="errorMessage"></div>
+    
+    <div class="actions">
+        <button id="processBtn" class="btn btn-success" style="display: none;" onclick="processCurrentTab()">
+            ⚡ تصحيح
+        </button>
+        <button id="clearBtn" class="btn btn-danger" style="display: none;" onclick="clearAll()">
+            🗑️ مسح
+        </button>
+    </div>
+    
+    <div id="resultBox" class="result-box">
+        <h4>✅ النتيجة</h4>
+        <div class="result-item">
+            <span class="result-label">👤 الطالب</span>
+            <span class="result-value" id="resultStudentName">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">📊 النوع</span>
+            <span class="result-value" id="resultExamType">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">⭐ الدرجة</span>
+            <span class="result-value" id="resultScore">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">📝 الملاحظات</span>
+            <span class="result-value" id="resultFeedback">-</span>
+        </div>
+        <div class="result-item" id="resultDetailsContainer" style="display: none;">
+            <span class="result-label">📄 التفاصيل</span>
+            <span class="result-value" id="resultDetails" style="font-size: 13px;">-</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;">
+            <button class="btn btn-info btn-sm" onclick="speakResult()">🔊 استماع</button>
+            <button class="btn btn-success btn-sm" onclick="saveToHistory()">💾 حفظ</button>
+            <button class="btn btn-warning btn-sm" onclick="shareResult()">📤 مشاركة</button>
+        </div>
+    </div>
+</div>
 
-  </div>
+<!-- ===== شريط التنقل السفلي ===== -->
+<nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-tab="essay" onclick="switchTab('essay')">
+        <span class="icon">📝</span>
+        <span class="label">مقالي</span>
+    </button>
+    <button class="nav-item" data-tab="mcq" onclick="switchTab('mcq')">
+        <span class="icon">🔘</span>
+        <span class="label">اختيار</span>
+    </button>
+    <button class="nav-item" data-tab="math" onclick="switchTab('math')">
+        <span class="icon">🔢</span>
+        <span class="label">رياضيات</span>
+    </button>
+    <button class="nav-item" data-tab="haitham" onclick="switchTab('haitham')">
+        <span class="icon">🧠</span>
+        <span class="label">هيثم</span>
+        <span class="badge-nav" id="haithamBadge">0</span>
+    </button>
+</nav>
 
-  <footer>
-    تطبيق هيثم AI &copy; 2026 - جميع الحقوق محفوظة
-  </footer>
+<!-- ===== السكريبتات ===== -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
 
-  <script src="app.js"></script>
-  
-  <!-- ========================================= -->
-  <!-- ✅ إضافات التصحيح والتقدير (JavaScript)   -->
-  <!-- ========================================= -->
-  <script>
-    // فتح وإغلاق نافذة التصحيح
-    document.addEventListener('DOMContentLoaded', function() {
-      const card = document.getElementById('correctionCard');
-      if (card) {
-        card.addEventListener('click', function() {
-          document.getElementById('correctionModal').style.display = 'flex';
+<script>
+    // =============================================
+    // 1. المتغيرات العامة
+    // =============================================
+    let currentTab = 'essay';
+    let imageBase64 = null;
+    let extractedText = '';
+    let scoreResult = null;
+    let haithamAnswersCount = 0;
+    let correctionHistory = [];
+    let mcqCounter = 0;
+    
+    // =============================================
+    // 2. التبديل بين التبويبات
+    // =============================================
+    function switchTab(tab) {
+        currentTab = tab;
+        
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+        
+        document.getElementById('resultBox').style.display = 'none';
+        document.getElementById('previewImage').style.display = 'none';
+        document.getElementById('processBtn').style.display = 'none';
+        document.getElementById('clearBtn').style.display = 'none';
+        hideError();
+        
+        imageBase64 = null;
+        
+        // تحديث نصائح هيثم
+        const tips = {
+            'essay': '💡 <strong>نصيحة هيثم:</strong> ارفع صورة واضحة للورقة للحصول على أفضل نتائج!',
+            'mcq': '💡 <strong>نصيحة هيثم:</strong> اكتب الإجابات بصيغة "1: أ" أو "السؤال الأول: ب"!',
+            'math': '💡 <strong>نصيحة هيثم:</strong> تأكد من كتابة المعادلات بوضوح!',
+            'haitham': '💡 <strong>نصيحة هيثم:</strong> اسألني عن أي موضوع تعليمي وسأجيبك!'
+        };
+        document.querySelector('.haitham-tip .text').innerHTML = tips[tab] || tips['essay'];
+    }
+    
+    // =============================================
+    // 3. رفع الصورة
+    // =============================================
+    function setupUpload(inputId, areaId) {
+        const input = document.getElementById(inputId);
+        const area = document.getElementById(areaId);
+        if (!input || !area) return;
+        
+        area.addEventListener('click', () => input.click());
+        area.addEventListener('touchstart', () => {});
+        
+        input.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) handleFile(file);
         });
-      }
-    });
-
-    function closeCorrectionModal() {
-      document.getElementById('correctionModal').style.display = 'none';
-      document.getElementById('correctionResult').innerHTML = '';
-      document.getElementById('examFile').value = '';
-      document.getElementById('answerFile').value = '';
     }
-
-    // إغلاق النافذة بالضغط خارجها
-    document.addEventListener('click', function(e) {
-      const modal = document.getElementById('correctionModal');
-      if (e.target === modal) {
-        closeCorrectionModal();
-      }
-    });
-
-    // ===== دالة التصحيح =====
-    function startCorrection() {
-      const examFile = document.getElementById('examFile').files[0];
-      if (!examFile) {
-        alert('❌ الرجاء رفع صورة الورقة أولاً');
-        return;
-      }
-
-      const resultDiv = document.getElementById('correctionResult');
-      resultDiv.innerHTML = '⏳ جاري التصحيح والتحليل...';
-
-      // محاكاة التصحيح (للتجربة)
-      setTimeout(() => {
-        const mockResult = `
-          ✅ تم التصحيح بنجاح!<br>
-          • السؤال 1: ✅ صحيح (5/5)<br>
-          • السؤال 2: ❌ خطأ (2/5) - ملاحظة: نسي إشارة السالب<br>
-          • السؤال 3: ⚠️ ناقص (3/5) - الحل صحيح لكن الخطوة الأخيرة غير مكتملة<br>
-          <br>
-          <strong>📊 المجموع: 10 / 15</strong>
+    
+    function handleFile(file) {
+        if (file.size > 10 * 1024 * 1024) {
+            showError('حجم الصورة كبير جداً (حد أقصى 10 ميجابايت)');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imageBase64 = e.target.result;
+            const preview = document.getElementById('previewImage');
+            preview.src = imageBase64;
+            preview.style.display = 'block';
+            document.getElementById('processBtn').style.display = 'block';
+            document.getElementById('clearBtn').style.display = 'block';
+            document.getElementById('resultBox').style.display = 'none';
+            hideError();
+            
+            document.querySelectorAll('.upload-area').forEach(area => {
+                area.querySelector('p:first-of-type').textContent = '✅ تم الرفع';
+                area.style.borderColor = '#48bb78';
+                area.style.background = '#f0fff4';
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    setupUpload('paperInputEssay', 'uploadAreaEssay');
+    setupUpload('paperInputMcq', 'uploadAreaMcq');
+    setupUpload('paperInputMath', 'uploadAreaMath');
+    
+    // =============================================
+    // 4. MCQ
+    // =============================================
+    function addMcqQuestion() {
+        mcqCounter++;
+        const container = document.getElementById('mcqQuestions');
+        const div = document.createElement('div');
+        div.className = 'mcq-container';
+        div.id = `mcq-${mcqCounter}`;
+        div.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <strong>سؤال ${mcqCounter}</strong>
+                <button class="btn btn-danger btn-sm" onclick="document.getElementById('mcq-${mcqCounter}').remove()" style="width:auto;padding:4px 12px;font-size:11px;">✖</button>
+            </div>
+            <div class="input-group" style="margin-top:6px;">
+                <input type="text" class="mcq-question-text" placeholder="نص السؤال" value="ما هو عاصمة السعودية؟">
+            </div>
+            <div class="question-options">
+                <input type="text" class="mcq-option" placeholder="أ" value="الرياض">
+                <input type="text" class="mcq-option" placeholder="ب" value="جدة">
+                <input type="text" class="mcq-option" placeholder="ج" value="مكة">
+                <input type="text" class="mcq-option" placeholder="د" value="الدمام">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;">
+                <select class="mcq-correct" style="flex:1;padding:8px;border:2px solid #e2e8f0;border-radius:8px;">
+                    <option value="أ">أ</option>
+                    <option value="ب" selected>ب</option>
+                    <option value="ج">ج</option>
+                    <option value="د">د</option>
+                </select>
+                <input type="number" class="mcq-score" value="2" min="1" max="10" style="flex:0.5;padding:8px;border:2px solid #e2e8f0;border-radius:8px;width:60px;">
+            </div>
         `;
-        resultDiv.innerHTML = mockResult;
-      }, 2000);
+        container.appendChild(div);
     }
-
-    // ===== دالة تقدير الدرجة =====
-    function estimateGrade() {
-      const resultDiv = document.getElementById('correctionResult');
-      const resultText = resultDiv.innerText;
-      const match = resultText.match(/(\d+)\s*\/\s*(\d+)/);
-      
-      if (!match) {
-        alert('❌ لازم تصحح الورقة أولاً');
-        return;
-      }
-      
-      const score = parseInt(match[1]);
-      const total = parseInt(match[2]);
-      const percentage = (score / total) * 100;
-
-      let grade = '';
-      let emoji = '';
-      let recommendation = '';
-
-      if (percentage >= 90) {
-        grade = 'ممتاز';
-        emoji = '⭐';
-        recommendation = 'أداء رائع، استمر بهذا المستوى!';
-      } else if (percentage >= 75) {
-        grade = 'جيد جداً';
-        emoji = '🌟';
-        recommendation = 'أداء مميز، ركز على النقاط التي أخطأت فيها';
-      } else if (percentage >= 60) {
-        grade = 'جيد';
-        emoji = '👍';
-        recommendation = 'أداء جيد، أنصحك بمراجعة الأخطاء';
-      } else if (percentage >= 45) {
-        grade = 'مقبول';
-        emoji = '📖';
-        recommendation = 'تحتاج إلى مراجعة الدروس مع المعلم';
-      } else {
-        grade = 'ضعيف';
-        emoji = '📚';
-        recommendation = 'بحاجة إلى خطة علاجية فورية';
-      }
-
-      resultDiv.innerHTML += `
-        <div style="background:#f0f8ff; padding:15px; border-radius:12px; margin-top:15px; border-right:4px solid #4A90D9;">
-          <strong style="font-size:18px;">${emoji} التقدير: ${grade}</strong><br>
-          <span style="color:#555;">${score} من ${total} (${Math.round(percentage)}%)</span><br>
-          <span style="color:#7f8c8d; font-size:13px;">💡 ${recommendation}</span>
-        </div>
-      `;
+    
+    function addBulkMcqQuestions() {
+        const questions = [
+            { q: 'أكبر محيط في العالم؟', opts: ['الهادئ', 'الأطلسي', 'الهندي', 'المتجمد'], correct: 'أ' },
+            { q: 'مؤسس الدولة السعودية؟', opts: ['عبدالعزيز', 'سعود', 'فيصل', 'خالد'], correct: 'أ' },
+            { q: 'رمز الأكسجين؟', opts: ['O', 'Au', 'Ag', 'Cu'], correct: 'أ' },
+            { q: 'كواكب المجموعة الشمسية؟', opts: ['7', '8', '9', '10'], correct: 'ب' },
+            { q: 'عاصمة مصر؟', opts: ['الرياض', 'القاهرة', 'دمشق', 'بغداد'], correct: 'ب' }
+        ];
+        questions.forEach(q => {
+            mcqCounter++;
+            const container = document.getElementById('mcqQuestions');
+            const div = document.createElement('div');
+            div.className = 'mcq-container';
+            div.id = `mcq-${mcqCounter}`;
+            div.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <strong>سؤال ${mcqCounter}</strong>
+                    <button class="btn btn-danger btn-sm" onclick="document.getElementById('mcq-${mcqCounter}').remove()" style="width:auto;padding:4px 12px;font-size:11px;">✖</button>
+                </div>
+                <div class="input-group" style="margin-top:6px;">
+                    <input type="text" class="mcq-question-text" placeholder="نص السؤال" value="${q.q}">
+                </div>
+                <div class="question-options">
+                    <input type="text" class="mcq-option" placeholder="أ" value="${q.opts[0]}">
+                    <input type="text" class="mcq-option" placeholder="ب" value="${q.opts[1]}">
+                    <input type="text" class="mcq-option" placeholder="ج" value="${q.opts[2]}">
+                    <input type="text" class="mcq-option" placeholder="د" value="${q.opts[3]}">
+                </div>
+                <div style="display:flex;gap:10px;margin-top:8px;">
+                    <select class="mcq-correct" style="flex:1;padding:8px;border:2px solid #e2e8f0;border-radius:8px;">
+                        <option value="أ" ${q.correct === 'أ' ? 'selected' : ''}>أ</option>
+                        <option value="ب" ${q.correct === 'ب' ? 'selected' : ''}>ب</option>
+                        <option value="ج" ${q.correct === 'ج' ? 'selected' : ''}>ج</option>
+                        <option value="د" ${q.correct === 'د' ? 'selected' : ''}>د</option>
+                    </select>
+                    <input type="number" class="mcq-score" value="2" min="1" max="10" style="flex:0.5;padding:8px;border:2px solid #e2e8f0;border-radius:8px;width:60px;">
+                </div>
+            `;
+            container.appendChild(div);
+        });
     }
-  </script>
-
-  <style>
-    /* إضافة حركة fadeUp للنافذة */
-    @keyframes fadeUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    
+    function clearAllMcqQuestions() {
+        document.getElementById('mcqQuestions').innerHTML = '';
+        mcqCounter = 0;
+        addMcqQuestion();
     }
-
-    /* تنسيق البطاقة الجديدة */
-    #correctionCard {
-      position: relative;
-      cursor: pointer;
-      transition: all 0.3s ease;
+    
+    // =============================================
+    // 5. استخراج النص
+    // =============================================
+    async function extractTextFromImage() {
+        if (!imageBase64) throw new Error('لا توجد صورة');
+        const result = await Tesseract.recognize(imageBase64, 'ara+eng', {
+            logger: m => console.log(`📊 ${Math.round(m.progress * 100)}%`)
+        });
+        return result.data.text;
     }
-    #correctionCard:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 30px rgba(74, 144, 217, 0.25);
+    
+    // =============================================
+    // 6. معالجة المقالي
+    // =============================================
+    async function processEssay() {
+        const studentName = document.getElementById('studentNameEssay').value || 'غير معروف';
+        const answerKey = document.getElementById('answerKeyEssay').value || '';
+        if (!answerKey.trim()) throw new Error('أدخل الحل النموذجي');
+        
+        const text = await extractTextFromImage();
+        extractedText = text;
+        const score = calculateScore(text, answerKey);
+        const feedback = generateFeedback(score, 'essay');
+        
+        return {
+            studentName,
+            examType: '📝 مقالي',
+            score: `${Math.min(score, 20)}/20`,
+            feedback,
+            details: text.substring(0, 200) + (text.length > 200 ? '...' : '')
+        };
     }
-  </style>
+    
+    // =============================================
+    // 7. معالجة MCQ
+    // =============================================
+    async function processMcq() {
+        const studentName = document.getElementById('studentNameMcq').value || 'غير معروف';
+        const questions = [];
+        document.querySelectorAll('#mcqQuestions .mcq-container').forEach(div => {
+            questions.push({
+                questionText: div.querySelector('.mcq-question-text').value,
+                options: Array.from(div.querySelectorAll('.mcq-option')).map(o => o.value),
+                correct: div.querySelector('.mcq-correct').value,
+                score: parseInt(div.querySelector('.mcq-score').value) || 2
+            });
+        });
+        if (questions.length === 0) throw new Error('أضف أسئلة');
+        
+        const text = await extractTextFromImage();
+        extractedText = text;
+        const answers = parseMcqAnswers(text, questions.length);
+        
+        let total = 0, max = 0, correct = 0;
+        questions.forEach((q, i) => {
+            const isCorrect = answers[i] === q.correct;
+            total += isCorrect ? q.score : 0;
+            max += q.score;
+            if (isCorrect) correct++;
+        });
+        
+        const pct = max > 0 ? Math.round((total / max) * 100) : 0;
+        haithamAnswersCount++;
+        document.getElementById('haithamAnswersCount').textContent = haithamAnswersCount;
+        document.getElementById('haithamBadge').textContent = haithamAnswersCount;
+        
+        return {
+            studentName,
+            examType: `🔘 MCQ (${questions.length} أسئلة)`,
+            score: `${total}/${max} (${pct}%)`,
+            feedback: generateFeedback(pct, 'mcq') + ` (${correct}/${questions.length} صحيحة)`,
+            details: answers.map((a, i) => `س${i+1}: ${a}`).join('\n')
+        };
+    }
+    
+    function parseMcqAnswers(text, n) {
+        const ans = [];
+        const clean = text.toUpperCase();
+        for (let i = 1; i <= n; i++) {
+            const patterns = [
+                new RegExp(`${i}\\s*[:.ـ)]\\s*([أ-د])`),
+                new RegExp(`السؤال\\s*${i}\\s*[:.ـ)]\\s*([أ-د])`),
+                new RegExp(`س${i}\\s*[:.ـ)]\\s*([أ-د])`),
+                new RegExp(`Q${i}\\s*[:.ـ)]\\s*([A-D])`)
+            ];
+            let found = false;
+            for (let p of patterns) {
+                const m = clean.match(p);
+                if (m) { ans.push(m[1]); found = true; break; }
+            }
+            if (!found) {
+                const letters = ['أ', 'ب', 'ج', 'د'];
+                let best = null;
+                for (let l of letters) {
+                    if (clean.includes(l) && !ans.includes(l)) { best = l; break; }
+                }
+                ans.push(best || '؟');
+            }
+        }
+        return ans;
+    }
+    
+    // =============================================
+    // 8. معالجة الرياضيات
+    // =============================================
+    async function processMath() {
+        const studentName = document.getElementById('studentNameMath').value || 'غير معروف';
+        const problem = document.getElementById('mathProblem').value || '';
+        const modelAnswer = document.getElementById('mathAnswer').value || '';
+        if (!problem.trim()) throw new Error('أدخل المسألة');
+        if (!modelAnswer.trim()) throw new Error('أدخل الإجابة النموذجية');
+        
+        const text = await extractTextFromImage();
+        extractedText = text;
+        const studentAns = extractMathAnswer(text);
+        const isCorrect = compareMathAnswers(studentAns, modelAnswer);
+        const score = isCorrect ? 20 : (studentAns ? 8 : 2);
+        
+        return {
+            studentName,
+            examType: '🔢 رياضيات',
+            score: `${score}/20`,
+            feedback: isCorrect ? '✅ إجابة صحيحة!' : (studentAns ? '⚠️ إجابة غير صحيحة' : '❌ لم نجد إجابة واضحة'),
+            details: `المسألة: ${problem}\nإجابة الطالب: ${studentAns || 'غير موجودة'}\nالنموذجي: ${modelAnswer}`
+        };
+    }
+    
+    function extractMathAnswer(text) {
+        const patterns = [
+            /=\s*([\d.]+)/,
+            /الناتج\s*[:.ـ]\s*([\d.]+)/,
+            /الحل\s*[:.ـ]\s*([\d.]+)/,
+            /x\s*=\s*([\d.]+)/
+        ];
+        for (let p of patterns) {
+            const m = text.match(p);
+            if (m) return m[1];
+        }
+        const m = text.match(/([\d+\-*/.()]+)/);
+        if (m) try { return math.evaluate(m[1]).toString(); } catch(e) {}
+        return null;
+    }
+    
+    function compareMathAnswers(s, m) {
+        if (!s || !m) return false;
+        const cs = s.trim().replace(/\s/g, '');
+        const cm = m.trim().replace(/\s/g, '');
+        if (cs === cm) return true;
+        try {
+            const sn = parseFloat(cs), mn = parseFloat(cm);
+            if (!isNaN(sn) && !isNaN(mn)) return Math.abs(sn - mn) < 0.001;
+        } catch(e) {}
+        return false;
+    }
+    
+    // =============================================
+    // 9. اسأل هيثم
+    // =============================================
+    function askHaitham() {
+        const question = document.getElementById('haithamQuestion').value.trim();
+        if (!question) { showError('اكتب سؤالك'); return; }
+        
+        document.getElementById('loadingIndicator').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            
+            const answers = {
+                math: 'لحل المعادلات: 1) اكتب المعادلة 2) انقل المتغيرات 3) اقسم الطرفين 4) تحقق من الحل',
+                arabic: 'لتحسين لغتك: اقرأ يومياً، اكتب جمل قصيرة، استخدم القاموس، استمع للمحتوى العربي',
+                science: 'الطريقة العلمية: الملاحظة → السؤال → الفرضية → التجربة → التحليل → الاستنتاج',
+                'study-tips': 'نصائح: حدد وقتاً للمذاكرة، قسم المواد، استخدم تقنية البومودورو، راجع بعد 24 ساعة',
+                general: 'شكراً لسؤالك! 😊 الممارسة المستمرة هي مفتاح النجاح. هل لديك سؤال محدد؟'
+            };
+            
+            const topic = document.getElementById('haithamTopic').value;
+            const answer = answers[topic] || answers.general;
+            
+            document.getElementById('resultStudentName').textContent = '🧠 هيثم';
+            document.getElementById('resultExamType').textContent = '📚 إجابة';
+            document.getElementById('resultScore').textContent = '✨';
+            document.getElementById('resultScore').className = 'result-value score-high';
+            document.getElementById('resultFeedback').textContent = answer;
+            document.getElementById('resultDetailsContainer').style.display = 'none';
+            document.getElementById('resultBox').style.display = 'block';
+            
+            haithamAnswersCount++;
+            document.getElementById('haithamAnswersCount').textContent = haithamAnswersCount;
+            document.getElementById('haithamBadge').textContent = haithamAnswersCount;
+            createConfetti();
+            hideError();
+        }, 1200);
+    }
+    
+    // =============================================
+    // 10. دوال مساعدة
+    // =============================================
+    function calculateScore(student, model) {
+        if (!student || !model) return 0;
+        const sw = student.toLowerCase().split(/\s+/);
+        const mw = model.toLowerCase().split(/\s+/);
+        if (mw.length === 0) return 0;
+        let matches = sw.filter(w => mw.includes(w)).length;
+        return Math.min(Math.round((matches / mw.length) * 20), 20);
+    }
+    
+    function generateFeedback(score, type) {
+        if (type === 'essay') {
+            if (score >= 18) return '🌟 ممتاز! إجابة متقنة';
+            if (score >= 15) return '👍 جيد جداً';
+            if (score >= 10) return '📖 جيد، يحتاج تحسين';
+            return '📚 يحتاج مراجعة';
+        } else {
+            if (score >= 90) return '🌟 ممتاز!';
+            if (score >= 70) return '👍 جيد جداً';
+            if (score >= 50) return '📖 جيد';
+            return '📚 يحتاج تدريب';
+        }
+    }
+    
+    async function processCurrentTab() {
+        if (!imageBase64) { showError('ارفع صورة أولاً'); return; }
+        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('processBtn').disabled = true;
+        document.getElementById('resultBox').style.display = 'none';
+        hideError();
+        
+        try {
+            let result;
+            switch(currentTab) {
+                case 'essay': result = await processEssay(); break;
+                case 'mcq': result = await processMcq(); break;
+                case 'math': result = await processMath(); break;
+                default: throw new Error('تبويب غير معروف');
+            }
+            if (result) {
+                displayResult(result);
+                const num = parseInt(result.score);
+                if (!isNaN(num) && num >= 18) createConfetti();
+            }
+        } catch(e) {
+            showError(e.message);
+        } finally {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('processBtn').disabled = false;
+        }
+    }
+    
+    function displayResult(result) {
+        document.getElementById('resultStudentName').textContent = result.studentName;
+        document.getElementById('resultExamType').textContent = result.examType;
+        
+        const el = document.getElementById('resultScore');
+        el.textContent = result.score;
+        el.className = 'result-value';
+        const num = parseInt(result.score);
+        if (!isNaN(num)) {
+            el.classList.add(num >= 15 ? 'score-high' : num >= 10 ? 'score-medium' : 'score-low');
+        }
+        
+        document.getElementById('resultFeedback').textContent = result.feedback;
+        if (result.details) {
+            document.getElementById('resultDetails').textContent = result.details;
+            document.getElementById('resultDetailsContainer').style.display = 'flex';
+        }
+        document.getElementById('resultBox').style.display = 'block';
+        scoreResult = result;
+        correctionHistory.push(result);
+        document.getElementById('haithamStudents').textContent = correctionHistory.length;
+    }
+    
+    function clearAll() {
+        imageBase64 = null;
+        document.getElementById('previewImage').style.display = 'none';
+        document.getElementById('processBtn').style.display = 'none';
+        document.getElementById('clearBtn').style.display = 'none';
+        document.getElementById('resultBox').style.display = 'none';
+        hideError();
+        document.querySelectorAll('.upload-area').forEach(a => {
+            a.querySelector('p:first-of-type').textContent = 'انقر لرفع الصورة';
+            a.style.borderColor = '#cbd5e0';
+            a.style.background = '#fafafa';
+        });
+    }
+    
+    function speakResult() {
+        const text = document.getElementById('resultFeedback').textContent;
+        if (!text || text === '-') { showError('لا توجد نتيجة'); return; }
+        if ('speechSynthesis' in window) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'ar-SA';
+            msg.rate = 0.9;
+            speechSynthesis.speak(msg);
+        }
+    }
+    
+    function saveToHistory() {
+        if (!scoreResult) { showError('لا توجد نتيجة'); return; }
+        const history = JSON.parse(localStorage.getItem('haithamHistory') || '[]');
+        history.push({ ...scoreResult, date: new Date().toISOString() });
+        localStorage.setItem('haithamHistory', JSON.stringify(history));
+        alert('✅ تم الحفظ!');
+    }
+    
+    function shareResult() {
+        if (!scoreResult) { showError('لا توجد نتيجة'); return; }
+        const text = `📊 نتيجة هيثم\n👤 ${scoreResult.studentName}\n⭐ ${scoreResult.score}\n📝 ${scoreResult.feedback}`;
+        if (navigator.share) {
+            navigator.share({ title: 'النتيجة', text }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(text).then(() => alert('✅ تم النسخ'));
+        }
+    }
+    
+    function createConfetti() {
+        const container = document.createElement('div');
+        container.className = 'confetti-container';
+        document.body.appendChild(container);
+        const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6'];
+        for (let i = 0; i < 40; i++) {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + '%';
+            c.style.background = colors[Math.floor(Math.random() * colors.length)];
+            c.style.width = (Math.random() * 6 + 4) + 'px';
+            c.style.height = (Math.random() * 6 + 4) + 'px';
+            c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            c.style.animationDelay = (Math.random() * 1.5) + 's';
+            container.appendChild(c);
+        }
+        setTimeout(() => container.remove(), 4000);
+    }
+    
+    function showError(msg) {
+        const el = document.getElementById('errorMessage');
+        el.textContent = '❌ ' + msg;
+        el.style.display = 'block';
+    }
+    
+    function hideError() {
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+    
+    // =============================================
+    // 11. تهيئة التطبيق
+    // =============================================
+    window.onload = function() {
+        addMcqQuestion();
+        document.getElementById('haithamBadge').textContent = '0';
+        console.log('📱 تطبيق اسأل هيثم جاهز!');
+        
+        // طلب تثبيت التطبيق (PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    };
+</script>
 
 </body>
-</html> 
+</html>
