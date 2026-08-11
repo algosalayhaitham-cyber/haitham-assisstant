@@ -502,53 +502,158 @@ document.addEventListener('DOMContentLoaded', function () {
     div.textContent = text;
     return div.innerHTML;
   }
-});
-// ===== دوال التصحيح والتقدير =====
-function startCorrection() {
+
+  // ================================================================
+  // ===== 11. دوال تصحيح الأوراق وتقدير الدرجة (المدمجة) =====
+  // ================================================================
+
+  // ✅ دالة التصحيح الرئيسية (تستخدم API حقيقي مع النموذج الجديد)
+  window.startCorrection = async function() {
     const examFile = document.getElementById('examFile').files[0];
     if (!examFile) {
-        alert('❌ الرجاء رفع صورة الورقة أولاً');
-        return;
+      alert('❌ الرجاء رفع صورة الورقة أولاً');
+      return;
     }
 
     const resultDiv = document.getElementById('correctionResult');
     resultDiv.innerHTML = '⏳ جاري التصحيح والتحليل...';
 
-    // محاكاة (استبدلها بـ API حقيقي)
-    setTimeout(() => {
-        resultDiv.innerHTML = `
-            ✅ تم التصحيح بنجاح!<br>
-            • السؤال 1: ✅ صحيح (5/5)<br>
-            • السؤال 2: ❌ خطأ (2/5)<br>
-            • السؤال 3: ⚠️ ناقص (3/5)<br>
-            <br>
-            <strong>📊 المجموع: 10 / 15</strong>
-        `;
-    }, 2000);
-}
+    // تحويل الصورة إلى Base64
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const imageBase64 = e.target.result;
 
-function estimateGrade() {
+      try {
+        // إرسال الصورة إلى الـ API مع النموذج الجديد
+        const response = await fetch('/api/correct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: imageBase64,
+            model: 'llama-3.2-90b-vision-preview' // ✅ النموذج الجديد الشغال
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'حدث خطأ في التصحيح');
+        }
+
+        // عرض النتيجة
+        resultDiv.innerHTML = data.html_result || `
+          ✅ تم التصحيح بنجاح!<br>
+          📊 النتيجة: ${data.score || 'غير متاحة'}
+        `;
+
+        // تخزين النتيجة للتقدير
+        window._lastCorrectionResult = data;
+
+      } catch (error) {
+        console.error('❌ خطأ في التصحيح:', error);
+        resultDiv.innerHTML = `❌ حدث خطأ: ${error.message}<br>
+          <small>تأكد من تشغيل السيرفر واستخدام النموذج الصحيح</small>`;
+      }
+    };
+
+    reader.readAsDataURL(examFile);
+  };
+
+  // ✅ دالة تقدير الدرجة
+  window.estimateGrade = function() {
     const resultDiv = document.getElementById('correctionResult');
     const resultText = resultDiv.innerText;
-    const match = resultText.match(/(\d+)\s*\/\s*(\d+)/);
-    if (!match) {
-        alert('❌ لازم تصحح الورقة أولاً');
-        return;
+    
+    // محاولة استخراج الدرجة من النص
+    const scoreMatch = resultText.match(/(\d+)\s*\/\s*(\d+)/);
+    if (!scoreMatch) {
+      alert('❌ لم أجد نتيجة التصحيح. قم بالتصحيح أولاً');
+      return;
     }
-    const score = parseInt(match[1]);
-    const total = parseInt(match[2]);
+
+    const score = parseInt(scoreMatch[1]);
+    const total = parseInt(scoreMatch[2]);
     const percentage = (score / total) * 100;
 
     let grade = '';
-    if (percentage >= 90) grade = '⭐ ممتاز';
-    else if (percentage >= 75) grade = '🌟 جيد جداً';
-    else if (percentage >= 60) grade = '👍 جيد';
-    else if (percentage >= 45) grade = '📖 مقبول';
-    else grade = '📚 ضعيف';
+    let emoji = '';
+    let recommendation = '';
 
+    if (percentage >= 90) {
+      grade = 'ممتاز';
+      emoji = '⭐';
+      recommendation = 'أداء رائع، استمر بهذا المستوى!';
+    } else if (percentage >= 75) {
+      grade = 'جيد جداً';
+      emoji = '🌟';
+      recommendation = 'أداء مميز، ركز على النقاط التي أخطأت فيها';
+    } else if (percentage >= 60) {
+      grade = 'جيد';
+      emoji = '👍';
+      recommendation = 'أداء جيد، أنصحك بمراجعة الأخطاء';
+    } else if (percentage >= 45) {
+      grade = 'مقبول';
+      emoji = '📖';
+      recommendation = 'تحتاج إلى مراجعة الدروس مع المعلم';
+    } else {
+      grade = 'ضعيف';
+      emoji = '📚';
+      recommendation = 'بحاجة إلى خطة علاجية فورية';
+    }
+
+    // إضافة التقدير للنتيجة
     resultDiv.innerHTML += `
-        <div style="background:#f0f8ff;padding:15px;border-radius:12px;margin-top:15px;">
-            <strong>التقدير: ${grade}</strong> (${score}/${total})
-        </div>
+      <div style="background: #f0f8ff; padding: 15px; border-radius: 12px; margin-top: 15px; border-right: 4px solid #4A90D9;">
+        <strong style="font-size: 18px;">${emoji} التقدير: ${grade}</strong><br>
+        <span style="color: #555;">${score} من ${total} (${Math.round(percentage)}%)</span><br>
+        <span style="color: #7f8c8d; font-size: 13px;">💡 ${recommendation}</span>
+      </div>
     `;
-}
+
+    // تشغيل تأثير احتفال إذا كان ممتاز
+    if (percentage >= 90) {
+      createMiniConfetti();
+    }
+  };
+
+  // ✅ دالة مساعدة: تأثير احتفال صغير
+  function createMiniConfetti() {
+    const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6'];
+    for (let i = 0; i < 30; i++) {
+      const el = document.createElement('div');
+      el.style.cssText = `
+        position: fixed;
+        left: ${Math.random() * 100}%;
+        top: -10px;
+        width: ${Math.random() * 8 + 4}px;
+        height: ${Math.random() * 8 + 4}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+        pointer-events: none;
+        z-index: 9999;
+        animation: confettiFall ${Math.random() * 2 + 1}s linear forwards;
+        animation-delay: ${Math.random() * 0.5}s;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+  }
+
+  // إضافة الـ Keyframes للـ Confetti إذا لم تكن موجودة
+  if (!document.getElementById('confettiStyle')) {
+    const style = document.createElement('style');
+    style.id = 'confettiStyle';
+    style.textContent = `
+      @keyframes confettiFall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+});
+
+// ================================================================
+// ===== نهاية الملف =====
+// ================================================================ 
