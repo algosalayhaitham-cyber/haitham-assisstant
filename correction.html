@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصحيح أوراق الاختبار - Al-Haitham Series</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn { background: #007bff; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 15px; width: 100%; }
+        .btn:hover { background: #0056b3; }
+        #previewImage { max-width: 100%; margin-top: 15px; border-radius: 5px; display: none; }
+        .result-box { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; display: none; text-align: right; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>تصحيح الاختبارات الآلي</h2>
+    <p>قم بتصوير ورقة إجابة الطالب لرصد الدرجة مباشرة</p>
+    
+    <!-- زر فتح الكاميرا واختيار الصورة -->
+    <input type="file" id="paperInput" accept="image/*" capture="environment" style="display: none;" onchange="previewPaper(event)">
+    <button class="btn" onclick="document.getElementById('paperInput').click()">📸 التقاط أو رفع ورقة الإجابة</button>
+
+    <!-- معاينة الصورة -->
+    <img id="previewImage" alt="معاينة الورقة">
+
+    <!-- زر بدء المعالجة -->
+    <button id="processBtn" class="btn" style="display: none; background: #28a745;" onclick="sendForCorrection()">⚡ بدء التصحيح ورصد الدرجة</button>
+
+    <!-- صندوق النتيجة -->
+    <div id="resultBox" class="result-box">
+        <h4>نتيجة التصحيح:</h4>
+        <p id="resultText">جاري المعالجة...</p>
+    </div>
+</div>
+
+<script>
+    let selectedFile = null;
+
+    function previewPaper(event) {
+        const file = event.target.files[0];
+        if (file) {
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('previewImage');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById('processBtn').style.display = 'block';
+                document.getElementById('resultBox').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function sendForCorrection() {
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+        
+        resultBox.style.display = 'block';
+        resultText.innerHTML = "جاري إرسال الصورة للتحليل وقراءة الدرجة...";
+
+        // هنا سيتم لاحقاً ربط الكود بإرسال الصورة للسيرفر ومعالجتها ثم حفظها في Supabase
+    }
+</script>
+
+</body>
+</html>
