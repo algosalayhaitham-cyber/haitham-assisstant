@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل الميزة رقم 4: تفضيل وأرشيف السجل وتصدير النسخ الاحتياطي + الواتساب + الطباعة + البحث)
+// app.js - هيثم AI (نسخة كاملة مع قاعدة المعرفة)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // تفعيل محرك البحث الداخلي (الميزة رقم 3)
+  // تفعيل محرك البحث الداخلي
   if (searchInput) {
     searchInput.addEventListener('input', function () {
       filterAndSearchMessages();
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // --- 7. بدء محادثة جديدة وتصدير نسخة احتياطية (الميزة رقم 4) ---
+  // --- 7. بدء محادثة جديدة وتصدير نسخة احتياطية ---
   if (clearChatBtn) {
     clearChatBtn.addEventListener('click', function () {
       if (confirm('هل تريد بدء محادثة جديدة ومسح السجل غير المفضّل؟')) {
@@ -219,19 +219,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!form || !input || !messages) return;
 
-  // --- 8. إرسال الرسالة ---
+  // --- 8. إرسال الرسالة (المعدل لاستخدام المعرفة) ---
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const message = input.value.trim();
     if (!message && !selectedBase64Image) return;
 
+    // 🔍 البحث في قاعدة المعرفة أولاً
+    const knowledgeAnswer = answerFromKnowledge(message);
+    
+    if (knowledgeAnswer) {
+      // إذا وجد إجابة في المعرفة، استخدمها مباشرة
+      appendMessage('user', message, selectedBase64Image, currentCategory, false);
+      saveChatHistory();
+      
+      // إضافة تأخير بسيط لمحاكاة التفكير
+      const loading = document.createElement('div');
+      loading.className = 'msg ai';
+      loading.id = 'loadingMsg';
+      loading.innerHTML = `<b>هيثم AI</b><p>⏳ جاري البحث في الملخصات...</p>`;
+      messages.appendChild(loading);
+      messages.scrollTop = messages.scrollHeight;
+      
+      setTimeout(() => {
+        document.getElementById('loadingMsg')?.remove();
+        appendMessage('ai', knowledgeAnswer, null, '📚 معرفة', false);
+        saveChatHistory();
+        messages.scrollTop = messages.scrollHeight;
+      }, 500);
+      
+      // تنظيف المدخلات
+      input.value = '';
+      selectedBase64Image = null;
+      if (imageInput) imageInput.value = '';
+      if (imagePreviewContainer) imagePreviewContainer.style.display = 'none';
+      return;
+    }
+
+    // إذا لم توجد إجابة في المعرفة، استخدم الـ AI
     appendMessage('user', message, selectedBase64Image, currentCategory, false);
     saveChatHistory();
 
     const payload = {
       message: message,
-      image: selectedBase64Image
+      image: selectedBase64Image,
+      knowledge: searchKnowledge(message) || '' // أرسل المعرفة للـ AI
     };
 
     const sentCat = currentCategory;
@@ -319,7 +352,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
 
-      // الميزة رقم 4: زر المفضلة/الحفظ
       const favBtn = document.createElement('button');
       favBtn.className = `action-btn fav-btn ${isFav ? 'is-fav' : ''}`;
       favBtn.innerHTML = isFav ? '⭐ مَفَضَّلَة' : '☆ تفضيل';
@@ -333,13 +365,11 @@ document.addEventListener('DOMContentLoaded', function () {
         filterAndSearchMessages();
       };
 
-      // الميزة رقم 1: زر مشاركة الواتساب
       const waBtn = document.createElement('button');
       waBtn.className = 'action-btn whatsapp-btn';
       waBtn.innerHTML = '📲 واتساب';
       waBtn.onclick = function () { shareToWhatsApp(text); };
 
-      // الميزة رقم 2: زر الطباعة المباشرة
       const printBtn = document.createElement('button');
       printBtn.className = 'action-btn print-btn';
       printBtn.innerHTML = '🖨️ طباعة';
@@ -379,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- 10. الأدوات المساعدة ---
-
   function shareToWhatsApp(text) {
     const cleanText = text.replace(/[*#`]/g, '');
     const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(cleanText)}`;
@@ -460,9 +489,10 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="msg ai" data-category="عام">
         <b>هيثم AI</b>
         <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.</p>
+        <p style="color: #718096; font-size: 13px;">📚 لدي معرفة بـ: الرياضيات، الفيزياء، الكيمياء، اللغة العربية، الإنجليزية، التاريخ</p>
       </div>
     `;
-    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.', category: 'عام', isFav: false }];
+    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.\n📚 لدي معرفة بـ: الرياضيات، الفيزياء، الكيمياء، اللغة العربية، الإنجليزية، التاريخ', category: 'عام', isFav: false }];
   }
 
   function exportToPDF(element) {
@@ -504,11 +534,271 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ================================================================
-  // ===== 11. دوال تصحيح الأوراق وتقدير الدرجة (المدمجة) =====
+  // ===== 11. قاعدة المعرفة المدمجة (الطريقة السريعة) =====
   // ================================================================
 
-  // ✅ دالة التصحيح الرئيسية (تستخدم API حقيقي مع النموذج الجديد)
-  window.startCorrection = async function() {
+  // ===== 11.1 قاعدة المعرفة =====
+  const KNOWLEDGE_BASE = {
+    'رياضيات': {
+      keywords: ['رياضيات', 'معادلة', 'جبر', 'هندسة', 'تفاضل', 'تكامل', 'حساب', 'مشتقة', 'تكامل', 'مثلثات'],
+      content: `
+📚 **ملخص الرياضيات:**
+
+**المعادلات الخطية:**
+- الصيغة العامة: ax + b = 0
+- الحل: x = -b/a
+- مثال: 2x + 5 = 13 → 2x = 8 → x = 4
+
+**الهندسة:**
+- مساحة المربع = الضلع²
+- مساحة المستطيل = الطول × العرض
+- مساحة المثلث = (القاعدة × الارتفاع) / 2
+- محيط الدائرة = 2πr
+- مساحة الدائرة = πr²
+- حجم المكعب = الضلع³
+- حجم الكرة = (4/3)πr³
+
+**التفاضل:**
+- مشتقة x^n = n·x^(n-1)
+- مشتقة الثابت = 0
+- مشتقة sin(x) = cos(x)
+- مشتقة cos(x) = -sin(x)
+- مشتقة tan(x) = sec²(x)
+
+**التكامل:**
+- ∫x^n dx = x^(n+1)/(n+1) + C
+- ∫sin(x) dx = -cos(x) + C
+- ∫cos(x) dx = sin(x) + C
+      `
+    },
+    'فيزياء': {
+      keywords: ['فيزياء', 'حركة', 'قوة', 'طاقة', 'نيوتن', 'سرعة', 'تسارع', 'ضغط', 'كثافة'],
+      content: `
+📚 **ملخص الفيزياء:**
+
+**قوانين الحركة:**
+- السرعة = المسافة / الزمن
+- التسارع = التغير في السرعة / الزمن
+- قانون نيوتن الثاني: F = m × a
+
+**الطاقة:**
+- الطاقة الحركية: KE = ½ × m × v²
+- طاقة الوضع: PE = m × g × h
+- قانون حفظ الطاقة: الطاقة لا تفنى ولا تستحدث من عدم
+
+**قوانين أخرى:**
+- الضغط = القوة / المساحة
+- الكثافة = الكتلة / الحجم
+- الشغل = القوة × المسافة
+
+**الكهرباء:**
+- قانون أوم: V = I × R
+- القدرة: P = V × I
+      `
+    },
+    'كيمياء': {
+      keywords: ['كيمياء', 'عنصر', 'مركب', 'تفاعل', 'ذرة', 'جزيء', 'حمض', 'قاعدة', 'ملح'],
+      content: `
+📚 **ملخص الكيمياء:**
+
+**العناصر والمركبات:**
+- الماء: H₂O
+- ثاني أكسيد الكربون: CO₂
+- ملح الطعام: NaCl
+- حمض الهيدروكلوريك: HCl
+- حمض الكبريتيك: H₂SO₄
+
+**التفاعلات الكيميائية:**
+- تفاعل الاتحاد: A + B → AB
+- تفاعل الانحلال: AB → A + B
+- تفاعل الإحلال: AB + C → AC + B
+
+**الأحماض والقواعد:**
+- الأس الهيدروجيني (pH): 0-7 حمضي، 7 متعادل، 7-14 قاعدي
+- حمض + قاعدة → ملح + ماء
+
+**الجدول الدوري:**
+- العناصر مرتبة حسب العدد الذري
+- المجموعات: 18 مجموعة
+- الدورات: 7 دورات
+      `
+    },
+    'لغة عربية': {
+      keywords: ['عربية', 'نحو', 'صرف', 'بلاغة', 'قواعد', 'إملاء', 'أدب', 'شعر'],
+      content: `
+📚 **ملخص اللغة العربية:**
+
+**النحو:**
+- أقسام الكلمة: اسم، فعل، حرف
+- الجملة الاسمية: مبتدأ + خبر
+- الجملة الفعلية: فعل + فاعل + مفعول به
+- النكرة والمعرفة
+
+**الصرف:**
+- الماضي: كتبَ
+- المضارع: يَكتبُ
+- الأمر: اُكتُبْ
+- المصدر: كِتابة
+
+**البلاغة:**
+- التشبيه: وجه الشبه + أداة التشبيه
+- الاستعارة: تشبيه بلا أداة
+- الكناية: تعبير غير مباشر
+
+**الإملاء:**
+- الهمزة في أول الكلمة: همزة وصل أو قطع
+- التاء المربوطة والتاء المبسوطة
+- الألف اللينة
+      `
+    },
+    'لغة إنجليزية': {
+      keywords: ['انجليزي', 'english', 'grammar', 'vocabulary', 'tenses', 'verbs', 'phrases'],
+      content: `
+📚 **English Summary:**
+
+**Tenses:**
+- Present Simple: I eat / He eats
+- Present Continuous: I am eating
+- Past Simple: I ate
+- Future Simple: I will eat
+
+**Parts of Speech:**
+- Noun: person, place, thing
+- Verb: action word
+- Adjective: describes noun
+- Adverb: describes verb
+
+**Common Phrases:**
+- Hello = مرحباً
+- Thank you = شكراً
+- How are you? = كيف حالك؟
+- Good morning = صباح الخير
+
+**Prepositions:**
+- in, on, at, for, with, by, from, to
+      `
+    },
+    'تاريخ': {
+      keywords: ['تاريخ', 'حضارة', 'إسلام', 'عصر', 'خلافة', 'دولة', 'فرعون', 'رومان'],
+      content: `
+📚 **ملخص التاريخ:**
+
+**الحضارات القديمة:**
+- الحضارة المصرية القديمة: الفراعنة، الأهرامات، الكتابة الهيروغليفية
+- الحضارة اليونانية: الإسكندر الأكبر، الفلسفة (سقراط، أفلاطون، أرسطو)
+- الحضارة الرومانية: الإمبراطورية، القانون، اللاتينية
+
+**العصر الإسلامي:**
+- الخلافة الراشدة: أبو بكر، عمر، عثمان، علي (رضي الله عنهم)
+- الدولة الأموية: دمشق، الفتوحات
+- الدولة العباسية: بغداد، بيت الحكمة، العصر الذهبي
+
+**العصر الحديث:**
+- النهضة الأوروبية: عصر النهضة، الفن، العلم
+- الثورة الصناعية: آلات، مصانع، تحول اقتصادي
+- الحرب العالمية الأولى والثانية
+      `
+    },
+    'برمجة': {
+      keywords: ['برمجة', 'كمبيوتر', 'حاسوب', 'خوارزمية', 'بيانات', 'كود', 'برنامج', 'تطبيق'],
+      content: `
+📚 **ملخص البرمجة:**
+
+**مكونات الحاسوب:**
+- المعالج (CPU): دماغ الحاسوب
+- الذاكرة (RAM): تخزين مؤقت
+- القرص الصلب (HDD/SSD): تخزين دائم
+
+**البرمجة:**
+- الخوارزمية: خطوات حل المشكلة
+- لغات البرمجة: Python, JavaScript, Java, C++
+- المتغيرات: تخزين البيانات
+
+**الشبكات:**
+- الإنترنت: شبكة عالمية
+- IP: عنوان الجهاز
+- DNS: تحويل الأسماء إلى عناوين
+      `
+    }
+  };
+
+  // ===== 11.2 دالة البحث في قاعدة المعرفة =====
+  function searchKnowledge(query) {
+    if (!query) return null;
+    
+    const lowerQuery = query.toLowerCase();
+    let bestMatch = null;
+    let highestScore = 0;
+
+    for (const [topic, data] of Object.entries(KNOWLEDGE_BASE)) {
+      let score = 0;
+      // ابحث في الكلمات المفتاحية
+      for (const keyword of data.keywords) {
+        if (lowerQuery.includes(keyword.toLowerCase())) {
+          score += 2;
+        }
+      }
+      // ابحث في المحتوى نفسه
+      if (data.content.toLowerCase().includes(lowerQuery)) {
+        score += 1;
+      }
+      
+      if (score > highestScore) {
+        highestScore = score;
+        bestMatch = data.content;
+      }
+    }
+
+    // إذا كان التطابق ضعيفاً (أقل من 2)، لا نستخدم المعرفة
+    if (highestScore < 2) return null;
+    
+    return bestMatch;
+  }
+
+  // ===== 11.3 دالة الإجابة من المعرفة =====
+  function answerFromKnowledge(query) {
+    const knowledge = searchKnowledge(query);
+    if (knowledge) {
+      return `${knowledge}\n\n💡 هذه المعلومات مأخوذة من ملخصات هيثم AI.`;
+    }
+    return null;
+  }
+
+  // ===== 11.4 وظيفة إضافة معرفة جديدة =====
+  function addKnowledge(topic, keywords, content) {
+    KNOWLEDGE_BASE[topic] = {
+      keywords: keywords,
+      content: content
+    };
+    console.log(`✅ تم إضافة معرفة جديدة: ${topic}`);
+    localStorage.setItem('haitham_knowledge', JSON.stringify(KNOWLEDGE_BASE));
+    return `✅ تم إضافة "${topic}" بنجاح!`;
+  }
+
+  // ===== 11.5 عرض جميع المواضيع =====
+  function listKnowledgeTopics() {
+    return Object.keys(KNOWLEDGE_BASE);
+  }
+
+  // ===== 11.6 تحميل المعرفة المحفوظة =====
+  function loadSavedKnowledge() {
+    const saved = localStorage.getItem('haitham_knowledge');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        Object.assign(KNOWLEDGE_BASE, parsed);
+        console.log('✅ تم تحميل المعرفة المحفوظة');
+      } catch(e) {
+        console.log('⚠️ خطأ في تحميل المعرفة المحفوظة');
+      }
+    }
+  }
+
+  // تحميل المعرفة عند بدء التشغيل
+  loadSavedKnowledge();
+
+  // ===== 11.7 دوال تصحيح الأوراق =====
+  window.startCorrection = function() {
     const examFile = document.getElementById('examFile').files[0];
     if (!examFile) {
       alert('❌ الرجاء رفع صورة الورقة أولاً');
@@ -518,19 +808,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultDiv = document.getElementById('correctionResult');
     resultDiv.innerHTML = '⏳ جاري التصحيح والتحليل...';
 
-    // تحويل الصورة إلى Base64
     const reader = new FileReader();
     reader.onload = async function(e) {
       const imageBase64 = e.target.result;
 
       try {
-        // إرسال الصورة إلى الـ API مع النموذج الجديد
         const response = await fetch('/api/correct', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             image: imageBase64,
-            model: 'llama-3.2-90b-vision-preview' // ✅ النموذج الجديد الشغال
+            model: 'llama-3.2-90b-vision-preview'
           })
         });
 
@@ -540,13 +828,11 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(data.error || 'حدث خطأ في التصحيح');
         }
 
-        // عرض النتيجة
         resultDiv.innerHTML = data.html_result || `
           ✅ تم التصحيح بنجاح!<br>
           📊 النتيجة: ${data.score || 'غير متاحة'}
         `;
 
-        // تخزين النتيجة للتقدير
         window._lastCorrectionResult = data;
 
       } catch (error) {
@@ -559,12 +845,10 @@ document.addEventListener('DOMContentLoaded', function () {
     reader.readAsDataURL(examFile);
   };
 
-  // ✅ دالة تقدير الدرجة
   window.estimateGrade = function() {
     const resultDiv = document.getElementById('correctionResult');
     const resultText = resultDiv.innerText;
     
-    // محاولة استخراج الدرجة من النص
     const scoreMatch = resultText.match(/(\d+)\s*\/\s*(\d+)/);
     if (!scoreMatch) {
       alert('❌ لم أجد نتيجة التصحيح. قم بالتصحيح أولاً');
@@ -601,7 +885,6 @@ document.addEventListener('DOMContentLoaded', function () {
       recommendation = 'بحاجة إلى خطة علاجية فورية';
     }
 
-    // إضافة التقدير للنتيجة
     resultDiv.innerHTML += `
       <div style="background: #f0f8ff; padding: 15px; border-radius: 12px; margin-top: 15px; border-right: 4px solid #4A90D9;">
         <strong style="font-size: 18px;">${emoji} التقدير: ${grade}</strong><br>
@@ -610,13 +893,11 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     `;
 
-    // تشغيل تأثير احتفال إذا كان ممتاز
     if (percentage >= 90) {
       createMiniConfetti();
     }
   };
 
-  // ✅ دالة مساعدة: تأثير احتفال صغير
   function createMiniConfetti() {
     const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6'];
     for (let i = 0; i < 30; i++) {
@@ -639,7 +920,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // إضافة الـ Keyframes للـ Confetti إذا لم تكن موجودة
+  // إضافة الـ Keyframes للـ Confetti
   if (!document.getElementById('confettiStyle')) {
     const style = document.createElement('style');
     style.id = 'confettiStyle';
@@ -652,265 +933,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.head.appendChild(style);
   }
 
+  // ===== 11.8 اختبار المعرفة في Console =====
+  console.log('📚 قاعدة المعرفة جاهزة!');
+  console.log('📖 المواضيع المتاحة:', listKnowledgeTopics());
+  console.log('🔍 ابحث عن شيء: searchKnowledge("معادلة")');
+  console.log('💡 اسأل هيثم: answerFromKnowledge("ما هي المعادلة الخطية؟")');
+  console.log('➕ أضف معرفة جديدة: addKnowledge("موضوع", ["كلمات"], "محتوى")');
+
+  // ================================================================
+  // نهاية الكود
+  // ================================================================
 });
-// ================================================================
-// ===== قاعدة المعرفة المدمجة (الطريقة السريعة) =====
-// ================================================================
-
-// 1. قاعدة المعرفة (أضف ملخصاتك هنا)
-const KNOWLEDGE_BASE = {
-    'رياضيات': {
-        keywords: ['رياضيات', 'معادلة', 'جبر', 'هندسة', 'تفاضل', 'تكامل', 'حساب'],
-        content: `
-📚 **ملخص الرياضيات:**
-
-**المعادلات الخطية:**
-- الصيغة العامة: ax + b = 0
-- الحل: x = -b/a
-- مثال: 2x + 5 = 13 → 2x = 8 → x = 4
-
-**الهندسة:**
-- مساحة المربع = الضلع²
-- مساحة المستطيل = الطول × العرض
-- مساحة المثلث = (القاعدة × الارتفاع) / 2
-- محيط الدائرة = 2πr
-- مساحة الدائرة = πr²
-
-**التفاضل:**
-- مشتقة x^n = n·x^(n-1)
-- مشتقة الثابت = 0
-- مشتقة sin(x) = cos(x)
-- مشتقة cos(x) = -sin(x)
-        `
-    },
-    'فيزياء': {
-        keywords: ['فيزياء', 'حركة', 'قوة', 'طاقة', 'نيوتن', 'سرعة', 'تسارع'],
-        content: `
-📚 **ملخص الفيزياء:**
-
-**قوانين الحركة:**
-- السرعة = المسافة / الزمن
-- التسارع = التغير في السرعة / الزمن
-- قانون نيوتن الثاني: F = m × a
-
-**الطاقة:**
-- الطاقة الحركية: KE = ½ × m × v²
-- طاقة الوضع: PE = m × g × h
-- قانون حفظ الطاقة: الطاقة لا تفنى ولا تستحدث من عدم
-
-**قوانين أخرى:**
-- الضغط = القوة / المساحة
-- الكثافة = الكتلة / الحجم
-        `
-    },
-    'كيمياء': {
-        keywords: ['كيمياء', 'عنصر', 'مركب', 'تفاعل', 'ذرة', 'جزيء', 'حمض', 'قاعدة'],
-        content: `
-📚 **ملخص الكيمياء:**
-
-**العناصر والمركبات:**
-- الماء: H₂O
-- ثاني أكسيد الكربون: CO₂
-- ملح الطعام: NaCl
-- حمض الهيدروكلوريك: HCl
-
-**التفاعلات الكيميائية:**
-- تفاعل الاتحاد: A + B → AB
-- تفاعل الانحلال: AB → A + B
-- تفاعل الإحلال: AB + C → AC + B
-
-**الأحماض والقواعد:**
-- الأس الهيدروجيني (pH): 0-7 حمضي، 7 متعادل، 7-14 قاعدي
-        `
-    },
-    'لغة عربية': {
-        keywords: ['عربية', 'نحو', 'صرف', 'بلاغة', 'قواعد', 'إملاء', 'أدب'],
-        content: `
-📚 **ملخص اللغة العربية:**
-
-**النحو:**
-- أقسام الكلمة: اسم، فعل، حرف
-- الجملة الاسمية: مبتدأ + خبر
-- الجملة الفعلية: فعل + فاعل + مفعول به
-
-**الصرف:**
-- الماضي: كتبَ
-- المضارع: يَكتبُ
-- الأمر: اُكتُبْ
-
-**البلاغة:**
-- التشبيه: وجه الشبه + أداة التشبيه
-- الاستعارة: تشبيه بلا أداة
-- الكناية: تعبير غير مباشر
-        `
-    },
-    'لغة إنجليزية': {
-        keywords: ['انجليزي', 'english', 'grammar', 'vocabulary', 'tenses', 'verbs'],
-        content: `
-📚 **English Summary:**
-
-**Tenses:**
-- Present Simple: I eat
-- Present Continuous: I am eating
-- Past Simple: I ate
-- Future Simple: I will eat
-
-**Parts of Speech:**
-- Noun: person, place, thing
-- Verb: action word
-- Adjective: describes noun
-- Adverb: describes verb
-
-**Common Phrases:**
-- Hello = مرحباً
-- Thank you = شكراً
-- How are you? = كيف حالك؟
-        `
-    },
-    'تاريخ': {
-        keywords: ['تاريخ', 'حضارة', 'إسلام', 'عصر', 'خلافة', 'دولة'],
-        content: `
-📚 **ملخص التاريخ:**
-
-**الحضارات القديمة:**
-- الحضارة المصرية القديمة: الفراعنة، الأهرامات
-- الحضارة اليونانية: الإسكندر الأكبر، الفلسفة
-- الحضارة الرومانية: الإمبراطورية، القانون
-
-**العصر الإسلامي:**
-- الخلافة الراشدة: أبو بكر، عمر، عثمان، علي
-- الدولة العباسية: بغداد، بيت الحكمة
-- الدولة العثمانية: إسطنبول، الفتوحات
-
-**العصر الحديث:**
-- النهضة الأوروبية: عصر النهضة
-- الثورة الصناعية: آلات، مصانع
-        `
-    }
-};
-
-// ================================================================
-// 2. دالة البحث في قاعدة المعرفة
-// ================================================================
-function searchKnowledge(query) {
-    if (!query) return null;
-    
-    const lowerQuery = query.toLowerCase();
-    let bestMatch = null;
-    let highestScore = 0;
-
-    for (const [topic, data] of Object.entries(KNOWLEDGE_BASE)) {
-        let score = 0;
-        // ابحث في الكلمات المفتاحية
-        for (const keyword of data.keywords) {
-            if (lowerQuery.includes(keyword.toLowerCase())) {
-                score += 2;
-            }
-        }
-        // ابحث في المحتوى نفسه
-        if (data.content.toLowerCase().includes(lowerQuery)) {
-            score += 1;
-        }
-        
-        if (score > highestScore) {
-            highestScore = score;
-            bestMatch = data.content;
-        }
-    }
-
-    return bestMatch;
-}
-
-// ================================================================
-// 3. دالة الإجابة من المعرفة (بدون AI)
-// ================================================================
-function answerFromKnowledge(query) {
-    const knowledge = searchKnowledge(query);
-    if (knowledge) {
-        return `${knowledge}\n\n💡 هذه المعلومات مأخوذة من ملخصات هيثم AI.`;
-    }
-    return null;
-}
-
-// ================================================================
-// 4. دمج المعرفة في نظام المحادثة (تعديل دالة الإرسال)
-// ================================================================
-
-// خزن الدالة الأصلية مؤقتاً
-const originalSendMessage = window.sendMessage || function() {};
-
-// استبدل دالة الإرسال بالدالة المطورة
-window.sendMessage = async function(message) {
-    // 1. ابحث في قاعدة المعرفة
-    const knowledgeAnswer = answerFromKnowledge(message);
-    
-    if (knowledgeAnswer) {
-        // إذا وجد إجابة في المعرفة، استخدمها مباشرة
-        appendMessage('ai', knowledgeAnswer, null, 'معرفة', false);
-        saveChatHistory();
-        return;
-    }
-
-    // 2. إذا لم توجد إجابة، استخدم الـ AI العادي
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: message,
-                knowledge: searchKnowledge(message) || '' // أرسل المعرفة للـ AI
-            })
-        });
-        const data = await response.json();
-        if (data.reply) {
-            appendMessage('ai', data.reply, null, 'عام', false);
-        }
-    } catch (error) {
-        appendMessage('ai', `❌ حدث خطأ: ${error.message}`, null, 'عام', false);
-    }
-};
-
-// ================================================================
-// 5. وظيفة إضافة معرفة جديدة (للمطور)
-// ================================================================
-function addKnowledge(topic, keywords, content) {
-    KNOWLEDGE_BASE[topic] = {
-        keywords: keywords,
-        content: content
-    };
-    console.log(`✅ تم إضافة معرفة جديدة: ${topic}`);
-    // حفظ في localStorage
-    localStorage.setItem('haitham_knowledge', JSON.stringify(KNOWLEDGE_BASE));
-}
-
-// ================================================================
-// 6. تحميل المعرفة المحفوظة (عند بدء التشغيل)
-// ================================================================
-function loadSavedKnowledge() {
-    const saved = localStorage.getItem('haitham_knowledge');
-    if (saved) {
-        try {
-            const parsed = JSON.parse(saved);
-            Object.assign(KNOWLEDGE_BASE, parsed);
-            console.log('✅ تم تحميل المعرفة المحفوظة');
-        } catch(e) {}
-    }
-}
-
-// تحميل المعرفة عند بدء التشغيل
-loadSavedKnowledge();
-
-// ================================================================
-// 7. اختبار المعرفة (في Console)
-// ================================================================
-console.log('📚 قاعدة المعرفة جاهزة!');
-console.log('🔍 ابحث عن شيء: searchKnowledge("معادلة")');
-console.log('💡 اسأل هيثم: answerFromKnowledge("ما هي المعادلة الخطية؟")');
-console.log('➕ أضف معرفة جديدة: addKnowledge("موضوع", ["كلمات"], "محتوى")');
-
-// ================================================================
-// نهاية الكود
-// ================================================================
-// ================================================================
-// ===== نهاية الملف =====
-// ================================================================ 
