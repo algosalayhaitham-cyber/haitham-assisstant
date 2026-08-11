@@ -655,3 +655,10 @@ footer {
     margin: 40px auto;
     padding: 20px;
 }
+body {
+    background-image: url('/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
