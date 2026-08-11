@@ -60,6 +60,7 @@
       <div class="chat-header">
         <div class="category-tabs">
           <button class="tab-btn active" data-filter="all">الكل</button>
+          <button class="tab-btn" data-filter="fav">⭐ المفضلة</button>
           <button class="tab-btn" data-filter="تحضير">📚 تحضير</button>
           <button class="tab-btn" data-filter="اختبارات">📝 اختبارات</button>
           <button class="tab-btn" data-filter="رياضيات">📐 رياضيات</button>
@@ -69,7 +70,10 @@
           <input type="text" id="searchInput" placeholder="🔍 بحث في السجل..." />
         </div>
 
-        <button id="clearChatBtn" class="clear-chat-btn">🗑️ محادثة جديدة</button>
+        <div style="display:flex; gap:6px;">
+          <button id="exportBackupBtn" class="clear-chat-btn" title="حفظ نسخة احتياطية من السجل">💾 نسخ</button>
+          <button id="clearChatBtn" class="clear-chat-btn">🗑️ جديد</button>
+        </div>
       </div>
 
       <div class="messages" id="messages"></div>
