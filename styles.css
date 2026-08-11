@@ -291,3 +291,28 @@ body {
   color: white;
   border-color: #ef4444;
 }
+/* تحسينات إضافية للبطاقات السريعة */
+.grid .card {
+  position: relative;
+  overflow: hidden;
+  border-right: 3px solid #38bdf8;
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+}
+
+.grid .card:hover {
+  border-right-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
+}
+
+.grid .card b {
+  margin-bottom: 0.2rem;
+}
+
+.grid .card strong {
+  color: #f8fafc;
+}
+
+.grid .card small {
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
