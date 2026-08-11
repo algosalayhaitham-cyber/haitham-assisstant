@@ -636,3 +636,22 @@ footer {
     border: 1px solid #000000 !important;
   }
 }
+/* بطاقة تصحيح الأوراق الجديدة */
+.badge-new {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #4A90D9;
+    color: white;
+    font-size: 10px;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* تنسيق نافذة التصحيح */
+.correction-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
