@@ -14,7 +14,6 @@
   --ai-msg-bg: #1e293b;
 }
 
-/* --- متغيّرات الوضع الفاتح (Light Mode) --- */
 body.light-mode {
   --bg-color: #f1f5f9;
   --card-bg: #ffffff;
@@ -86,7 +85,6 @@ body.light-mode .topbar {
   border-radius: 12px;
 }
 
-/* زر تبديل الثيم */
 .theme-toggle-btn {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -338,6 +336,7 @@ body.light-mode .chat {
   max-width: 85%;
   line-height: 1.6;
   font-size: 0.9rem;
+  position: relative;
 }
 
 .msg.user {
@@ -390,6 +389,13 @@ body.light-mode .msg.user {
   background-color: #2563eb;
   color: white;
   border-color: #2563eb;
+}
+
+/* زر المفضلة (الميزة رقم 4) */
+.action-btn.fav-btn.is-fav {
+  background-color: rgba(234, 179, 8, 0.2);
+  border-color: #eab308;
+  color: #eab308;
 }
 
 /* زر المشاركة عبر الواتساب (الميزة رقم 1) */
@@ -630,4 +636,3 @@ footer {
     border: 1px solid #000000 !important;
   }
 }
- 
