@@ -67,13 +67,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const text = await response.text();
 
-let data;
+      let data;
 
-try {
-  data = JSON.parse(text);
-} catch {
-  throw new Error(text || 'السيرفر لم يرجع استجابة صحيحة');
-}
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(text || 'السيرفر لم يرجع استجابة صحيحة');
+      }
 
       // حذف جاري التفكير
       loading.remove();
@@ -86,10 +86,33 @@ try {
       const aiMsg = document.createElement('div');
       aiMsg.className = 'msg ai';
 
-      aiMsg.innerHTML = `
-        <b>هيثم AI</b>
-        <p>${escapeHtml(data.reply || 'لم يصل رد.')}</p>
-      `;
+      const replyText = data.reply || 'لم يصل رد.';
+
+      // إعداد حاوية النص
+      const contentContainer = document.createElement('div');
+
+      // 1. تحويل الماركداون إلى HTML إذا كانت المكتبة متاحة
+      if (typeof marked !== 'undefined') {
+        contentContainer.innerHTML = marked.parse(replyText);
+      } else {
+        contentContainer.innerHTML = `<p>${escapeHtml(replyText)}</p>`;
+      }
+
+      // 2. تشغيل تنسيق المعادلات الرياضية KaTeX إذا كانت المكتبة متاحة
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(contentContainer, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true }
+          ],
+          throwOnError: false
+        });
+      }
+
+      aiMsg.innerHTML = `<b>هيثم AI</b>`;
+      aiMsg.appendChild(contentContainer);
 
       messages.appendChild(aiMsg);
 
@@ -119,3 +142,4 @@ try {
   }
 
 });
+
