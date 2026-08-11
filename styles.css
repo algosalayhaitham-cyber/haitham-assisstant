@@ -376,3 +376,38 @@ footer {
   color: var(--text-muted);
   border-top: 1px solid var(--border-color);
 }
+/* تنسيق الجداول والتحليلات */
+.pdf-export-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.pdf-export-content th {
+  background-color: #1e3a8a;
+  color: #f8fafc;
+  padding: 0.75rem;
+  text-align: right;
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+}
+
+.pdf-export-content td {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.pdf-export-content tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.pdf-export-content tr:hover {
+  background-color: rgba(56, 189, 248, 0.05);
+}
+
