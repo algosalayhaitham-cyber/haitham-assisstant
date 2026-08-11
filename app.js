@@ -1,4 +1,4 @@
-// app.js - هيثم AI (دعم الصور + المعادلات + PDF + حفظ سجل المحادثة)
+// app.js - هيثم AI (مع دعم الصور، المعادلات، PDF، الحفظ، والإملاء والقراءة الصوتية)
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -10,14 +10,70 @@ document.addEventListener('DOMContentLoaded', function () {
   const imagePreview = document.getElementById('imagePreview');
   const removeImageBtn = document.getElementById('removeImageBtn');
   const clearChatBtn = document.getElementById('clearChatBtn');
+  const voiceBtn = document.getElementById('voiceBtn');
 
   let selectedBase64Image = null;
   let chatHistory = [];
+  let isRecording = false;
+  let recognition = null;
 
-  // 1. تحميل سجل المحادثة المخزن عند بدء التشغيل
+  // إعداد ميزة التعرف على الصوت
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'ar-SA';
+    recognition.continuous = false;
+
+    recognition.onstart = function () {
+      isRecording = true;
+      if (voiceBtn) {
+        voiceBtn.classList.add('recording');
+        voiceBtn.innerHTML = '🛑';
+      }
+    };
+
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+      input.value = (input.value ? input.value + ' ' : '') + transcript;
+    };
+
+    recognition.onerror = function (event) {
+      console.error('خطأ في الصوت:', event.error);
+      stopRecording();
+    };
+
+    recognition.onend = function () {
+      stopRecording();
+    };
+  } else {
+    if (voiceBtn) voiceBtn.style.display = 'none'; // إخفاء الزر إذا كان المتصفح لا يدعمه
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    if (voiceBtn) {
+      voiceBtn.classList.remove('recording');
+      voiceBtn.innerHTML = '🎤';
+    }
+  }
+
+  // الضغط على زر المايك
+  if (voiceBtn) {
+    voiceBtn.addEventListener('click', function () {
+      if (!recognition) return;
+      if (isRecording) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+  }
+
+  // تحميل السجل عند التشغيل
   loadChatHistory();
 
-  // أزرار الأدوات السريعة
+  // أزرار القوالب
   document.querySelectorAll('[data-prompt]').forEach(button => {
     button.addEventListener('click', function () {
       input.value = this.dataset.prompt;
@@ -50,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // مسح السجل وبدء محادثة جديدة
+  // بدء محادثة جديدة
   if (clearChatBtn) {
     clearChatBtn.addEventListener('click', function () {
       if (confirm('هل تريد بدء محادثة جديدة ومسح السجل الحالي؟')) {
@@ -71,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = input.value.trim();
     if (!message && !selectedBase64Image) return;
 
-    // إضافة رسالة المستخدم للسجل والمستند
     appendMessage('user', message, selectedBase64Image);
     saveChatHistory();
 
@@ -80,13 +135,11 @@ document.addEventListener('DOMContentLoaded', function () {
       image: selectedBase64Image
     };
 
-    // تنظيف المدخلات
     input.value = '';
     selectedBase64Image = null;
     if (imageInput) imageInput.value = '';
     if (imagePreviewContainer) imagePreviewContainer.style.display = 'none';
 
-    // رسالة انتظار
     const loading = document.createElement('div');
     loading.className = 'msg ai';
     loading.id = 'loadingMsg';
@@ -110,8 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!response.ok) throw new Error(data.reply || data.error || 'حدث خطأ في الخادم');
 
       const replyText = data.reply || 'لم يصل رد.';
-      
-      // إضافة رد المساعد للسجل
       appendMessage('ai', replyText);
       saveChatHistory();
 
@@ -123,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
     messages.scrollTop = messages.scrollHeight;
   });
 
-  // دالة عرض رسالة في الصفحة
+  // إضافة الرسالة للعرض
   function appendMessage(role, text, image = null) {
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg ${role}`;
@@ -158,37 +209,57 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // زر تحميل PDF
+      // أزرار التفاعل (تحميل PDF + القراءة الصوتية)
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'msg-actions';
+
       const pdfBtn = document.createElement('button');
-      pdfBtn.className = 'pdf-download-btn';
+      pdfBtn.className = 'action-btn';
       pdfBtn.innerHTML = '📄 تحميل PDF';
       pdfBtn.onclick = function () { exportToPDF(contentContainer); };
-      msgDiv.appendChild(pdfBtn);
+
+      const speakBtn = document.createElement('button');
+      speakBtn.className = 'action-btn';
+      speakBtn.innerHTML = '🔊 قراءة صوتیة';
+      speakBtn.onclick = function () { speakText(text); };
+
+      actionsDiv.appendChild(pdfBtn);
+      actionsDiv.appendChild(speakBtn);
+      msgDiv.appendChild(actionsDiv);
     }
 
     messages.appendChild(msgDiv);
     messages.scrollTop = messages.scrollHeight;
 
-    // إضافة للكائن الداخلي للحفظ
     chatHistory.push({ role, text, image });
   }
 
-  // حفظ السجل في LocalStorage
+  // دالة النطق الصوتي للرد
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // إيقاف أي قراءة سابقة
+      const cleanText = text.replace(/[*#$`]/g, ''); // إزالة رموز الماركداون للأنماط
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'ar-SA';
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('متصفحك لا يدعم خاصية القراءة الصوتية.');
+    }
+  }
+
   function saveChatHistory() {
     localStorage.setItem('haitham_chat_history', JSON.stringify(chatHistory));
   }
 
-  // تحميل السجل من LocalStorage
   function loadChatHistory() {
     const saved = localStorage.getItem('haitham_chat_history');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         messages.innerHTML = '';
-        parsed.forEach(item => {
-          appendMessage(item.role, item.text, item.image);
-        });
-        chatHistory = parsed; // إعادة ضبط السجل
+        parsed.forEach(item => appendMessage(item.role, item.text, item.image));
+        chatHistory = parsed;
       } catch (e) {
         renderWelcomeMessage();
       }
@@ -201,13 +272,12 @@ document.addEventListener('DOMContentLoaded', function () {
     messages.innerHTML = `
       <div class="msg ai">
         <b>هيثم AI</b>
-        <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك مباشرة أو صور المسألة وأرفقها.</p>
+        <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.</p>
       </div>
     `;
-    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك مباشرة أو صور المسألة وأرفقها.' }];
+    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.' }];
   }
 
-  // دالة تصدير PDF
   function exportToPDF(element) {
     if (typeof html2pdf === 'undefined') {
       alert('مكتبة التصدير غير متحملة بعد.');
