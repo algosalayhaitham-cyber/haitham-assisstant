@@ -45,9 +45,13 @@
     </section>
 
     <section class="chat">
-      <div id="messages" class="messages">
-        <div class="msg ai"><b>هيثم AI</b><p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك مباشرة أو صور المسألة وأرفقها.</p></div>
+      <div class="chat-header">
+        <span>💬 المحادثة الحالية</span>
+        <button id="clearChatBtn" class="clear-chat-btn">محادثة جديدة ➕</button>
       </div>
+
+      <div id="messages" class="messages">
+        </div>
 
       <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
         <img id="imagePreview" src="" alt="المعاينة">
