@@ -344,6 +344,7 @@ body.light-mode .msg.user {
   opacity: 0.8;
 }
 
+/* --- أزرار الإجراءات للرسائل --- */
 .msg-actions {
   display: flex;
   gap: 8px;
@@ -368,7 +369,21 @@ body.light-mode .msg.user {
   border-color: #2563eb;
 }
 
-/* --- حاسبة وشريط الرموز الرياضية السريعة (رقم 4) --- */
+/* زر المشاركة عبر الواتساب (الميزة رقم 1) */
+.action-btn.whatsapp-btn {
+  background-color: rgba(37, 211, 102, 0.1);
+  border-color: rgba(37, 211, 102, 0.4);
+  color: #25d366;
+  font-weight: 600;
+}
+
+.action-btn.whatsapp-btn:hover {
+  background-color: #25d366;
+  color: #ffffff;
+  border-color: #25d366;
+}
+
+/* --- حاسبة وشريط الرموز الرياضية السريعة --- */
 .math-pad {
   display: flex;
   gap: 6px;
@@ -379,45 +394,5 @@ body.light-mode .msg.user {
   white-space: nowrap;
 }
 
-.math-pad::-webkit-scrollbar {
-  height: 3px;
-}
-
-.math-pad::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
-  border-radius: 4px;
-}
-
-.math-btn {
-  background-color: var(--card-bg);
-  color: #38bdf8;
-  border: 1px solid var(--border-color);
-  padding: 0.25rem 0.55rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.math-btn:hover {
-  background-color: #38bdf8;
-  color: #0f172a;
-  transform: translateY(-1px);
-}
-
-/* --- معاينة الصور وصندوق الكتابة --- */
-.image-preview-container {
-  position: relative;
-  padding: 0.5rem 1rem;
-  background-color: rgba(15, 23, 42, 0.4);
-}
-
-.image-preview-container img {
-  max-height: 80px;
-  border-radius: 6px;
-}
-
-.remove-img-btn {
-  position:
+.math
  
