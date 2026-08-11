@@ -38,34 +38,40 @@
     </section>
 
     <section class="grid">
-      <button class="card" data-prompt="أريد تحضير درس رياضيات شامل ومكتمل العناصر (الأهداف، التمهيد، الاستراتيجيات، الوسائل، التقويم، الواجب). اطلب مني الصف واسم الدرس أولاً.">
+      <button class="card" data-category="تحضير" data-prompt="أريد تحضير درس رياضيات شامل ومكتمل العناصر (الأهداف، التمهيد، الاستراتيجيات، الوسائل، التقويم، الواجب). اطلب مني الصف واسم الدرس أولاً.">
         <b>📚</b><strong>تحضير درس</strong><small>خطة درس معتمدة ومكتملة</small>
       </button>
 
-      <button class="card" data-prompt="أريد إنشاء اختبار رياضيات متكامل مع نموذج الإجابة وسلم الدرجات. اطلب مني تحديد الصف، الدروس، وعدد الأسئلة.">
+      <button class="card" data-category="اختبارات" data-prompt="أريد إنشاء اختبار رياضيات متكامل مع نموذج الإجابة وسلم الدرجات. اطلب مني تحديد الصف، الدروس، وعدد الأسئلة.">
         <b>📝</b><strong>إنشاء اختبار</strong><small>أسئلة متنوعة + نموذج الإجابة</small>
       </button>
 
-      <button class="card" data-prompt="أريد جدول مواصفات اختبار رياضيات متكامل في جدول منظم يحتوي على (الوحدات، الدروس، الوزن النسبي، مستويات الأهداف، عدد الأسئلة والدرجات). اطلب مني الصف والمواضيع.">
+      <button class="card" data-category="مواصفات" data-prompt="أريد جدول مواصفات اختبار رياضيات متكامل في جدول منظم يحتوي على (الوحدات، الدروس، الوزن النسبي، مستويات الأهداف، عدد الأسئلة والدرجات). اطلب مني الصف والمواضيع.">
         <b>📊</b><strong>جدول مواصفات</strong><small>توزيع الدرجات والأهداف</small>
       </button>
 
-      <button class="card" data-prompt="أريد شرح خطوات حل مسألة رياضية بالخطوات بالتفصيل والرموز الدقيقة. اطلب مني إرسال المسألة الآن.">
+      <button class="card" data-category="حل مسائل" data-prompt="أريد شرح خطوات حل مسألة رياضية بالخطوات بالتفصيل والرموز الدقيقة. اطلب مني إرسال المسألة الآن.">
         <b>📐</b><strong>حل مسألة</strong><small>خطوات تفصيلية + شرح تعليمي</small>
       </button>
 
-      <button class="card" data-prompt="أريد صياغة تعميم أو إعلان مدرسي رسمي ومحفز للطلاب والأولياء. اطلب مني التفاصيل والمناسبة.">
+      <button class="card" data-category="إعلانات" data-prompt="أريد صياغة تعميم أو إعلان مدرسي رسمي ومحفز للطلاب والأولياء. اطلب مني التفاصيل والمناسبة.">
         <b>🏫</b><strong>إعلان مدرسي</strong><small>تعاميم ونشرات رسمية</small>
       </button>
 
-      <button class="card" data-prompt="أريد خطة علاجية لرفع مستوى الطلاب ضعاف التحصيل في الرياضيات. اطلب مني تحديد المهارة المستهدفة والصف.">
+      <button class="card" data-category="خطط علاجية" data-prompt="أريد خطة علاجية لرفع مستوى الطلاب ضعاف التحصيل في الرياضيات. اطلب مني تحديد المهارة المستهدفة والصف.">
         <b>🎓</b><strong>خطة علاجية</strong><small>استراتيجيات ودعم للطلاب</small>
       </button>
     </section>
 
     <section class="chat">
       <div class="chat-header">
-        <span>💬 المحادثة الحالية</span>
+        <div class="category-tabs">
+          <button class="tab-btn active" data-filter="all">الكل</button>
+          <button class="tab-btn" data-filter="تحضير">📚 تحضير</button>
+          <button class="tab-btn" data-filter="اختبارات">📝 اختبارات</button>
+          <button class="tab-btn" data-filter="حل مسائل">📐 مسائل</button>
+          <button class="tab-btn" data-filter="إعلانات">🏫 إعلانات</button>
+        </div>
         <button id="clearChatBtn" class="clear-chat-btn">محادثة جديدة ➕</button>
       </div>
 
@@ -94,4 +100,3 @@
   <script src="/app.js"></script>
 </body>
 </html>
- 
