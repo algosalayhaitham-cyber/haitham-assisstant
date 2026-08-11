@@ -459,4 +459,58 @@ footer {
   border: 1px solid rgba(56, 189, 248, 0.3);
   margin-right: 6px;
 }
+/* زر تبديل الثيم */
+.theme-toggle-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 1.1rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  border-color: #38bdf8;
+  transform: scale(1.05);
+}
+
+/* متغيّرات الوضع الفاتح (Light Mode) */
+body.light-mode {
+  --bg-color: #f1f5f9;
+  --card-bg: #ffffff;
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #cbd5e1;
+  --user-msg-bg: #2563eb;
+  --ai-msg-bg: #ffffff;
+}
+
+body.light-mode .topbar {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+body.light-mode .hero {
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+}
+
+body.light-mode .card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  --text-main: #0f172a;
+}
+
+body.light-mode .card strong {
+  color: #0f172a;
+}
+
+body.light-mode .chat {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+body.light-mode .msg.user {
+  color: #ffffff;
+}
 
