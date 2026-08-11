@@ -1,4 +1,5 @@
-// تسجيل تطبيق PWA للعمل على الجوال
+// app.js - هيثم AI (شامل: أقسام ومكتبة + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
@@ -6,7 +7,6 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW registration failed: ', err));
   });
 }
-// app.js - هيثم AI (شامل: صور + معادلات + PDF + Word + حفظ + صوت)
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let selectedBase64Image = null;
   let chatHistory = [];
+  let currentCategory = 'عام';
+  let activeFilter = 'all';
   let isRecording = false;
   let recognition = null;
 
@@ -84,9 +86,32 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('[data-prompt]').forEach(button => {
     button.addEventListener('click', function () {
       input.value = this.dataset.prompt;
+      currentCategory = this.dataset.category || 'عام';
       input.focus();
     });
   });
+
+  // أزرار تبويب الفلترة للأقسام
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeFilter = this.dataset.filter;
+      filterMessages(activeFilter);
+    });
+  });
+
+  function filterMessages(filter) {
+    const allMsgs = messages.querySelectorAll('.msg');
+    allMsgs.forEach(msg => {
+      const cat = msg.dataset.category;
+      if (filter === 'all' || cat === filter || !cat) {
+        msg.style.display = 'block';
+      } else {
+        msg.style.display = 'none';
+      }
+    });
+  }
 
   // معالجة اختيار صورة
   if (imageInput) {
@@ -134,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = input.value.trim();
     if (!message && !selectedBase64Image) return;
 
-    appendMessage('user', message, selectedBase64Image);
+    appendMessage('user', message, selectedBase64Image, currentCategory);
     saveChatHistory();
 
     const payload = {
@@ -142,6 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
       image: selectedBase64Image
     };
 
+    const sentCat = currentCategory;
+    currentCategory = 'عام'; // إعادة الضبط لعام بعد الإرسال
     input.value = '';
     selectedBase64Image = null;
     if (imageInput) imageInput.value = '';
@@ -170,27 +197,30 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!response.ok) throw new Error(data.reply || data.error || 'حدث خطأ في الخادم');
 
       const replyText = data.reply || 'لم يصل رد.';
-      appendMessage('ai', replyText);
+      appendMessage('ai', replyText, null, sentCat);
       saveChatHistory();
 
     } catch (error) {
       document.getElementById('loadingMsg')?.remove();
-      appendMessage('ai', `حدث خطأ: ${error.message}`);
+      appendMessage('ai', `حدث خطأ: ${error.message}`, null, sentCat);
     }
 
     messages.scrollTop = messages.scrollHeight;
   });
 
   // إضافة الرسالة للعرض
-  function appendMessage(role, text, image = null) {
+  function appendMessage(role, text, image = null, category = 'عام') {
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg ${role}`;
+    msgDiv.dataset.category = category;
+
+    const catBadge = (category && category !== 'عام') ? `<span class="category-badge">${category}</span>` : '';
 
     if (role === 'user') {
       let html = '';
       if (image) html += `<img src="${image}" style="max-width:200px; border-radius:8px; display:block; margin-bottom:8px;">`;
       if (text) html += `<p>${escapeHtml(text)}</p>`;
-      msgDiv.innerHTML = `<b>أنت</b>${html}`;
+      msgDiv.innerHTML = `<b>أنت ${catBadge}</b>${html}`;
     } else {
       const contentContainer = document.createElement('div');
       contentContainer.className = 'pdf-export-content';
@@ -213,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
-      msgDiv.innerHTML = `<b>هيثم AI</b>`;
+      msgDiv.innerHTML = `<b>هيثم AI ${catBadge}</b>`;
       msgDiv.appendChild(contentContainer);
 
       // أزرار الإجراءات (PDF + Word + قراءة صوتية)
@@ -232,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const speakBtn = document.createElement('button');
       speakBtn.className = 'action-btn';
-      speakBtn.innerHTML = '🔊 قراءة صوتیة';
+      speakBtn.innerHTML = '🔊 قراءة صوتية';
       speakBtn.onclick = function () { speakText(text); };
 
       actionsDiv.appendChild(pdfBtn);
@@ -242,9 +272,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     messages.appendChild(msgDiv);
+    filterMessages(activeFilter);
     messages.scrollTop = messages.scrollHeight;
 
-    chatHistory.push({ role, text, image });
+    chatHistory.push({ role, text, image, category });
   }
 
   // النطق الصوتي للرد
@@ -271,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         const parsed = JSON.parse(saved);
         messages.innerHTML = '';
-        parsed.forEach(item => appendMessage(item.role, item.text, item.image));
+        parsed.forEach(item => appendMessage(item.role, item.text, item.image, item.category || 'عام'));
         chatHistory = parsed;
       } catch (e) {
         renderWelcomeMessage();
@@ -283,12 +314,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderWelcomeMessage() {
     messages.innerHTML = `
-      <div class="msg ai">
+      <div class="msg ai" data-category="عام">
         <b>هيثم AI</b>
         <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.</p>
       </div>
     `;
-    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.' }];
+    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.', category: 'عام' }];
   }
 
   // دالة تصدير PDF
@@ -307,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
     html2pdf().set(opt).from(element).save();
   }
 
-  // دالة تصدير Word (.docx / .doc)
+  // دالة تصدير Word (.doc)
   function exportToWord(text) {
     const cleanText = text.replace(/[*#`]/g, '');
     const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
