@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل: ثيم داكن/فاتح + أقسام ومكتبة + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+// app.js - هيثم AI (شامل ومكتمل العناصر)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -46,7 +46,24 @@ document.addEventListener('DOMContentLoaded', function () {
   let isRecording = false;
   let recognition = null;
 
-  // --- 3. إعداد الإملاء الصوتي ---
+  // --- 3. تفعيل أزرار لوحة الرموز الرياضية ---
+  document.querySelectorAll('.math-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const symbol = this.dataset.symbol;
+      if (!input || !symbol) return;
+
+      const startPos = input.selectionStart;
+      const endPos = input.selectionEnd;
+      const textBefore = input.value.substring(0, startPos);
+      const textAfter = input.value.substring(endPos);
+
+      input.value = textBefore + symbol + textAfter;
+      input.focus();
+      input.selectionStart = input.selectionEnd = startPos + symbol.length;
+    });
+  });
+
+  // --- 4. إعداد الإملاء الصوتي ---
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (SpeechRecognition) {
@@ -101,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // تحميل المحادثات المحفوظة
   loadChatHistory();
 
-  // --- 4. أزرار القوالب والأقسام ---
+  // --- 5. أزرار القوالب والأقسام ---
   document.querySelectorAll('[data-prompt]').forEach(button => {
     button.addEventListener('click', function () {
       input.value = this.dataset.prompt;
@@ -132,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // --- 5. معالجة اختيار وإلغاء الصور ---
+  // --- 6. معالجة اختيار وإلغاء الصور ---
   if (imageInput) {
     imageInput.addEventListener('change', function (e) {
       const file = e.target.files[0];
@@ -156,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // --- 6. بدء محادثة جديدة ---
+  // --- 7. بدء محادثة جديدة ---
   if (clearChatBtn) {
     clearChatBtn.addEventListener('click', function () {
       if (confirm('هل تريد بدء محادثة جديدة ومسح السجل الحالي؟')) {
@@ -170,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!form || !input || !messages) return;
 
-  // --- 7. إرسال الرسالة ---
+  // --- 8. إرسال الرسالة ---
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -226,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
     messages.scrollTop = messages.scrollHeight;
   });
 
-  // --- 8. بناء وإضافة الرسائل للمستند ---
+  // --- 9. بناء وإضافة الرسائل للمستند ---
   function appendMessage(role, text, image = null, category = 'عام') {
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg ${role}`;
@@ -302,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
     chatHistory.push({ role, text, image, category });
   }
 
-  // --- 9. الأدوات المساعدة (نسخ، صوت، حفظ، تصدير) ---
+  // --- 10. الأدوات المساعدة ---
   function copyToClipboard(text, btnElement) {
     const cleanText = text.replace(/[*#`]/g, '');
     navigator.clipboard.writeText(cleanText).then(() => {
