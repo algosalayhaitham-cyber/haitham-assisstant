@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل: مشاركة واتساب + رموز رياضية + ثيم داكن/فاتح + أقسام + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+// app.js - هيثم AI (شامل: طباعة مباشرة + مشاركة واتساب + رموز رياضية + ثيم داكن/فاتح + أقسام + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -281,9 +281,14 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI ${catBadge}</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // أزرار الإجراءات (مشاركة واتساب + نسخ + PDF + Word + قراءة صوتية)
+      // أزرار الإجراءات (طباعة + مشاركة واتساب + نسخ + PDF + Word + قراءة صوتية)
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
+
+      const printBtn = document.createElement('button');
+      printBtn.className = 'action-btn print-btn';
+      printBtn.innerHTML = '🖨️ طباعة';
+      printBtn.onclick = function () { printMessage(contentContainer); };
 
       const waBtn = document.createElement('button');
       waBtn.className = 'action-btn whatsapp-btn';
@@ -310,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function () {
       speakBtn.innerHTML = '🔊 قراءة صوتية';
       speakBtn.onclick = function () { speakText(text); };
 
+      actionsDiv.appendChild(printBtn);
       actionsDiv.appendChild(waBtn);
       actionsDiv.appendChild(copyBtn);
       actionsDiv.appendChild(pdfBtn);
@@ -326,6 +332,38 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // --- 10. الأدوات المساعدة ---
+
+  // دالة الطباعة المباشرة (رقم 2)
+  function printMessage(contentElement) {
+    const printWindow = window.open('', '_blank');
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="ar" dir="rtl">
+      <head>
+        <meta charset="UTF-8">
+        <title>طباعة مستند - هيثم AI</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+        <style>
+          body { font-family: 'Arial', sans-serif; direction: rtl; padding: 20px; color: #000; }
+          table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+          th, td { border: 1px solid #000; padding: 8px; text-align: right; }
+          th { background-color: #f2f2f2; }
+        </style>
+      </head>
+      <body>
+        <div>${contentElement.innerHTML}</div>
+        <script>
+          window.onload = function() {
+            window.print();
+            window.close();
+          };
+        <\/script>
+      </body>
+      </html>
+    `;
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  }
 
   // دالة المشاركة المباشرة عبر الواتساب (رقم 1)
   function shareToWhatsApp(text) {
@@ -435,4 +473,3 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML;
   }
 });
- 
