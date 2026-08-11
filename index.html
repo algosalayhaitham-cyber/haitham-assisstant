@@ -28,20 +28,37 @@
   <main class="container">
     <section class="hero">
       <div>
-        <p class="eyebrow">مرحبًا بك</p>
+        <p class="eyebrow">مرحبًا بك أستاذ هيثم</p>
         <h1>ماذا تريد أن تنجز اليوم؟</h1>
-        <p>اسأل هيثم AI في الرياضيات والتعليم والاختبارات والتحضير والأعمال المدرسية.</p>
+        <p>مساعدك الذكي لإعداد التحضير، بنوك الأسئلة، الشروحات الرياضية، والأعمال المدرسية.</p>
       </div>
       <div class="hero-mark">∑</div>
     </section>
 
     <section class="grid">
-      <button class="card" data-prompt="جهز لي تحضير درس رياضيات منظم، وسأذكر لك الصف واسم الدرس. ابدأ بسؤالي عن الصف والدرس."><b>📚</b><strong>تحضير درس</strong><small>تحضير منظم وجاهز</small></button>
-      <button class="card" data-prompt="أريد إنشاء اختبار رياضيات. اسألني عن الصف والدرس وعدد الأسئلة ونوعها ومستوى الصعوبة."><b>📝</b><strong>إنشاء اختبار</strong><small>أسئلة ونموذج إجابة</small></button>
-      <button class="card" data-prompt="أريد مساعدة في مسألة رياضيات. اطلب مني المسألة واشرح الحل خطوة بخطوة."><b>📐</b><strong>الرياضيات</strong><small>شرح وحل وتدريب</small></button>
-      <button class="card" data-prompt="أريد إعداد إعلان أو تعميم مدرسي. اسألني عن المناسبة والجمهور والمعلومات المطلوبة."><b>🏫</b><strong>المدرسة</strong><small>إعلانات وتقارير وبرامج</small></button>
-      <button class="card" data-prompt="أريد خطة علاجية أو إثرائية لطلاب. اسألني عن الصف والمشكلة والمدة."><b>🎓</b><strong>الطلاب</strong><small>خطط وتقييمات</small></button>
-      <button class="card" data-prompt="أريد تجهيز محتوى لتصميم منشور أو شهادة. اسألني عن المناسبة والمقاس والمعلومات."><b>🎨</b><strong>التصاميم</strong><small>نصوص وأفكار بصرية</small></button>
+      <button class="card" data-prompt="أريد تحضير درس رياضيات شامل ومكتمل العناصر (الأهداف، التمهيد، الاستراتيجيات، الوسائل، التقويم، الواجب). اطلب مني الصف اسم الدرس أولاً.">
+        <b>📚</b><strong>تحضير درس</strong><small>خطة درس معتمدة ومكتملة</small>
+      </button>
+
+      <button class="card" data-prompt="أريد إنشاء اختبار رياضيات متكامل مع نموذج الإجابة وسلم الدرجات. اطلب مني تحديد الصف، الدروس، وعدد الأسئلة.">
+        <b>📝</b><strong>إنشاء اختبار</strong><small>أسئلة متنوعة + نموذج الإجابة</small>
+      </button>
+
+      <button class="card" data-prompt="أريد شرح خطوات حل مسألة رياضية بالخطوات بالتفصيل والرموز الدقيقة. اطلب مني إرسال المسألة الآن.">
+        <b>📐</b><strong>حل مسألة</strong><small>خطوات تفصيلية + شرح تعليمي</small>
+      </button>
+
+      <button class="card" data-prompt="أريد صياغة تعميم أو إعلان مدرسي رسمي ومحفز للطلاب والأولياء. اطلب مني التفاصيل والمناسبة.">
+        <b>🏫</b><strong>إعلان مدرسي</strong><small>تعاميم ونشرات رسمية</small>
+      </button>
+
+      <button class="card" data-prompt="أريد خطة علاجية لرفع مستوى الطلاب ضعاف التحصيل في الرياضيات. اطلب مني تحديد المهارة المستهدفة والصف.">
+        <b>🎓</b><strong>خطة علاجية</strong><small>استراتيجيات ودعم للطلاب</small>
+      </button>
+
+      <button class="card" data-prompt="أريد أفكار ونصوص لتصميم شهادة تقدير أو بطاقة تكريم للطلاب المتفوقين. اسألني عن المناسبة والأسماء.">
+        <b>🎨</b><strong>تكريم وتصاميم</strong><small>عبارات وشهادات تقدير</small>
+      </button>
     </section>
 
     <section class="chat">
@@ -59,12 +76,12 @@
       </div>
 
       <form id="chatForm" class="composer">
-        <label for="imageInput" class="upload-btn" title="أرفق صورة">
+        <label for="imageInput" class="upload-btn" title="أرفق صورة مسألة أو مستند">
           📷
           <input type="file" id="imageInput" accept="image/*" style="display: none;">
         </label>
 
-        <textarea id="input" rows="2" placeholder="اكتب طلبك هنا..." required></textarea>
+        <textarea id="input" rows="2" placeholder="اكتب طلبك هنا أو اختر من القوالب أعلاه..." required></textarea>
         <button type="submit">إرسال ➤</button>
       </form>
     </section>
