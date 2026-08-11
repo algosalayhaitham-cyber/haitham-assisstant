@@ -383,6 +383,19 @@ body.light-mode .msg.user {
   border-color: #25d366;
 }
 
+/* زر الطباعة المباشرة (الميزة رقم 2) */
+.action-btn.print-btn {
+  background-color: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #f59e0b;
+}
+
+.action-btn.print-btn:hover {
+  background-color: #f59e0b;
+  color: #ffffff;
+  border-color: #f59e0b;
+}
+
 /* --- حاسبة وشريط الرموز الرياضية السريعة --- */
 .math-pad {
   display: flex;
@@ -394,5 +407,203 @@ body.light-mode .msg.user {
   white-space: nowrap;
 }
 
-.math
- 
+.math-pad::-webkit-scrollbar {
+  height: 3px;
+}
+
+.math-pad::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+.math-btn {
+  background-color: var(--card-bg);
+  color: #38bdf8;
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.math-btn:hover {
+  background-color: #38bdf8;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+/* --- معاينة الصور وصندوق الكتابة --- */
+.image-preview-container {
+  position: relative;
+  padding: 0.5rem 1rem;
+  background-color: rgba(15, 23, 42, 0.4);
+}
+
+.image-preview-container img {
+  max-height: 80px;
+  border-radius: 6px;
+}
+
+.remove-img-btn {
+  position: absolute;
+  top: 4px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.composer {
+  padding: 0.75rem;
+  background-color: rgba(15, 23, 42, 0.8);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.composer textarea {
+  flex: 1;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-family: inherit;
+  resize: none;
+}
+
+.composer textarea:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+.upload-btn, .voice-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-btn.recording {
+  background-color: #ef4444;
+  color: white;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.composer button[type="submit"] {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.composer button[type="submit"]:hover {
+  background-color: var(--accent-hover);
+}
+
+/* --- تنسيق الجداول --- */
+.pdf-export-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.pdf-export-content th {
+  background-color: #1e3a8a;
+  color: #f8fafc;
+  padding: 0.75rem;
+  text-align: right;
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+}
+
+.pdf-export-content td {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.pdf-export-content tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+}
+
+/* --- تنسيقات وضع الطباعة المباشرة (@media print) --- */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .topbar, .hero, .grid, .chat-header, .math-pad, .composer, footer, .msg-actions, .msg.user {
+    display: none !important;
+  }
+
+  .container, .chat, .messages {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .msg.ai {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: transparent !important;
+    color: #000000 !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .pdf-export-content table {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+  }
+
+  .pdf-export-content th {
+    background-color: #f0f0f0 !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+  }
+
+  .pdf-export-content td {
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+  }
+}
