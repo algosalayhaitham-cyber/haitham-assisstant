@@ -10,22 +10,24 @@ const handler = async (req, res) => {
       return res.status(400).json({ reply: 'اكتب رسالتك أولاً' });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    // هنا يتم قراءة المفتاح الخاص بـ Groq أو OpenAI
+    const apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({
-        reply: 'مفتاح OpenAI غير موجود في Vercel'
+        reply: 'مفتاح API غير موجود في Vercel'
       });
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // تم تغيير الرابط ليعمل مع سيرفرات Groq المجانية
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -43,7 +45,7 @@ const handler = async (req, res) => {
 
     if (!response.ok) {
       return res.status(response.status).json({
-        reply: data?.error?.message || 'خطأ من OpenAI'
+        reply: data?.error?.message || 'خطأ من مزود الخدمة'
       });
     }
 
@@ -63,3 +65,4 @@ const handler = async (req, res) => {
 };
 
 module.exports = handler;
+ 
