@@ -229,6 +229,7 @@ body.light-mode .chat {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .clear-chat-btn {
@@ -244,6 +245,28 @@ body.light-mode .chat {
 .clear-chat-btn:hover {
   color: #ef4444;
   border-color: #ef4444;
+}
+
+/* --- شريط البحث الداخلي (الميزة رقم 3) --- */
+.search-box {
+  flex: 1;
+  max-width: 220px;
+}
+
+.search-box input {
+  width: 100%;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-box input:focus {
+  border-color: #38bdf8;
 }
 
 /* --- تبويبات الأقسام والمكتبة --- */
@@ -607,3 +630,4 @@ footer {
     border: 1px solid #000000 !important;
   }
 }
+ 
