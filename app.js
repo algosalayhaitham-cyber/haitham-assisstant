@@ -1,4 +1,4 @@
-// app.js - هيثم AI (شامل: بحث في السجل + طباعة مباشرة + مشاركة واتساب + رموز رياضية + ثيم داكن/فاتح + أقسام + نسخ سريع + PWA + صور + معادلات + PDF + Word + حفظ + صوت)
+// app.js - هيثم AI (شامل الميزة رقم 4: تفضيل وأرشيف السجل وتصدير النسخ الاحتياطي + الواتساب + الطباعة + البحث)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const imagePreview = document.getElementById('imagePreview');
   const removeImageBtn = document.getElementById('removeImageBtn');
   const clearChatBtn = document.getElementById('clearChatBtn');
+  const exportBackupBtn = document.getElementById('exportBackupBtn');
   const voiceBtn = document.getElementById('voiceBtn');
   const searchInput = document.getElementById('searchInput');
 
@@ -128,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // أزرار تبويب الفلترة للأقسام
+  // أزرار تبويب الفلترة للأقسام والمفضلة
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function () {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -138,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // --- ميزة رقم 3: تفعيل محرك البحث الداخلي ---
+  // تفعيل محرك البحث الداخلي (الميزة رقم 3)
   if (searchInput) {
     searchInput.addEventListener('input', function () {
       filterAndSearchMessages();
@@ -151,9 +152,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     allMsgs.forEach(msg => {
       const cat = msg.dataset.category;
+      const isFav = msg.dataset.fav === 'true';
       const text = msg.textContent.toLowerCase();
 
-      const matchesCat = (activeFilter === 'all' || cat === activeFilter || !cat);
+      let matchesCat = false;
+      if (activeFilter === 'all') matchesCat = true;
+      else if (activeFilter === 'fav') matchesCat = isFav;
+      else matchesCat = (cat === activeFilter);
+
       const matchesSearch = (!query || text.includes(query));
 
       if (matchesCat && matchesSearch) {
@@ -188,15 +194,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // --- 7. بدء محادثة جديدة ---
+  // --- 7. بدء محادثة جديدة وتصدير نسخة احتياطية (الميزة رقم 4) ---
   if (clearChatBtn) {
     clearChatBtn.addEventListener('click', function () {
-      if (confirm('هل تريد بدء محادثة جديدة ومسح السجل الحالي؟')) {
-        localStorage.removeItem('haitham_chat_history');
-        chatHistory = [];
-        messages.innerHTML = '';
-        renderWelcomeMessage();
+      if (confirm('هل تريد بدء محادثة جديدة ومسح السجل غير المفضّل؟')) {
+        chatHistory = chatHistory.filter(item => item.isFav);
+        saveChatHistory();
+        renderFromHistory();
       }
+    });
+  }
+
+  if (exportBackupBtn) {
+    exportBackupBtn.addEventListener('click', function () {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(chatHistory, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "haitham_ai_backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
     });
   }
 
@@ -209,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = input.value.trim();
     if (!message && !selectedBase64Image) return;
 
-    appendMessage('user', message, selectedBase64Image, currentCategory);
+    appendMessage('user', message, selectedBase64Image, currentCategory, false);
     saveChatHistory();
 
     const payload = {
@@ -218,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const sentCat = currentCategory;
-    currentCategory = 'عام'; // إعادة الضبط بعد الإرسال
+    currentCategory = 'عام';
     input.value = '';
     selectedBase64Image = null;
     if (imageInput) imageInput.value = '';
@@ -247,22 +264,24 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!response.ok) throw new Error(data.reply || data.error || 'حدث خطأ في الخادم');
 
       const replyText = data.reply || 'لم يصل رد.';
-      appendMessage('ai', replyText, null, sentCat);
+      appendMessage('ai', replyText, null, sentCat, false);
       saveChatHistory();
 
     } catch (error) {
       document.getElementById('loadingMsg')?.remove();
-      appendMessage('ai', `حدث خطأ: ${error.message}`, null, sentCat);
+      appendMessage('ai', `حدث خطأ: ${error.message}`, null, sentCat, false);
     }
 
     messages.scrollTop = messages.scrollHeight;
   });
 
   // --- 9. بناء وإضافة الرسائل للمستند ---
-  function appendMessage(role, text, image = null, category = 'عام') {
+  function appendMessage(role, text, image = null, category = 'عام', isFav = false, index = null) {
+    const itemIndex = index !== null ? index : chatHistory.length;
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg ${role}`;
     msgDiv.dataset.category = category;
+    msgDiv.dataset.fav = isFav ? 'true' : 'false';
 
     const catBadge = (category && category !== 'عام') ? `<span class="category-badge">${category}</span>` : '';
 
@@ -296,46 +315,57 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI ${catBadge}</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // أزرار الإجراءات (طباعة + مشاركة واتساب + نسخ + PDF + Word + قراءة صوتية)
+      // أزرار الإجراءات
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
 
+      // الميزة رقم 4: زر المفضلة/الحفظ
+      const favBtn = document.createElement('button');
+      favBtn.className = `action-btn fav-btn ${isFav ? 'is-fav' : ''}`;
+      favBtn.innerHTML = isFav ? '⭐ مَفَضَّلَة' : '☆ تفضيل';
+      favBtn.onclick = function () {
+        const newFavStatus = !chatHistory[itemIndex].isFav;
+        chatHistory[itemIndex].isFav = newFavStatus;
+        saveChatHistory();
+        favBtn.className = `action-btn fav-btn ${newFavStatus ? 'is-fav' : ''}`;
+        favBtn.innerHTML = newFavStatus ? '⭐ مَفَضَّلَة' : '☆ تفضيل';
+        msgDiv.dataset.fav = newFavStatus ? 'true' : 'false';
+        filterAndSearchMessages();
+      };
+
+      // الميزة رقم 1: زر مشاركة الواتساب
+      const waBtn = document.createElement('button');
+      waBtn.className = 'action-btn whatsapp-btn';
+      waBtn.innerHTML = '📲 واتساب';
+      waBtn.onclick = function () { shareToWhatsApp(text); };
+
+      // الميزة رقم 2: زر الطباعة المباشرة
       const printBtn = document.createElement('button');
       printBtn.className = 'action-btn print-btn';
       printBtn.innerHTML = '🖨️ طباعة';
       printBtn.onclick = function () { printMessage(contentContainer); };
 
-      const waBtn = document.createElement('button');
-      waBtn.className = 'action-btn whatsapp-btn';
-      waBtn.innerHTML = '📲 مشاركة واتساب';
-      waBtn.onclick = function () { shareToWhatsApp(text); };
-
       const copyBtn = document.createElement('button');
       copyBtn.className = 'action-btn';
-      copyBtn.innerHTML = '📋 نسخ النص';
+      copyBtn.innerHTML = '📋 نسخ';
       copyBtn.onclick = function () { copyToClipboard(text, copyBtn); };
 
       const pdfBtn = document.createElement('button');
       pdfBtn.className = 'action-btn';
-      pdfBtn.innerHTML = '📄 تحميل PDF';
+      pdfBtn.innerHTML = '📄 PDF';
       pdfBtn.onclick = function () { exportToPDF(contentContainer); };
 
       const wordBtn = document.createElement('button');
       wordBtn.className = 'action-btn';
-      wordBtn.innerHTML = '📝 تحميل Word';
+      wordBtn.innerHTML = '📝 Word';
       wordBtn.onclick = function () { exportToWord(text); };
 
-      const speakBtn = document.createElement('button');
-      speakBtn.className = 'action-btn';
-      speakBtn.innerHTML = '🔊 قراءة صوتية';
-      speakBtn.onclick = function () { speakText(text); };
-
-      actionsDiv.appendChild(printBtn);
+      actionsDiv.appendChild(favBtn);
       actionsDiv.appendChild(waBtn);
+      actionsDiv.appendChild(printBtn);
       actionsDiv.appendChild(copyBtn);
       actionsDiv.appendChild(pdfBtn);
       actionsDiv.appendChild(wordBtn);
-      actionsDiv.appendChild(speakBtn);
       msgDiv.appendChild(actionsDiv);
     }
 
@@ -343,10 +373,18 @@ document.addEventListener('DOMContentLoaded', function () {
     filterAndSearchMessages();
     messages.scrollTop = messages.scrollHeight;
 
-    chatHistory.push({ role, text, image, category });
+    if (index === null) {
+      chatHistory.push({ role, text, image, category, isFav });
+    }
   }
 
   // --- 10. الأدوات المساعدة ---
+
+  function shareToWhatsApp(text) {
+    const cleanText = text.replace(/[*#`]/g, '');
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(cleanText)}`;
+    window.open(waUrl, '_blank');
+  }
 
   function printMessage(contentElement) {
     const printWindow = window.open('', '_blank');
@@ -379,40 +417,13 @@ document.addEventListener('DOMContentLoaded', function () {
     printWindow.document.close();
   }
 
-  function shareToWhatsApp(text) {
-    const cleanText = text.replace(/[*#`]/g, '');
-    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(cleanText)}`;
-    window.open(waUrl, '_blank');
-  }
-
   function copyToClipboard(text, btnElement) {
     const cleanText = text.replace(/[*#`]/g, '');
     navigator.clipboard.writeText(cleanText).then(() => {
       const originalHTML = btnElement.innerHTML;
-      btnElement.innerHTML = '✅ تم النسخ!';
-      btnElement.style.borderColor = '#10b981';
-      btnElement.style.color = '#10b981';
-      setTimeout(() => {
-        btnElement.innerHTML = originalHTML;
-        btnElement.style.borderColor = '';
-        btnElement.style.color = '';
-      }, 2000);
-    }).catch(() => {
-      alert('تعذر النسخ تلقائياً، يرجى تحديد النص ونسخه يدويًا.');
+      btnElement.innerHTML = '✅ تم!';
+      setTimeout(() => { btnElement.innerHTML = originalHTML; }, 2000);
     });
-  }
-
-  function speakText(text) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const cleanText = text.replace(/[*#$`]/g, '');
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = 'ar-SA';
-      utterance.rate = 0.95;
-      window.speechSynthesis.speak(utterance);
-    } else {
-      alert('متصفحك لا يدعم خاصية القراءة الصوتية.');
-    }
   }
 
   function saveChatHistory() {
@@ -423,16 +434,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const saved = localStorage.getItem('haitham_chat_history');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        messages.innerHTML = '';
-        parsed.forEach(item => appendMessage(item.role, item.text, item.image, item.category || 'عام'));
-        chatHistory = parsed;
+        chatHistory = JSON.parse(saved);
+        renderFromHistory();
       } catch (e) {
         renderWelcomeMessage();
       }
     } else {
       renderWelcomeMessage();
     }
+  }
+
+  function renderFromHistory() {
+    messages.innerHTML = '';
+    if (chatHistory.length === 0) {
+      renderWelcomeMessage();
+      return;
+    }
+    chatHistory.forEach((item, index) => {
+      appendMessage(item.role, item.text, item.image, item.category || 'عام', item.isFav || false, index);
+    });
   }
 
   function renderWelcomeMessage() {
@@ -442,14 +462,11 @@ document.addEventListener('DOMContentLoaded', function () {
         <p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.</p>
       </div>
     `;
-    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.', category: 'عام' }];
+    chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.', category: 'عام', isFav: false }];
   }
 
   function exportToPDF(element) {
-    if (typeof html2pdf === 'undefined') {
-      alert('مكتبة التصدير غير متحملة بعد.');
-      return;
-    }
+    if (typeof html2pdf === 'undefined') return;
     const opt = {
       margin: 10,
       filename: 'هيثم_AI_مستند.pdf',
@@ -486,4 +503,3 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML;
   }
 });
- 
