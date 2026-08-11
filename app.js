@@ -503,3 +503,52 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML;
   }
 });
+// ===== دوال التصحيح والتقدير =====
+function startCorrection() {
+    const examFile = document.getElementById('examFile').files[0];
+    if (!examFile) {
+        alert('❌ الرجاء رفع صورة الورقة أولاً');
+        return;
+    }
+
+    const resultDiv = document.getElementById('correctionResult');
+    resultDiv.innerHTML = '⏳ جاري التصحيح والتحليل...';
+
+    // محاكاة (استبدلها بـ API حقيقي)
+    setTimeout(() => {
+        resultDiv.innerHTML = `
+            ✅ تم التصحيح بنجاح!<br>
+            • السؤال 1: ✅ صحيح (5/5)<br>
+            • السؤال 2: ❌ خطأ (2/5)<br>
+            • السؤال 3: ⚠️ ناقص (3/5)<br>
+            <br>
+            <strong>📊 المجموع: 10 / 15</strong>
+        `;
+    }, 2000);
+}
+
+function estimateGrade() {
+    const resultDiv = document.getElementById('correctionResult');
+    const resultText = resultDiv.innerText;
+    const match = resultText.match(/(\d+)\s*\/\s*(\d+)/);
+    if (!match) {
+        alert('❌ لازم تصحح الورقة أولاً');
+        return;
+    }
+    const score = parseInt(match[1]);
+    const total = parseInt(match[2]);
+    const percentage = (score / total) * 100;
+
+    let grade = '';
+    if (percentage >= 90) grade = '⭐ ممتاز';
+    else if (percentage >= 75) grade = '🌟 جيد جداً';
+    else if (percentage >= 60) grade = '👍 جيد';
+    else if (percentage >= 45) grade = '📖 مقبول';
+    else grade = '📚 ضعيف';
+
+    resultDiv.innerHTML += `
+        <div style="background:#f0f8ff;padding:15px;border-radius:12px;margin-top:15px;">
+            <strong>التقدير: ${grade}</strong> (${score}/${total})
+        </div>
+    `;
+}
