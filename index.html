@@ -64,6 +64,10 @@
       <button class="card" data-category="خطط علاجية" data-prompt="أريد خطة علاجية لرفع مستوى الطلاب ضعاف التحصيل في الرياضيات. اطلب مني تحديد المهارة المستهدفة والصف.">
         <b>🎓</b><strong>خطة علاجية</strong><small>استراتيجيات ودعم للطلاب</small>
       </button>
+
+      <button class="card" data-category="تنبيهات" data-prompt="أعطني خطة تنظيم وتذكير يومية ومقترحات لإنجاز أعمالي المدرسية بفعالية هذا الأسبوع.">
+        <b>🔔</b><strong>تنبيهات وتذكير</strong><small>تنسيق وتذكير بالمهام اليومية</small>
+      </button>
     </section>
 
     <section class="chat">
@@ -83,6 +87,22 @@
       <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
         <img id="imagePreview" src="" alt="المعاينة">
         <button type="button" id="removeImageBtn" class="remove-img-btn">✕</button>
+      </div>
+
+      <div class="math-pad">
+        <button type="button" class="math-btn" data-symbol="\sqrt{}">√x</button>
+        <button type="button" class="math-btn" data-symbol="\frac{}{}">a/b</button>
+        <button type="button" class="math-btn" data-symbol="^2">x²</button>
+        <button type="button" class="math-btn" data-symbol="\sum">∑</button>
+        <button type="button" class="math-btn" data-symbol="\int">∫</button>
+        <button type="button" class="math-btn" data-symbol="\pi">π</button>
+        <button type="button" class="math-btn" data-symbol="\theta">θ</button>
+
+        <button type="button" class="math-btn" data-symbol=" \le ">≤</button>
+        <button type="button" class="math-btn" data-symbol=" \ge ">≥</button>
+        <button type="button" class="math-btn" data-symbol=" \neq ">≠</button>
+        <button type="button" class="math-btn" data-symbol=" \pm ">±</button>
+        <button type="button" class="math-btn" data-symbol=" \infty ">∞</button>
       </div>
 
       <form id="chatForm" class="composer">
