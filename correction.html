@@ -3,68 +3,672 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تصحيح أوراق الاختبار - Al-Haitham Series</title>
+    <title>تصحيح أوراق الاختبار - النسخة المتكاملة</title>
     <style>
-        body { font-family: Tahoma, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; text-align: center; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn { background: #007bff; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 15px; width: 100%; }
-        .btn:hover { background: #0056b3; }
-        #previewImage { max-width: 100%; margin-top: 15px; border-radius: 5px; display: none; }
-        .result-box { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; display: none; text-align: right; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 700px;
+            width: 100%;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .upload-area .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-success {
+            background: #48bb78;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .btn-danger {
+            background: #fc8181;
+        }
+        
+        .btn-danger:hover {
+            background: #f56565;
+        }
+        
+        #previewImage {
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 3px solid #667eea;
+        }
+        
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f6f9fc 0%, #e8f0fe 100%);
+            border-radius: 15px;
+            display: none;
+            border-right: 5px solid #667eea;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .result-box h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #4a5568;
+            font-weight: bold;
+        }
+        
+        .result-value {
+            color: #2d3748;
+        }
+        
+        .score-high {
+            color: #48bb78;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .score-medium {
+            color: #ed8936;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .score-low {
+            color: #fc8181;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #fc8181;
+            background: #fff5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            border: 1px solid #feb2b2;
+        }
+        
+        .input-group {
+            margin-top: 15px;
+            text-align: right;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: bold;
+        }
+        
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .input-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .actions .btn {
+            flex: 1;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .actions {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>تصحيح الاختبارات الآلي</h2>
-    <p>قم بتصوير ورقة إجابة الطالب لرصد الدرجة مباشرة</p>
+    <h2>📝 تصحيح الاختبارات الآلي</h2>
+    <p class="subtitle">قم برفع صورة ورقة إجابة الطالب للحصول على الدرجة مباشرة</p>
     
-    <!-- زر فتح الكاميرا واختيار الصورة -->
-    <input type="file" id="paperInput" accept="image/*" capture="environment" style="display: none;" onchange="previewPaper(event)">
-    <button class="btn" onclick="document.getElementById('paperInput').click()">📸 التقاط أو رفع ورقة الإجابة</button>
+    <!-- منطقة رفع الصورة -->
+    <div class="upload-area" id="uploadArea">
+        <div class="icon">📸</div>
+        <p style="color: #4a5568; font-size: 16px;">انقر هنا لاختيار صورة الورقة</p>
+        <p style="color: #a0aec0; font-size: 14px;">يدعم: JPG, PNG, PDF</p>
+        <input type="file" id="paperInput" accept="image/*" style="display: none;">
+    </div>
+
+    <!-- معلومات الطالب والاختبار -->
+    <div class="input-group">
+        <label for="studentName">👤 اسم الطالب</label>
+        <input type="text" id="studentName" placeholder="أدخل اسم الطالب" value="أحمد محمد">
+    </div>
+    
+    <div class="input-group">
+        <label for="answerKey">📋 الحل النموذجي (النص المتوقع)</label>
+        <textarea id="answerKey" placeholder="أدخل الإجابة النموذجية هنا...">الذكاء الاصطناعي هو فرع من علوم الحاسوب يهدف إلى محاكاة القدرات البشرية</textarea>
+    </div>
 
     <!-- معاينة الصورة -->
     <img id="previewImage" alt="معاينة الورقة">
 
-    <!-- زر بدء المعالجة -->
-    <button id="processBtn" class="btn" style="display: none; background: #28a745;" onclick="sendForCorrection()">⚡ بدء التصحيح ورصد الدرجة</button>
+    <!-- مؤشر التحميل -->
+    <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <p style="color: #4a5568;">⏳ جاري تحليل الصورة واستخراج النص...</p>
+    </div>
+
+    <!-- رسالة الخطأ -->
+    <div class="error" id="errorMessage"></div>
+
+    <!-- أزرار التحكم -->
+    <div class="actions">
+        <button id="processBtn" class="btn btn-success" style="display: none;" onclick="sendForCorrection()">
+            ⚡ بدء التصحيح
+        </button>
+        <button id="clearBtn" class="btn btn-danger" style="display: none;" onclick="clearAll()">
+            🗑️ مسح الكل
+        </button>
+    </div>
 
     <!-- صندوق النتيجة -->
     <div id="resultBox" class="result-box">
-        <h4>نتيجة التصحيح:</h4>
-        <p id="resultText">جاري المعالجة...</p>
+        <h4>✅ نتيجة التصحيح</h4>
+        <div class="result-item">
+            <span class="result-label">👤 اسم الطالب</span>
+            <span class="result-value" id="resultStudentName">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">📊 الدرجة</span>
+            <span class="result-value" id="resultScore">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">📝 الملاحظات</span>
+            <span class="result-value" id="resultFeedback">-</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">📄 النص المستخرج</span>
+            <span class="result-value" id="resultExtractedText" style="font-size: 14px; max-width: 300px; word-wrap: break-word;">-</span>
+        </div>
+        <div style="margin-top: 15px; text-align: center;">
+            <button class="btn" onclick="saveToHistory()" style="background: #4299e1;">
+                💾 حفظ في سجل الطلاب
+            </button>
+        </div>
     </div>
 </div>
 
-<script>
-    let selectedFile = null;
+<!-- استيراد Tesseract.js لاستخراج النص من الصورة -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
-    function previewPaper(event) {
+<!-- استيراد Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    // =============================================
+    // 1. تهيئة Supabase (اختياري - للتخزين)
+    // =============================================
+    // قم بفك التعليق وإضافة مفاتيحك الحقيقية إذا أردت استخدام Supabase
+    /*
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_KEY = 'your-anon-key';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    */
+
+    // =============================================
+    // 2. المتغيرات العامة
+    // =============================================
+    let selectedFile = null;
+    let imageBase64 = null;
+    let extractedText = '';
+    let scoreResult = null;
+
+    // =============================================
+    // 3. رفع الصورة ومعاينتها
+    // =============================================
+    const uploadArea = document.getElementById('uploadArea');
+    const paperInput = document.getElementById('paperInput');
+    const previewImage = document.getElementById('previewImage');
+    const processBtn = document.getElementById('processBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorMessage = document.getElementById('errorMessage');
+    const resultBox = document.getElementById('resultBox');
+
+    // رفع الصورة بالنقر على المنطقة
+    uploadArea.addEventListener('click', function() {
+        paperInput.click();
+    });
+
+    // رفع الصورة بسحبها وإفلاتها
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#667eea';
+        this.style.background = '#f0f2ff';
+    });
+
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#ddd';
+        this.style.background = '#fafafa';
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#ddd';
+        this.style.background = '#fafafa';
+        
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleFile(file);
+        } else {
+            showError('الرجاء سحب ملف صورة فقط');
+        }
+    });
+
+    // معالجة اختيار الملف
+    paperInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
-            selectedFile = file;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.getElementById('previewImage');
-                img.src = e.target.result;
-                img.style.display = 'block';
-                document.getElementById('processBtn').style.display = 'block';
-                document.getElementById('resultBox').style.display = 'none';
+            handleFile(file);
+        }
+    });
+
+    function handleFile(file) {
+        // التحقق من حجم الصورة (حد أقصى 10 ميجابايت)
+        if (file.size > 10 * 1024 * 1024) {
+            showError('حجم الصورة كبير جداً. الرجاء اختيار صورة أقل من 10 ميجابايت.');
+            return;
+        }
+
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imageBase64 = e.target.result;
+            previewImage.src = imageBase64;
+            previewImage.style.display = 'block';
+            processBtn.style.display = 'block';
+            clearBtn.style.display = 'block';
+            resultBox.style.display = 'none';
+            hideError();
+            
+            // تغيير نص منطقة الرفع
+            uploadArea.querySelector('p:first-of-type').textContent = '✅ تم رفع الصورة بنجاح';
+            uploadArea.style.borderColor = '#48bb78';
+            uploadArea.style.background = '#f0fff4';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // =============================================
+    // 4. مسح الكل
+    // =============================================
+    function clearAll() {
+        selectedFile = null;
+        imageBase64 = null;
+        extractedText = '';
+        scoreResult = null;
+        previewImage.style.display = 'none';
+        previewImage.src = '';
+        processBtn.style.display = 'none';
+        clearBtn.style.display = 'none';
+        resultBox.style.display = 'none';
+        loadingIndicator.style.display = 'none';
+        hideError();
+        paperInput.value = '';
+        
+        uploadArea.querySelector('p:first-of-type').textContent = 'انقر هنا لاختيار صورة الورقة';
+        uploadArea.style.borderColor = '#ddd';
+        uploadArea.style.background = '#fafafa';
+        
+        document.getElementById('studentName').value = '';
+    }
+
+    // =============================================
+    // 5. دالة التصحيح الرئيسية (تعمل في المتصفح)
+    // =============================================
+    async function sendForCorrection() {
+        if (!imageBase64) {
+            showError('الرجاء رفع صورة أولاً');
+            return;
+        }
+
+        const studentName = document.getElementById('studentName').value || 'غير معروف';
+        const answerKey = document.getElementById('answerKey').value || '';
+
+        if (!answerKey.trim()) {
+            showError('الرجاء إدخال الحل النموذجي');
+            return;
+        }
+
+        // إظهار مؤشر التحميل
+        loadingIndicator.style.display = 'block';
+        processBtn.disabled = true;
+        resultBox.style.display = 'none';
+        hideError();
+
+        try {
+            // =============================================
+            // الخطوة 1: استخراج النص من الصورة باستخدام Tesseract.js
+            // =============================================
+            const result = await Tesseract.recognize(
+                imageBase64,
+                'ara+eng', // اللغة العربية والإنجليزية
+                {
+                    logger: function(m) {
+                        if (m.status === 'recognizing text') {
+                            console.log(`التقدم: ${Math.round(m.progress * 100)}%`);
+                        }
+                    }
+                }
+            );
+
+            extractedText = result.data.text;
+            console.log('📄 النص المستخرج:', extractedText);
+
+            // =============================================
+            // الخطوة 2: حساب الدرجة (خوارزمية بسيطة)
+            // =============================================
+            const score = calculateScore(extractedText, answerKey);
+            const feedback = generateFeedback(score);
+
+            // حفظ النتيجة
+            scoreResult = {
+                studentName: studentName,
+                score: score,
+                feedback: feedback,
+                extractedText: extractedText.substring(0, 200) + (extractedText.length > 200 ? '...' : '')
             };
-            reader.readAsDataURL(file);
+
+            // =============================================
+            // الخطوة 3: عرض النتيجة
+            // =============================================
+            displayResult(scoreResult);
+
+        } catch (error) {
+            console.error('❌ خطأ:', error);
+            showError('حدث خطأ أثناء المعالجة: ' + error.message);
+        } finally {
+            loadingIndicator.style.display = 'none';
+            processBtn.disabled = false;
         }
     }
 
-    function sendForCorrection() {
-        const resultBox = document.getElementById('resultBox');
-        const resultText = document.getElementById('resultText');
+    // =============================================
+    // 6. خوارزمية حساب الدرجة
+    // =============================================
+    function calculateScore(studentAnswer, modelAnswer) {
+        if (!studentAnswer || !modelAnswer) return 0;
+
+        // تنظيف النصوص
+        const cleanStudent = studentAnswer.trim().toLowerCase();
+        const cleanModel = modelAnswer.trim().toLowerCase();
+
+        // حساب التشابه (نسبة الكلمات المشتركة)
+        const studentWords = cleanStudent.split(/\s+/);
+        const modelWords = cleanModel.split(/\s+/);
+        
+        if (modelWords.length === 0) return 0;
+
+        let matchCount = 0;
+        for (let word of studentWords) {
+            if (modelWords.includes(word)) {
+                matchCount++;
+            }
+        }
+
+        // نسبة التشابه
+        const similarity = matchCount / modelWords.length;
+        
+        // حساب الدرجة من 20
+        let score = Math.round(similarity * 20);
+        
+        // حد أدنى 2 درجات للمحاولة
+        if (studentAnswer.length > 10 && score < 2) score = 2;
+        
+        // حد أقصى 20
+        return Math.min(score, 20);
+    }
+
+    // =============================================
+    // 7. توليد ملاحظات
+    // =============================================
+    function generateFeedback(score) {
+        if (score >= 18) return '🌟 ممتاز! إجابة متقنة وشاملة.';
+        if (score >= 15) return '👍 جيد جداً، لكن يمكن تحسين بعض النقاط.';
+        if (score >= 10) return '📖 جيد، تحتاج إلى مراجعة بعض الأجزاء.';
+        if (score >= 5) return '⚠️ يحتاج إلى تحسين كبير في الإجابة.';
+        return '📚 يرجى مراجعة المادة جيداً والمحاولة مرة أخرى.';
+    }
+
+    // =============================================
+    // 8. عرض النتيجة
+    // =============================================
+    function displayResult(result) {
+        document.getElementById('resultStudentName').textContent = result.studentName;
+        
+        // تلوين الدرجة حسب قيمتها
+        const scoreElement = document.getElementById('resultScore');
+        scoreElement.textContent = `${result.score}/20`;
+        scoreElement.className = 'result-value';
+        if (result.score >= 15) {
+            scoreElement.classList.add('score-high');
+        } else if (result.score >= 10) {
+            scoreElement.classList.add('score-medium');
+        } else {
+            scoreElement.classList.add('score-low');
+        }
+        
+        document.getElementById('resultFeedback').textContent = result.feedback;
+        document.getElementById('resultExtractedText').textContent = result.extractedText;
         
         resultBox.style.display = 'block';
-        resultText.innerHTML = "جاري إرسال الصورة للتحليل وقراءة الدرجة...";
-
-        // هنا سيتم لاحقاً ربط الكود بإرسال الصورة للسيرفر ومعالجتها ثم حفظها في Supabase
+        resultBox.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // =============================================
+    // 9. حفظ في سجل الطلاب (Supabase)
+    // =============================================
+    async function saveToHistory() {
+        if (!scoreResult) {
+            showError('لا توجد نتيجة لحفظها');
+            return;
+        }
+
+        // إذا كنت قد فعّلت Supabase، استخدم هذا الكود:
+        /*
+        try {
+            const { data, error } = await supabase
+                .from('student_grades')
+                .insert([{
+                    student_name: scoreResult.studentName,
+                    score: scoreResult.score,
+                    notes: scoreResult.feedback,
+                    extracted_text: scoreResult.extractedText,
+                    created_at: new Date().toISOString()
+                }]);
+
+            if (error) throw error;
+            
+            alert('✅ تم حفظ النتيجة في سجل الطلاب بنجاح!');
+        } catch (error) {
+            console.error('خطأ في الحفظ:', error);
+            alert('❌ فشل الحفظ: ' + error.message);
+        }
+        */
+
+        // نسخة تجريبية (محاكاة الحفظ)
+        alert(`✅ تم حفظ نتيجة ${scoreResult.studentName} (${scoreResult.score}/20) في السجل المحلي`);
+        console.log('📊 البيانات المحفوظة:', scoreResult);
+    }
+
+    // =============================================
+    // 10. دوال مساعدة
+    // =============================================
+    function showError(message) {
+        errorMessage.textContent = '❌ ' + message;
+        errorMessage.style.display = 'block';
+    }
+
+    function hideError() {
+        errorMessage.style.display = 'none';
+    }
+
+    // =============================================
+    // 11. مثال للاختبار السريع (تشغيل تلقائي)
+    // =============================================
+    console.log('🚀 التطبيق جاهز للاستخدام!');
+    console.log('📌 ارفع صورة تحتوي على نص عربي لاستخراجها وتصحيحها');
 </script>
 
 </body>
-</html>
+</html> 
