@@ -36,7 +36,7 @@
     </section>
 
     <section class="grid">
-      <button class="card" data-prompt="أريد تحضير درس رياضيات شامل ومكتمل العناصر (الأهداف، التمهيد، الاستراتيجيات، الوسائل، التقويم، الواجب). اطلب مني الصف اسم الدرس أولاً.">
+      <button class="card" data-prompt="أريد تحضير درس رياضيات شامل ومكتمل العناصر (الأهداف، التمهيد، الاستراتيجيات، الوسائل، التقويم، الواجب). اطلب مني الصف واسم الدرس أولاً.">
         <b>📚</b><strong>تحضير درس</strong><small>خطة درس معتمدة ومكتملة</small>
       </button>
 
@@ -67,8 +67,7 @@
         <button id="clearChatBtn" class="clear-chat-btn">محادثة جديدة ➕</button>
       </div>
 
-      <div id="messages" class="messages">
-        </div>
+      <div id="messages" class="messages"></div>
 
       <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
         <img id="imagePreview" src="" alt="المعاينة">
@@ -81,7 +80,9 @@
           <input type="file" id="imageInput" accept="image/*" style="display: none;">
         </label>
 
-        <textarea id="input" rows="2" placeholder="اكتب طلبك هنا أو اختر من القوالب أعلاه..." required></textarea>
+        <button type="button" id="voiceBtn" class="voice-btn" title="تحدث بالصوت">🎤</button>
+
+        <textarea id="input" rows="2" placeholder="اكتب طلبك هنا أو اضغط 🎤 للتحدث..." required></textarea>
         <button type="submit">إرسال ➤</button>
       </form>
     </section>
