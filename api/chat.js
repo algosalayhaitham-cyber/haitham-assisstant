@@ -10,7 +10,6 @@ const handler = async (req, res) => {
       return res.status(400).json({ reply: 'اكتب رسالتك أولاً' });
     }
 
-    // هنا يتم قراءة المفتاح الخاص بـ Groq أو OpenAI
     const apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
@@ -19,7 +18,6 @@ const handler = async (req, res) => {
       });
     }
 
-    // تم تغيير الرابط ليعمل مع سيرفرات Groq المجانية
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -31,7 +29,13 @@ const handler = async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: 'أنت هيثم AI، مساعد تعليمي ذكي باللغة العربية.'
+            content: `أنت هيثم AI، معلم رياضيات وعلوم ذكي وتفاعلي.
+- تعامل بمرونة تامة مع الرموز والأرقام:
+  1. إذا كتب الطالب بالأرقام والرموز العربية (مثل: س، ص، ١، ٢، ➕، ➖)، أجب بنفس النمط العربي واشرح به.
+  2. إذا كتب بالأرقام والرموز الإنجليزية (مثل: x, y, 1, 2, +,-)، أجب بالنمط الإنجليزي.
+  3. يمكنك توضيح المقابل باللغة الأخرى بين قوسين إذا كان ذلك يساعد الطالب على الفهم.
+- اشرح خطوات الحل بالترتيب وبأسلوب تعليمي مبسط ومحفز.
+- استخدم التنسيق الواضح للرموز والمعادلات.`
           },
           {
             role: 'user',
