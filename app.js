@@ -1,4 +1,4 @@
-// app.js - هيثم AI (مع دعم الصور، المعادلات، PDF، الحفظ، والإملاء والقراءة الصوتية)
+// app.js - هيثم AI (شامل: صور + معادلات + PDF + Word + حفظ + صوت)
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let isRecording = false;
   let recognition = null;
 
-  // إعداد ميزة التعرف على الصوت
+  // إعداد الإملاء الصوتي
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (SpeechRecognition) {
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
       stopRecording();
     };
   } else {
-    if (voiceBtn) voiceBtn.style.display = 'none'; // إخفاء الزر إذا كان المتصفح لا يدعمه
+    if (voiceBtn) voiceBtn.style.display = 'none';
   }
 
   function stopRecording() {
@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // الضغط على زر المايك
   if (voiceBtn) {
     voiceBtn.addEventListener('click', function () {
       if (!recognition) return;
@@ -70,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // تحميل السجل عند التشغيل
+  // تحميل المحادثات المحفوظة
   loadChatHistory();
 
   // أزرار القوالب
@@ -209,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // أزرار التفاعل (تحميل PDF + القراءة الصوتية)
+      // أزرار الإجراءات (PDF + Word + قراءة صوتية)
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
 
@@ -218,12 +217,18 @@ document.addEventListener('DOMContentLoaded', function () {
       pdfBtn.innerHTML = '📄 تحميل PDF';
       pdfBtn.onclick = function () { exportToPDF(contentContainer); };
 
+      const wordBtn = document.createElement('button');
+      wordBtn.className = 'action-btn';
+      wordBtn.innerHTML = '📝 تحميل Word';
+      wordBtn.onclick = function () { exportToWord(text); };
+
       const speakBtn = document.createElement('button');
       speakBtn.className = 'action-btn';
       speakBtn.innerHTML = '🔊 قراءة صوتیة';
       speakBtn.onclick = function () { speakText(text); };
 
       actionsDiv.appendChild(pdfBtn);
+      actionsDiv.appendChild(wordBtn);
       actionsDiv.appendChild(speakBtn);
       msgDiv.appendChild(actionsDiv);
     }
@@ -234,11 +239,11 @@ document.addEventListener('DOMContentLoaded', function () {
     chatHistory.push({ role, text, image });
   }
 
-  // دالة النطق الصوتي للرد
+  // النطق الصوتي للرد
   function speakText(text) {
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel(); // إيقاف أي قراءة سابقة
-      const cleanText = text.replace(/[*#$`]/g, ''); // إزالة رموز الماركداون للأنماط
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/[*#$`]/g, '');
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'ar-SA';
       utterance.rate = 0.95;
@@ -278,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
     chatHistory = [{ role: 'ai', text: 'مرحبًا 👋\nأنا جاهز لمساعدتك. اكتب طلبك أو تحدث عبر المايك 🎤 أو أرفق صورة.' }];
   }
 
+  // دالة تصدير PDF
   function exportToPDF(element) {
     if (typeof html2pdf === 'undefined') {
       alert('مكتبة التصدير غير متحملة بعد.');
@@ -291,6 +297,27 @@ document.addEventListener('DOMContentLoaded', function () {
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(element).save();
+  }
+
+  // دالة تصدير Word (.docx / .doc)
+  function exportToWord(text) {
+    const cleanText = text.replace(/[*#`]/g, '');
+    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+      "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+      "xmlns='http://www.w3.org/TR/REC-html40'>"+
+      "<head><meta charset='utf-8'><title>مستند هيثم AI</title>"+
+      "<style>body { font-family: 'Arial', sans-serif; direction: rtl; text-align: right; }</style>"+
+      "</head><body>";
+    const footer = "</body></html>";
+    const sourceHTML = header + "<div>" + cleanText.replace(/\n/g, "<br>") + "</div>" + footer;
+
+    const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+    const fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = 'هيثم_AI_مستند.doc';
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
   }
 
   function escapeHtml(text) {
