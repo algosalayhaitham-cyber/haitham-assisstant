@@ -7,6 +7,14 @@
   <title>هيثم AI</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="stylesheet" href="/styles.css">
+
+  <!-- مكتبة تنسيق النص والنقاط (Marked) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- مكتبة تنسيق المعادلات الرياضية (KaTeX) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -38,7 +46,7 @@
 
     <section class="chat">
       <div id="messages" class="messages">
-        <div class="msg ai"><b>هيثم AI</b><p>مرحبًا أستاذ هيثم 👋<br>أنا جاهز لمساعدتك. اكتب طلبك مباشرة.</p></div>
+        <div class="msg ai"><b>هيثم AI</b><p>مرحبًا 👋<br>أنا جاهز لمساعدتك. اكتب طلبك مباشرة.</p></div>
       </div>
       <form id="chatForm" class="composer">
         <textarea id="input" rows="2" placeholder="اكتب طلبك هنا..." required></textarea>
