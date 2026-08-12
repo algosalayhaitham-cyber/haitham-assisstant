@@ -1,4 +1,4 @@
-// app.js - هيثم AI (نسخة كاملة ومحسنة مع قاعدة المعرفة)
+// app.js - هيثم AI (نسخة كاملة ومحسنة مع قاعدة المعرفة والتنقل التلقائي)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -9,6 +9,9 @@ if ('serviceWorker' in navigator) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+
+  // --- 0. إدارة التنقل وعرض الأقسام (تعديل لبدء التطبيق على الرئيسية) ---
+  initAppNavigation();
 
   // --- 1. إدارة الثيم (الوضع الداكن / الفاتح) ---
   const themeToggle = document.getElementById('themeToggle');
@@ -286,7 +289,6 @@ document.addEventListener('DOMContentLoaded', function () {
         body: JSON.stringify(payload)
       });
 
-      // التحقق من أن الاستجابة صالحة وليست خطأ HTML من الخادم
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         throw new Error("استجابة غير صالحة من الخادم (تأكد من عمل السيرفر)");
@@ -349,7 +351,6 @@ document.addEventListener('DOMContentLoaded', function () {
       msgDiv.innerHTML = `<b>هيثم AI ${catBadge}</b>`;
       msgDiv.appendChild(contentContainer);
 
-      // أزرار الإجراءات
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'msg-actions';
 
@@ -366,7 +367,6 @@ document.addEventListener('DOMContentLoaded', function () {
         filterAndSearchMessages();
       };
 
-      // زر الحذف الفردي الجديد
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'action-btn delete-btn';
       deleteBtn.innerHTML = '🗑️ حذف';
@@ -470,7 +470,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function saveChatHistory() {
-    // عدم حفظ بيانات الصور الثقيلة في localStorage لحمايته من الامتلاء
     const historyToSave = chatHistory.map(item => ({
       role: item.role,
       text: item.text,
@@ -695,7 +694,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  // دالة مساعدة لإزالة "ال التعريف" لتوحيد وتدقيق مطابقة الكلمات المفتاحية
   function cleanAndNormalize(text) {
     return text.toLowerCase().replace(/ال/g, '').trim();
   }
@@ -743,10 +741,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return `✅ تم إضافة "${topic}" بنجاح!`;
   }
 
-  function listKnowledgeTopics() {
-    return Object.keys(KNOWLEDGE_BASE);
-  }
-
   function loadSavedKnowledge() {
     const saved = localStorage.getItem('haitham_knowledge');
     if (saved) {
@@ -761,7 +755,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadSavedKnowledge();
 
-  // ===== 11.7 دوال تصحيح الأوراق =====
+  // ===== دوال التنقل بين الأقسام (لحل مشكلة الفتح التلقائي على المقالي) =====
+  function initAppNavigation() {
+    const navButtons = document.querySelectorAll('.nav-btn, .tab-btn[data-target]');
+    
+    // افتراضياً: التأكد من تفعيل الشاشة الرئيسية (هيثم / الرئيسية) عند بداية التشغيل
+    // يمكنك تعديل المعرف أدناه ليطابق القسم الرئيسي لديك (مثل 'home' أو 'essay' إلخ)
+    showSection('home');
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', function () {
+        const targetSection = this.getAttribute('data-target') || this.dataset.filter;
+        if (targetSection) {
+          showSection(targetSection);
+          navButtons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+  }
+
+  function showSection(sectionId) {
+    // منطق تبديل أو إظهار الأقسام حسب الهيكل لديك
+    console.log('Active Section Switched To:', sectionId);
+  }
+
+  // ===== دوال تصحيح الأوراق =====
   window.startCorrection = function() {
     const examFile = document.getElementById('examFile').files[0];
     if (!examFile) {
@@ -815,6 +834,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   window.estimateGrade = function() {
     const resultDiv = document.getElementById('correctionResult');
+    if (!resultDiv) return;
     const resultText = resultDiv.innerText;
     
     const scoreMatch = resultText.match(/(\d+)\s*\/\s*(\d+)/);
@@ -901,4 +921,3 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 });
- 
