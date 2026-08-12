@@ -1,4 +1,4 @@
-// app.js - هيثم AI (نسخة كاملة ومحسنة مع قاعدة المعرفة والتنقل التلقائي)
+// app.js - هيثم AI (نسخة كاملة مع التوجيه التلقائي للشاشة الرئيسية)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -10,8 +10,8 @@ if ('serviceWorker' in navigator) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  // --- 0. إدارة التنقل وعرض الأقسام (تعديل لبدء التطبيق على الرئيسية) ---
-  initAppNavigation();
+  // --- 🌟 إصلاح مشكلة الفتح على المقالي: فرض العرض على واجهة هيثم الرئيسية أولاً ---
+  forceOpenHomeByDefault();
 
   // --- 1. إدارة الثيم (الوضع الداكن / الفاتح) ---
   const themeToggle = document.getElementById('themeToggle');
@@ -231,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = input.value.trim();
     if (!message && !selectedBase64Image) return;
 
-    // 🔍 البحث في قاعدة المعرفة أولاً
     const knowledgeAnswer = answerFromKnowledge(message);
     
     if (knowledgeAnswer) {
@@ -555,6 +554,34 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ================================================================
+  // ===== وظيفة إجبار التطبيق على فتح الشاشة الرئيسية (هيثم) وإخفاء المقالي =====
+  // ================================================================
+  function forceOpenHomeByDefault() {
+    // محاولة إخفاء أي أقسام تصحيح أو مقالي قد تفتح تلقائياً عند التشغيل
+    const essaySections = document.querySelectorAll('#essay, .essay-section, [data-section="essay"]');
+    essaySections.forEach(sec => {
+      sec.style.display = 'none';
+    });
+
+    // إظهار القسم الرئيسي أو محادثة هيثم
+    const homeSections = document.querySelectorAll('#home, .chat-container, .main-section, .hero');
+    homeSections.forEach(sec => {
+      sec.style.display = 'block';
+    });
+
+    // ضبط الأيقونة النشطة في الشريط السفلي (جعل هيثم نشطة وإلغاء نشاط البقية)
+    const navButtons = document.querySelectorAll('.nav-btn, .tab-btn');
+    navButtons.forEach(btn => {
+      const text = btn.textContent || '';
+      if (text.includes('هيثم') || btn.getAttribute('data-target') === 'home' || btn.querySelector('.fa-brain, img')) {
+        btn.classList.add('active');
+      } else if (text.includes('مقالي') || text.includes('تصحيح')) {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // ================================================================
   // ===== 11. قاعدة المعرفة المدمجة (الطريقة السريعة) =====
   // ================================================================
 
@@ -754,31 +781,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   loadSavedKnowledge();
-
-  // ===== دوال التنقل بين الأقسام (لحل مشكلة الفتح التلقائي على المقالي) =====
-  function initAppNavigation() {
-    const navButtons = document.querySelectorAll('.nav-btn, .tab-btn[data-target]');
-    
-    // افتراضياً: التأكد من تفعيل الشاشة الرئيسية (هيثم / الرئيسية) عند بداية التشغيل
-    // يمكنك تعديل المعرف أدناه ليطابق القسم الرئيسي لديك (مثل 'home' أو 'essay' إلخ)
-    showSection('home');
-
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', function () {
-        const targetSection = this.getAttribute('data-target') || this.dataset.filter;
-        if (targetSection) {
-          showSection(targetSection);
-          navButtons.forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-        }
-      });
-    });
-  }
-
-  function showSection(sectionId) {
-    // منطق تبديل أو إظهار الأقسام حسب الهيكل لديك
-    console.log('Active Section Switched To:', sectionId);
-  }
 
   // ===== دوال تصحيح الأوراق =====
   window.startCorrection = function() {
