@@ -41,9 +41,10 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             padding: 12px;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
             color: #2d3748;
             overflow-x: hidden;
+            direction: rtl;
         }
         
         /* ===== شريط التطبيق العلوي ===== */
@@ -124,23 +125,24 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             display: flex;
             justify-content: space-around;
             padding: 8px 0;
             padding-bottom: env(safe-area-inset-bottom);
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
             z-index: 1000;
             border-top: 1px solid rgba(0,0,0,0.05);
+            direction: rtl;
         }
         
         .bottom-nav .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 4px 12px;
+            padding: 4px 8px;
             border: none;
             background: none;
             cursor: pointer;
@@ -148,18 +150,18 @@
             color: #a0aec0;
             transition: all 0.3s ease;
             font-family: inherit;
-            min-width: 60px;
+            flex: 1;
             position: relative;
         }
         
         .bottom-nav .nav-item .icon {
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 2px;
             transition: all 0.3s ease;
         }
         
         .bottom-nav .nav-item .label {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
         }
         
@@ -177,7 +179,7 @@
             top: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 20px;
+            width: 24px;
             height: 3px;
             background: var(--primary);
             border-radius: 10px;
@@ -185,14 +187,14 @@
         
         .bottom-nav .nav-item .badge-nav {
             position: absolute;
-            top: 0;
-            right: 4px;
+            top: 2px;
+            right: 22%;
             background: var(--danger);
             color: white;
             font-size: 9px;
-            padding: 2px 6px;
+            padding: 1px 5px;
             border-radius: 50px;
-            min-width: 18px;
+            min-width: 16px;
             text-align: center;
         }
         
@@ -327,6 +329,8 @@
             font-family: inherit;
             background: #f7fafc;
             -webkit-appearance: none;
+            direction: rtl;
+            text-align: right;
         }
         
         .input-group input:focus,
@@ -352,6 +356,7 @@
             display: none;
             border-right: 5px solid var(--primary);
             animation: fadeIn 0.5s ease;
+            text-align: right;
         }
         
         .result-box h4 {
@@ -391,18 +396,6 @@
             font-weight: bold;
         }
         
-        .score-medium {
-            color: var(--warning);
-            font-size: 26px;
-            font-weight: bold;
-        }
-        
-        .score-low {
-            color: var(--danger);
-            font-size: 26px;
-            font-weight: bold;
-        }
-        
         /* ===== مؤشر التحميل ===== */
         .loading {
             display: none;
@@ -435,6 +428,7 @@
             display: none;
             border: 2px solid #feb2b2;
             font-size: 14px;
+            text-align: right;
         }
         
         /* ===== MCQ ===== */
@@ -453,13 +447,6 @@
             margin-top: 8px;
         }
         
-        .question-options input {
-            padding: 8px 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-        
         /* ===== نصائح هيثم ===== */
         .haitham-tip {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
@@ -471,6 +458,7 @@
             align-items: center;
             gap: 10px;
             font-size: 14px;
+            text-align: right;
         }
         
         .haitham-tip .icon {
@@ -496,11 +484,6 @@
             border-radius: 12px;
             text-align: center;
             border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:active {
-            transform: scale(0.95);
         }
         
         .stat-card .number {
@@ -524,6 +507,8 @@
             display: none;
             box-shadow: var(--shadow);
             border: 3px solid var(--primary);
+            margin-left: auto;
+            margin-right: auto;
         }
         
         /* ===== أزرار الإجراءات ===== */
@@ -539,7 +524,6 @@
             min-width: 100px;
         }
         
-        /* ===== تحسينات للتطبيق ===== */
         .badge-required {
             background: var(--danger);
             color: white;
@@ -548,18 +532,6 @@
             font-size: 10px;
             font-weight: bold;
             margin-right: 6px;
-        }
-        
-        /* ===== التجاوب ===== */
-        @media (max-width: 480px) {
-            .container { padding: 14px; }
-            .app-bar .logo { font-size: 17px; }
-            .app-bar .status { font-size: 11px; }
-            .question-options { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .result-value { max-width: 100%; }
-            .bottom-nav .nav-item { min-width: 50px; }
-            .bottom-nav .nav-item .label { font-size: 9px; }
         }
         
         /* ===== الـ Confetti ===== */
@@ -589,7 +561,7 @@
 </head>
 <body>
 
-<!-- ===== شريط التطبيق ===== -->
+<!-- ===== شريط التطبيق العلوي ===== -->
 <div class="app-bar">
     <div class="logo">
         🤖 اسأل هيثم
@@ -779,7 +751,7 @@
     </div>
 </div>
 
-<!-- ===== شريط التنقل السفلي ===== -->
+<!-- ===== شريط التنقل السفلي (مرتب بالترتيب الصحيح يميناً لليسرى) ===== -->
 <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-tab="essay" onclick="switchTab('essay')">
         <span class="icon">📝</span>
@@ -799,9 +771,6 @@
         <span class="badge-nav" id="haithamBadge">0</span>
     </button>
 </nav>
-
-<!-- ===== السكريبتات والسكربت البرمجي المحدث ===== -->
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
 <script>
     let currentTab = 'essay';
@@ -921,7 +890,6 @@
         addMcqQuestion();
     }
     
-    // دالة الاتصال بـ Backend API للذكاء الاصطناعي
     async function askHaitham() {
         const question = document.getElementById('haithamQuestion').value.trim();
         const topic = document.getElementById('haithamTopic').value;
@@ -986,7 +954,6 @@
                 promptText = `قم بتصحيح ورقة إجابات اختيار من متعدد (MCQ) للطالب ${studentName} بناءً على الصورة المرفقة.`;
             }
             
-            // إرسال البيانات والصورة إلى الخادم الخلفي /api/chat
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1072,7 +1039,7 @@
         if (!scoreResult) { showError('لا توجد نتيجة للمشاركة'); return; }
         const text = `📊 نتيجة الطالب: ${scoreResult.studentName}\n📝 التقييم: ${scoreResult.feedback}`;
         if (navigator.share) {
-            navigator.share({ title: 'نتيجة اسأل هيثم', text }).catch(() => {});
+            navigator.share({ title: 'اسأل هيثم', text }).catch(() => {});
         } else {
             navigator.clipboard.writeText(text).then(() => alert('✅ تم نسخ النتيجة إلى الحافظة'));
         }
@@ -1110,7 +1077,6 @@
     window.onload = function() {
         addMcqQuestion();
         document.getElementById('haithamBadge').textContent = '0';
-        console.log('📱 تطبيق اسأل هيثم متصل وجاهز للعمل!');
     };
 </script>
 
