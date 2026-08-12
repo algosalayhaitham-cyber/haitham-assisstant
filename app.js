@@ -1,4 +1,4 @@
-// app.js - هيثم AI (نسخة كاملة مع قاعدة المعرفة)
+// app.js - هيثم AI (نسخة كاملة ومحسنة مع قاعدة المعرفة)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (voiceBtn) {
         voiceBtn.classList.add('recording');
         voiceBtn.innerHTML = '🛑';
+        voiceBtn.setAttribute('aria-label', 'إيقاف التسجيل الصوتي');
       }
     };
 
@@ -103,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (voiceBtn) {
       voiceBtn.classList.remove('recording');
       voiceBtn.innerHTML = '🎤';
+      voiceBtn.setAttribute('aria-label', 'بدء التسجيل الصوتي');
     }
   }
 
@@ -230,11 +232,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const knowledgeAnswer = answerFromKnowledge(message);
     
     if (knowledgeAnswer) {
-      // إذا وجد إجابة في المعرفة، استخدمها مباشرة
       appendMessage('user', message, selectedBase64Image, currentCategory, false);
       saveChatHistory();
       
-      // إضافة تأخير بسيط لمحاكاة التفكير
       const loading = document.createElement('div');
       loading.className = 'msg ai';
       loading.id = 'loadingMsg';
@@ -249,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function () {
         messages.scrollTop = messages.scrollHeight;
       }, 500);
       
-      // تنظيف المدخلات
       input.value = '';
       selectedBase64Image = null;
       if (imageInput) imageInput.value = '';
@@ -257,14 +256,13 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // إذا لم توجد إجابة في المعرفة، استخدم الـ AI
     appendMessage('user', message, selectedBase64Image, currentCategory, false);
     saveChatHistory();
 
     const payload = {
       message: message,
       image: selectedBase64Image,
-      knowledge: searchKnowledge(message) || '' // أرسل المعرفة للـ AI
+      knowledge: searchKnowledge(message) || ''
     };
 
     const sentCat = currentCategory;
@@ -288,10 +286,13 @@ document.addEventListener('DOMContentLoaded', function () {
         body: JSON.stringify(payload)
       });
 
-      const text = await response.text();
-      let data;
-      try { data = JSON.parse(text); } catch { throw new Error('استجابة غير صحيحة من السيرفر'); }
+      // التحقق من أن الاستجابة صالحة وليست خطأ HTML من الخادم
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("استجابة غير صالحة من الخادم (تأكد من عمل السيرفر)");
+      }
 
+      const data = await response.json();
       document.getElementById('loadingMsg')?.remove();
 
       if (!response.ok) throw new Error(data.reply || data.error || 'حدث خطأ في الخادم');
@@ -320,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (role === 'user') {
       let html = '';
-      if (image) html += `<img src="${image}" style="max-width:200px; border-radius:8px; display:block; margin-bottom:8px;">`;
+      if (image) html += `<img src="${image}" style="max-width:200px; border-radius:8px; display:block; margin-bottom:8px;" alt="صورة مرفقة">`;
       if (text) html += `<p>${escapeHtml(text)}</p>`;
       msgDiv.innerHTML = `<b>أنت ${catBadge}</b>${html}`;
     } else {
@@ -365,6 +366,18 @@ document.addEventListener('DOMContentLoaded', function () {
         filterAndSearchMessages();
       };
 
+      // زر الحذف الفردي الجديد
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'action-btn delete-btn';
+      deleteBtn.innerHTML = '🗑️ حذف';
+      deleteBtn.onclick = function () {
+        if (confirm('هل تريد حذف هذه الرسالة؟')) {
+          chatHistory.splice(itemIndex, 1);
+          saveChatHistory();
+          renderFromHistory();
+        }
+      };
+
       const waBtn = document.createElement('button');
       waBtn.className = 'action-btn whatsapp-btn';
       waBtn.innerHTML = '📲 واتساب';
@@ -391,6 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
       wordBtn.onclick = function () { exportToWord(text); };
 
       actionsDiv.appendChild(favBtn);
+      actionsDiv.appendChild(deleteBtn);
       actionsDiv.appendChild(waBtn);
       actionsDiv.appendChild(printBtn);
       actionsDiv.appendChild(copyBtn);
@@ -456,7 +470,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function saveChatHistory() {
-    localStorage.setItem('haitham_chat_history', JSON.stringify(chatHistory));
+    // عدم حفظ بيانات الصور الثقيلة في localStorage لحمايته من الامتلاء
+    const historyToSave = chatHistory.map(item => ({
+      role: item.role,
+      text: item.text,
+      image: null, 
+      category: item.category,
+      isFav: item.isFav
+    }));
+    localStorage.setItem('haitham_chat_history', JSON.stringify(historyToSave));
   }
 
   function loadChatHistory() {
@@ -537,10 +559,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // ===== 11. قاعدة المعرفة المدمجة (الطريقة السريعة) =====
   // ================================================================
 
-  // ===== 11.1 قاعدة المعرفة =====
   const KNOWLEDGE_BASE = {
     'رياضيات': {
-      keywords: ['رياضيات', 'معادلة', 'جبر', 'هندسة', 'تفاضل', 'تكامل', 'حساب', 'مشتقة', 'تكامل', 'مثلثات'],
+      keywords: ['رياضيات', 'معادلة', 'جبر', 'هندسة', 'تفاضل', 'تكامل', 'حساب', 'مشتقة', 'مثلثات'],
       content: `
 📚 **ملخص الرياضيات:**
 
@@ -563,7 +584,6 @@ document.addEventListener('DOMContentLoaded', function () {
 - مشتقة الثابت = 0
 - مشتقة sin(x) = cos(x)
 - مشتقة cos(x) = -sin(x)
-- مشتقة tan(x) = sec²(x)
 
 **التكامل:**
 - ∫x^n dx = x^(n+1)/(n+1) + C
@@ -584,7 +604,6 @@ document.addEventListener('DOMContentLoaded', function () {
 **الطاقة:**
 - الطاقة الحركية: KE = ½ × m × v²
 - طاقة الوضع: PE = m × g × h
-- قانون حفظ الطاقة: الطاقة لا تفنى ولا تستحدث من عدم
 
 **قوانين أخرى:**
 - الضغط = القوة / المساحة
@@ -611,16 +630,10 @@ document.addEventListener('DOMContentLoaded', function () {
 **التفاعلات الكيميائية:**
 - تفاعل الاتحاد: A + B → AB
 - تفاعل الانحلال: AB → A + B
-- تفاعل الإحلال: AB + C → AC + B
 
 **الأحماض والقواعد:**
 - الأس الهيدروجيني (pH): 0-7 حمضي، 7 متعادل، 7-14 قاعدي
 - حمض + قاعدة → ملح + ماء
-
-**الجدول الدوري:**
-- العناصر مرتبة حسب العدد الذري
-- المجموعات: 18 مجموعة
-- الدورات: 7 دورات
       `
     },
     'لغة عربية': {
@@ -632,23 +645,14 @@ document.addEventListener('DOMContentLoaded', function () {
 - أقسام الكلمة: اسم، فعل، حرف
 - الجملة الاسمية: مبتدأ + خبر
 - الجملة الفعلية: فعل + فاعل + مفعول به
-- النكرة والمعرفة
 
 **الصرف:**
 - الماضي: كتبَ
 - المضارع: يَكتبُ
 - الأمر: اُكتُبْ
-- المصدر: كِتابة
 
 **البلاغة:**
-- التشبيه: وجه الشبه + أداة التشبيه
-- الاستعارة: تشبيه بلا أداة
-- الكناية: تعبير غير مباشر
-
-**الإملاء:**
-- الهمزة في أول الكلمة: همزة وصل أو قطع
-- التاء المربوطة والتاء المبسوطة
-- الألف اللينة
+- التشبيه، الاستعارة، الكناية
       `
     },
     'لغة إنجليزية': {
@@ -662,20 +666,10 @@ document.addEventListener('DOMContentLoaded', function () {
 - Past Simple: I ate
 - Future Simple: I will eat
 
-**Parts of Speech:**
-- Noun: person, place, thing
-- Verb: action word
-- Adjective: describes noun
-- Adverb: describes verb
-
 **Common Phrases:**
 - Hello = مرحباً
 - Thank you = شكراً
 - How are you? = كيف حالك؟
-- Good morning = صباح الخير
-
-**Prepositions:**
-- in, on, at, for, with, by, from, to
       `
     },
     'تاريخ': {
@@ -684,62 +678,44 @@ document.addEventListener('DOMContentLoaded', function () {
 📚 **ملخص التاريخ:**
 
 **الحضارات القديمة:**
-- الحضارة المصرية القديمة: الفراعنة، الأهرامات، الكتابة الهيروغليفية
-- الحضارة اليونانية: الإسكندر الأكبر، الفلسفة (سقراط، أفلاطون، أرسطو)
-- الحضارة الرومانية: الإمبراطورية، القانون، اللاتينية
+- الحضارة المصرية القديمة: الفراعنة، الأهرامات
+- الحضارة اليونانية والإمبراطورية الرومانية
 
 **العصر الإسلامي:**
-- الخلافة الراشدة: أبو بكر، عمر، عثمان، علي (رضي الله عنهم)
-- الدولة الأموية: دمشق، الفتوحات
-- الدولة العباسية: بغداد، بيت الحكمة، العصر الذهبي
-
-**العصر الحديث:**
-- النهضة الأوروبية: عصر النهضة، الفن، العلم
-- الثورة الصناعية: آلات، مصانع، تحول اقتصادي
-- الحرب العالمية الأولى والثانية
+- الخلافة الراشدة، الدولة الأموية، الدولة العباسية (بيت الحكمة)
       `
     },
     'برمجة': {
       keywords: ['برمجة', 'كمبيوتر', 'حاسوب', 'خوارزمية', 'بيانات', 'كود', 'برنامج', 'تطبيق'],
       content: `
 📚 **ملخص البرمجة:**
-
-**مكونات الحاسوب:**
-- المعالج (CPU): دماغ الحاسوب
-- الذاكرة (RAM): تخزين مؤقت
-- القرص الصلب (HDD/SSD): تخزين دائم
-
-**البرمجة:**
-- الخوارزمية: خطوات حل المشكلة
-- لغات البرمجة: Python, JavaScript, Java, C++
-- المتغيرات: تخزين البيانات
-
-**الشبكات:**
-- الإنترنت: شبكة عالمية
-- IP: عنوان الجهاز
-- DNS: تحويل الأسماء إلى عناوين
+- المعالج (CPU)، الذاكرة (RAM)، القرص الصلب (Storage)
+- الخوارزميات ولغات البرمجة (Python, JavaScript, Java)
       `
     }
   };
 
-  // ===== 11.2 دالة البحث في قاعدة المعرفة =====
+  // دالة مساعدة لإزالة "ال التعريف" لتوحيد وتدقيق مطابقة الكلمات المفتاحية
+  function cleanAndNormalize(text) {
+    return text.toLowerCase().replace(/ال/g, '').trim();
+  }
+
   function searchKnowledge(query) {
     if (!query) return null;
     
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = cleanAndNormalize(query);
     let bestMatch = null;
     let highestScore = 0;
 
     for (const [topic, data] of Object.entries(KNOWLEDGE_BASE)) {
       let score = 0;
-      // ابحث في الكلمات المفتاحية
       for (const keyword of data.keywords) {
-        if (lowerQuery.includes(keyword.toLowerCase())) {
+        const cleanKeyword = cleanAndNormalize(keyword);
+        if (lowerQuery.includes(cleanKeyword)) {
           score += 2;
         }
       }
-      // ابحث في المحتوى نفسه
-      if (data.content.toLowerCase().includes(lowerQuery)) {
+      if (cleanAndNormalize(data.content).includes(lowerQuery)) {
         score += 1;
       }
       
@@ -749,13 +725,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // إذا كان التطابق ضعيفاً (أقل من 2)، لا نستخدم المعرفة
     if (highestScore < 2) return null;
-    
     return bestMatch;
   }
 
-  // ===== 11.3 دالة الإجابة من المعرفة =====
   function answerFromKnowledge(query) {
     const knowledge = searchKnowledge(query);
     if (knowledge) {
@@ -764,37 +737,28 @@ document.addEventListener('DOMContentLoaded', function () {
     return null;
   }
 
-  // ===== 11.4 وظيفة إضافة معرفة جديدة =====
-  function addKnowledge(topic, keywords, content) {
-    KNOWLEDGE_BASE[topic] = {
-      keywords: keywords,
-      content: content
-    };
-    console.log(`✅ تم إضافة معرفة جديدة: ${topic}`);
+  window.addKnowledge = function(topic, keywords, content) {
+    KNOWLEDGE_BASE[topic] = { keywords, content };
     localStorage.setItem('haitham_knowledge', JSON.stringify(KNOWLEDGE_BASE));
     return `✅ تم إضافة "${topic}" بنجاح!`;
   }
 
-  // ===== 11.5 عرض جميع المواضيع =====
   function listKnowledgeTopics() {
     return Object.keys(KNOWLEDGE_BASE);
   }
 
-  // ===== 11.6 تحميل المعرفة المحفوظة =====
   function loadSavedKnowledge() {
     const saved = localStorage.getItem('haitham_knowledge');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         Object.assign(KNOWLEDGE_BASE, parsed);
-        console.log('✅ تم تحميل المعرفة المحفوظة');
       } catch(e) {
         console.log('⚠️ خطأ في تحميل المعرفة المحفوظة');
       }
     }
   }
 
-  // تحميل المعرفة عند بدء التشغيل
   loadSavedKnowledge();
 
   // ===== 11.7 دوال تصحيح الأوراق =====
@@ -822,6 +786,11 @@ document.addEventListener('DOMContentLoaded', function () {
           })
         });
 
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("استجابة غير صالحة من الخادم أثناء التصحيح");
+        }
+
         const data = await response.json();
 
         if (!response.ok) {
@@ -837,8 +806,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       } catch (error) {
         console.error('❌ خطأ في التصحيح:', error);
-        resultDiv.innerHTML = `❌ حدث خطأ: ${error.message}<br>
-          <small>تأكد من تشغيل السيرفر واستخدام النموذج الصحيح</small>`;
+        resultDiv.innerHTML = `❌ حدث خطأ: ${error.message}`;
       }
     };
 
@@ -920,7 +888,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // إضافة الـ Keyframes للـ Confetti
   if (!document.getElementById('confettiStyle')) {
     const style = document.createElement('style');
     style.id = 'confettiStyle';
@@ -933,14 +900,5 @@ document.addEventListener('DOMContentLoaded', function () {
     document.head.appendChild(style);
   }
 
-  // ===== 11.8 اختبار المعرفة في Console =====
-  console.log('📚 قاعدة المعرفة جاهزة!');
-  console.log('📖 المواضيع المتاحة:', listKnowledgeTopics());
-  console.log('🔍 ابحث عن شيء: searchKnowledge("معادلة")');
-  console.log('💡 اسأل هيثم: answerFromKnowledge("ما هي المعادلة الخطية؟")');
-  console.log('➕ أضف معرفة جديدة: addKnowledge("موضوع", ["كلمات"], "محتوى")');
-
-  // ================================================================
-  // نهاية الكود
-  // ================================================================
 });
+ 
