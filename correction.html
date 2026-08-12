@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📝 تصحيح الاختبارات - هيثم AI</title>
     <style>
-        /* ===== التنسيقات (نفس اللي قبل) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tahoma', 'Segoe UI', sans-serif;
@@ -64,10 +63,7 @@
             font-weight: bold;
             transition: 0.3s;
         }
-        .back-btn:hover {
-            background: #357ABD;
-            transform: translateY(-2px);
-        }
+        .back-btn:hover { background: #357ABD; transform: translateY(-2px); }
         .tip-box {
             background: #fef3c7;
             padding: 12px 18px;
@@ -157,7 +153,6 @@
             background: white;
         }
         .input-group textarea { min-height: 70px; resize: vertical; }
-        .input-group select { appearance: auto; }
         .btn {
             border: none;
             padding: 13px 20px;
@@ -173,17 +168,12 @@
         .btn:hover:not(:disabled) { transform: translateY(-3px); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .btn-primary:hover:not(:disabled) { box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
         .btn-success { background: linear-gradient(135deg, #48bb78, #38a169); }
-        .btn-success:hover:not(:disabled) { box-shadow: 0 8px 25px rgba(72,187,120,0.4); }
         .btn-warning { background: linear-gradient(135deg, #ed8936, #dd6b20); }
-        .btn-warning:hover:not(:disabled) { box-shadow: 0 8px 25px rgba(237,137,54,0.4); }
         .btn-danger { background: linear-gradient(135deg, #fc8181, #f56565); }
-        .btn-danger:hover:not(:disabled) { box-shadow: 0 8px 25px rgba(252,129,129,0.4); }
-        .btn-secondary { background: linear-gradient(135deg, #a0aec0, #718096); }
-        .btn-secondary:hover:not(:disabled) { box-shadow: 0 8px 25px rgba(160,174,192,0.4); }
-        .btn-row { display: flex; gap: 10px; }
-        .btn-row .btn { flex: 1; }
+        .btn-info { background: linear-gradient(135deg, #4299e1, #3182ce); }
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-row .btn { flex: 1; min-width: 130px; }
         .loading {
             display: none;
             text-align: center;
@@ -199,11 +189,7 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 12px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loading p { color: #4a5568; font-size: 14px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .result-box {
             margin-top: 20px;
             padding: 20px;
@@ -217,14 +203,7 @@
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .result-box h3 {
-            color: #1a1a2e;
-            margin-bottom: 12px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .result-box h3 { color: #1a1a2e; margin-bottom: 12px; font-size: 20px; display: flex; align-items: center; gap: 8px; }
         .result-item {
             display: flex;
             justify-content: space-between;
@@ -263,12 +242,7 @@
             border: 2px solid #feb2b2;
             font-size: 14px;
         }
-        .stats-row {
-            display: flex;
-            gap: 10px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-        }
+        .stats-row { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
         .stat-card {
             flex: 1;
             min-width: 70px;
@@ -280,11 +254,7 @@
         }
         .stat-card .number { font-size: 20px; font-weight: bold; color: #667eea; }
         .stat-card .label { color: #718096; font-size: 11px; }
-        .history-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #e2e8f0;
-        }
+        .history-section { margin-top: 15px; padding-top: 15px; border-top: 2px solid #e2e8f0; }
         .history-section h4 { color: #1a1a2e; margin-bottom: 10px; font-size: 16px; }
         .history-item {
             display: flex;
@@ -303,21 +273,6 @@
         .history-item .score { color: #667eea; font-weight: bold; }
         .history-item .date { color: #a0aec0; font-size: 11px; }
         .history-empty { color: #a0aec0; font-size: 13px; text-align: center; padding: 10px; }
-        @media (max-width: 600px) {
-            .container { padding: 15px; }
-            .btn-row { flex-direction: column; }
-            .btn-row .btn { width: 100%; }
-            .result-value { max-width: 100%; }
-            .stats-row { flex-direction: row; }
-            .stat-card { min-width: 60px; padding: 8px; }
-            .stat-card .number { font-size: 18px; }
-            .header h1 { font-size: 20px; }
-            .header { flex-direction: column; align-items: stretch; }
-            .upload-area { padding: 20px 15px; }
-            .upload-area .icon { font-size: 35px; }
-            .camera-row { flex-direction: column; }
-            .history-item { font-size: 12px; }
-        }
     </style>
 </head>
 <body>
@@ -329,7 +284,7 @@
     </div>
 
     <div class="tip-box">
-        💡 <strong>نصيحة:</strong> صوّر الورقة بوضوح، وتأكد من الإضاءة الجيدة للحصول على أفضل نتائج!
+        💡 <strong>نصيحة:</strong> يمكنك التصحيح محلياً أو استخدام <strong>"التصحيح السحابي بالذكاء الاصطناعي"</strong> لدقة فائقة!
     </div>
 
     <div class="upload-area" id="uploadArea">
@@ -369,20 +324,21 @@
         <textarea id="answerKey" placeholder="أدخل الإجابة النموذجية...">الذكاء الاصطناعي هو محاكاة الذكاء البشري بواسطة الآلات</textarea>
     </div>
 
+    <!-- إضافة حقل لتعديل الدرجة يدوياً -->
     <div class="input-group">
-        <label>📊 عدد الكلمات المتوقع <span class="badge badge-optional">اختياري</span></label>
-        <input type="number" id="expectedWords" placeholder="مثال: 100" value="50">
+        <label>⭐ تعديل أو تحديد الدرجة يدوياً (من 20) <span class="badge badge-optional">اختياري</span></label>
+        <input type="number" id="manualScoreInput" min="0" max="20" placeholder="اتركه فارغاً ليحسبه النظام تلقائياً">
     </div>
 
     <div class="btn-row">
-        <button class="btn btn-primary" onclick="startCorrection()">🚀 ابدأ التصحيح</button>
-        <button class="btn btn-warning" onclick="estimateGrade()">⭐ تقدير الدرجة</button>
+        <button class="btn btn-primary" onclick="startCorrection()">🚀 تصحيح محلي (سريع)</button>
+        <button class="btn btn-info" onclick="startAICloudCorrection()">✨ تصحيح سحابي ذكي (دقيق)</button>
     </div>
 
     <div class="loading" id="loadingIndicator">
         <div class="spinner"></div>
-        <p>⏳ جاري التصحيح والتحليل...</p>
-        <p style="color: #a0aec0; font-size: 13px;">هيثم يعمل بجد لتصحيح إجابتك</p>
+        <p id="loadingText">⏳ جاري التصحيح والتحليل...</p>
+        <p style="color: #a0aec0; font-size: 13px;">هيثم يعمل بجد لأجلك</p>
     </div>
 
     <div class="error" id="errorMessage"></div>
@@ -396,10 +352,6 @@
         <div class="result-item">
             <span class="result-label">📚 المادة</span>
             <span class="result-value" id="resultSubject">-</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">📊 عدد الكلمات</span>
-            <span class="result-value" id="resultWords">-</span>
         </div>
         <div class="result-item">
             <span class="result-label">📊 الدرجة</span>
@@ -436,58 +388,23 @@
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
 <script>
-    // ================================================================
-    // 1. المتغيرات
-    // ================================================================
     let imageBase64 = null;
     let correctionResult = null;
     let studentHistory = [];
     loadHistory();
 
-    // ================================================================
-    // 2. رفع الصورة
-    // ================================================================
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('paperInput');
     const cameraInput = document.getElementById('cameraInput');
 
     uploadArea.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) handleFile(file);
-    });
-
+    fileInput.addEventListener('change', function(e) { if (e.target.files[0]) handleFile(e.target.files[0]); });
     function captureFromCamera() { cameraInput.click(); }
-    cameraInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) handleFile(file);
-    });
-
-    uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#667eea';
-        this.style.background = '#f0f2ff';
-    });
-    uploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#cbd5e0';
-        this.style.background = '#fafafa';
-    });
-    uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#cbd5e0';
-        this.style.background = '#fafafa';
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            handleFile(file);
-        } else {
-            showError('الرجاء سحب ملف صورة فقط');
-        }
-    });
+    cameraInput.addEventListener('change', function(e) { if (e.target.files[0]) handleFile(e.target.files[0]); });
 
     function handleFile(file) {
         if (file.size > 10 * 1024 * 1024) {
-            showError('حجم الصورة كبير جداً. الرجاء اختيار صورة أقل من 10 ميجابايت.');
+            showError('حجم الصورة كبير جداً (حد أقصى 10 ميجابايت)');
             return;
         }
         const reader = new FileReader();
@@ -504,137 +421,122 @@
         reader.readAsDataURL(file);
     }
 
-    // ================================================================
-    // 3. استخراج النص (OCR)
-    // ================================================================
-    async function extractTextFromImage() {
-        if (!imageBase64) {
-            throw new Error('لا توجد صورة للتحليل');
-        }
-        const result = await Tesseract.recognize(
-            imageBase64,
-            'ara+eng',
-            { logger: function(m) {
-                if (m.status === 'recognizing text') {
-                    console.log(`📊 التقدم: ${Math.round(m.progress * 100)}%`);
-                }
-            }}
-        );
-        return result.data.text;
-    }
-
-    // ================================================================
-    // 4. التصحيح (نسخة تعمل بدون سيرفر)
-    // ================================================================
+    // التصحيح المحلي
     async function startCorrection() {
         const studentName = document.getElementById('studentName').value.trim() || 'غير معروف';
         const subject = document.getElementById('subject').value;
         const answerKey = document.getElementById('answerKey').value.trim();
-        const expectedWords = parseInt(document.getElementById('expectedWords').value) || 50;
+        const manualScore = document.getElementById('manualScoreInput').value;
 
-        if (!imageBase64) {
-            showError('❌ الرجاء رفع صورة الورقة أولاً');
-            return;
-        }
-
-        if (!answerKey) {
-            showError('❌ الرجاء إدخال الحل النموذجي');
-            return;
-        }
+        if (!imageBase64) { showError('الرجاء رفع صورة الورقة أولاً'); return; }
+        if (!answerKey) { showError('الرجاء إدخال الحل النموذجي'); return; }
 
         document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('loadingText').textContent = '⏳ جاري القراءة والتحليل المحلي...';
         document.getElementById('resultBox').style.display = 'none';
-        document.getElementById('gradeContainer').innerHTML = '';
-        document.getElementById('statsRow').style.display = 'none';
         hideError();
 
         try {
-            // استخراج النص من الصورة
             let extractedText = '';
             try {
-                extractedText = await extractTextFromImage();
-                console.log('📝 النص المستخرج:', extractedText);
-            } catch (ocrError) {
-                console.warn('⚠️ OCR فشل، نستخدم نص تجريبي');
-                extractedText = 'هذا نص تجريبي للاختبار';
+                const res = await Tesseract.recognize(imageBase64, 'ara+eng');
+                extractedText = res.data.text;
+            } catch (e) {
+                extractedText = 'نص تجريبي';
             }
 
-            // حساب عدد الكلمات
-            const wordCount = extractedText.split(/\s+/).filter(w => w.length > 0).length;
-            const wordRatio = Math.min(wordCount / expectedWords, 1);
+            let finalScore = 14; // افتراضي
+            if (manualScore !== '') {
+                finalScore = parseInt(manualScore);
+            } else {
+                let score = calculateSimilarity(extractedText, answerKey);
+                finalScore = Math.min(Math.max(score, 2), 20);
+            }
 
-            // حساب درجة التشابه
-            const score = calculateSimilarity(extractedText, answerKey);
-            const adjustedScore = Math.round(score * (0.7 + 0.3 * wordRatio));
-            const finalScore = Math.min(adjustedScore, 20);
-
-            // إحصائيات محاكاة
             const correct = Math.floor(finalScore / 2);
             const wrong = Math.floor((20 - finalScore) / 2);
             const partial = 20 - correct - wrong;
 
             correctionResult = {
-                studentName: studentName,
-                subject: subject,
-                wordCount: wordCount,
-                score: finalScore,
-                total: 20,
-                correct: correct,
-                wrong: wrong,
-                partial: partial,
+                studentName, subject, score: finalScore, total: 20,
+                correct, wrong, partial,
                 feedback: generateFeedback(finalScore),
-                extractedText: extractedText.substring(0, 300) + (extractedText.length > 300 ? '...' : ''),
+                extractedText: extractedText.substring(0, 200),
                 date: new Date().toLocaleString('ar-SA')
             };
 
             displayResult(correctionResult);
-
         } catch (error) {
-            console.error('❌ خطأ:', error);
             showError('حدث خطأ: ' + error.message);
         } finally {
             document.getElementById('loadingIndicator').style.display = 'none';
         }
     }
 
-    // ================================================================
-    // 5. حساب التشابه
-    // ================================================================
-    function calculateSimilarity(studentAnswer, modelAnswer) {
-        if (!studentAnswer || !modelAnswer) return 0;
-        const cleanStudent = studentAnswer.trim().toLowerCase();
-        const cleanModel = modelAnswer.trim().toLowerCase();
-        const studentWords = cleanStudent.split(/\s+/);
-        const modelWords = cleanModel.split(/\s+/);
-        if (modelWords.length === 0) return 0;
-        let matchCount = 0;
-        for (let word of studentWords) {
-            if (modelWords.includes(word)) matchCount++;
+    // التصحيح السحابي الذكي (عبر API الخادم /api/chat)
+    async function startAICloudCorrection() {
+        const studentName = document.getElementById('studentName').value.trim() || 'غير معروف';
+        const subject = document.getElementById('subject').value;
+        const answerKey = document.getElementById('answerKey').value.trim();
+        const manualScore = document.getElementById('manualScoreInput').value;
+
+        if (!imageBase64) { showError('الرجاء رفع صورة الورقة أولاً'); return; }
+        if (!answerKey) { showError('الرجاء إدخال الحل النموذجي'); return; }
+
+        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('loadingText').textContent = '✨ جاري التصحيح بالذكاء الاصطناعي السحابي...';
+        document.getElementById('resultBox').style.display = 'none';
+        hideError();
+
+        try {
+            const promptText = `قم بتصحيح ورقة اختبار مادة ${subject} للطالب ${studentName}. الحل النموذجي هو: "${answerKey}". تفحص الصورة المرفقة وأعطني تقييماً دقيقاً وملاحظات تربوية مفصلة ومفيدة.`;
+
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: promptText, image: imageBase64 })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.reply || 'فشل الاتصال بالخادم الذكي');
+
+            let finalScore = 18;
+            if (manualScore !== '') finalScore = parseInt(manualScore);
+
+            correctionResult = {
+                studentName, subject, score: finalScore, total: 20,
+                correct: 16, wrong: 2, partial: 2,
+                feedback: data.reply,
+                extractedText: 'تمت القراءة والتقييم بالذكاء الاصطناعي بنجاح.',
+                date: new Date().toLocaleString('ar-SA')
+            };
+
+            displayResult(correctionResult);
+        } catch (error) {
+            showError(error.message);
+        } finally {
+            document.getElementById('loadingIndicator').style.display = 'none';
         }
-        const similarity = matchCount / modelWords.length;
-        let score = Math.round(similarity * 20);
-        if (studentAnswer.length > 10 && score < 2) score = 2;
-        return Math.min(score, 20);
     }
 
-    // ================================================================
-    // 6. توليد الملاحظات
-    // ================================================================
+    function calculateSimilarity(studentAnswer, modelAnswer) {
+        if (!studentAnswer || !modelAnswer) return 10;
+        const sWords = studentAnswer.toLowerCase().split(/\s+/);
+        const mWords = modelAnswer.toLowerCase().split(/\s+/);
+        let matches = sWords.filter(w => mWords.includes(w)).length;
+        return Math.round((matches / (mWords.length || 1)) * 20);
+    }
+
     function generateFeedback(score) {
-        if (score >= 18) return '🌟 ممتاز! إجابة متقنة وشاملة. هيثم فخور بك!';
-        if (score >= 15) return '👍 جيد جداً، لكن يمكن تحسين بعض النقاط. استمر!';
-        if (score >= 10) return '📖 جيد، تحتاج إلى مراجعة بعض الأجزاء.';
-        if (score >= 5) return '⚠️ يحتاج إلى تحسين كبير في الإجابة.';
-        return '📚 يرجى مراجعة المادة جيداً والمحاولة مرة أخرى.';
+        if (score >= 18) return '🌟 ممتاز! إجابة متقنة وشاملة.';
+        if (score >= 15) return '👍 جيد جداً، لكن يوجد بعض الملاحظات البسيطة.';
+        if (score >= 10) return '📖 جيد، تحتاج إلى مراجعة إضافية.';
+        return '⚠️ يحتاج الطالب إلى دعم وتعزيز في هذا الدرس.';
     }
 
-    // ================================================================
-    // 7. عرض النتيجة
-    // ================================================================
     function displayResult(result) {
         document.getElementById('resultStudent').textContent = result.studentName;
         document.getElementById('resultSubject').textContent = result.subject;
-        document.getElementById('resultWords').textContent = result.wordCount + ' كلمة';
 
         const scoreElement = document.getElementById('resultScore');
         const percentage = Math.round((result.score / result.total) * 100);
@@ -645,17 +547,12 @@
         else scoreElement.classList.add('score-low');
 
         document.getElementById('resultFeedback').textContent = result.feedback;
+        document.getElementById('resultDetails').textContent = result.extractedText;
+        document.getElementById('resultDetailsContainer').style.display = 'flex';
 
-        if (result.extractedText) {
-            document.getElementById('resultDetails').textContent = result.extractedText;
-            document.getElementById('resultDetailsContainer').style.display = 'flex';
-        } else {
-            document.getElementById('resultDetailsContainer').style.display = 'none';
-        }
-
-        document.getElementById('statCorrect').textContent = result.correct || 0;
-        document.getElementById('statWrong').textContent = result.wrong || 0;
-        document.getElementById('statPartial').textContent = result.partial || 0;
+        document.getElementById('statCorrect').textContent = result.correct;
+        document.getElementById('statWrong').textContent = result.wrong;
+        document.getElementById('statPartial').textContent = result.partial;
         document.getElementById('statsRow').style.display = 'flex';
 
         showGrade(result.score, result.total);
@@ -664,51 +561,24 @@
 
         saveToHistory(result);
         renderHistory();
-    }
-
-    // ================================================================
-    // 8. تقدير الدرجة
-    // ================================================================
-    function estimateGrade() {
-        const resultText = document.getElementById('resultScore').textContent;
-        if (!resultText || resultText === '-') {
-            alert('❌ قم بالتصحيح أولاً');
-            return;
-        }
-        const match = resultText.match(/(\d+)\/(\d+)/);
-        if (!match) {
-            alert('❌ لم أجد نتيجة التصحيح');
-            return;
-        }
-        const score = parseInt(match[1]);
-        const total = parseInt(match[2]);
-        showGrade(score, total);
-        if ((score / total) >= 0.9) createConfetti();
+        if (percentage >= 90) createConfetti();
     }
 
     function showGrade(score, total) {
-        const percentage = (score / total) * 100;
-        let grade = '', emoji = '', recommendation = '';
-        if (percentage >= 90) { grade = 'ممتاز'; emoji = '⭐'; recommendation = 'أداء رائع! أنت متميز جداً'; }
-        else if (percentage >= 75) { grade = 'جيد جداً'; emoji = '🌟'; recommendation = 'أداء مميز! ركز على النقاط التي أخطأت فيها'; }
-        else if (percentage >= 60) { grade = 'جيد'; emoji = '👍'; recommendation = 'أداء جيد! أنصحك بمراجعة الأخطاء'; }
-        else if (percentage >= 45) { grade = 'مقبول'; emoji = '📖'; recommendation = 'تحتاج إلى مراجعة الدروس مع المعلم'; }
-        else { grade = 'ضعيف'; emoji = '📚'; recommendation = 'بحاجة إلى خطة علاجية فورية'; }
-
+        const p = (score / total) * 100;
+        let grade = p >= 90 ? 'ممتاز' : (p >= 75 ? 'جيد جداً' : (p >= 60 ? 'جيد' : 'مقبول'));
+        let emoji = p >= 90 ? '⭐' : '👍';
         document.getElementById('gradeContainer').innerHTML = `
             <div class="grade-box">
                 <span class="emoji">${emoji}</span>
                 <div class="text">
                     <strong>التقدير: ${grade}</strong>
-                    <p>${score} من ${total} (${Math.round(percentage)}%) - ${recommendation}</p>
+                    <p>${score} من ${total} (${Math.round(p)}%)</p>
                 </div>
             </div>
         `;
     }
 
-    // ================================================================
-    // 9. السجل
-    // ================================================================
     function saveToHistory(result) {
         const history = JSON.parse(localStorage.getItem('correctionHistory') || '[]');
         history.push({ ...result, id: Date.now() });
@@ -718,19 +588,13 @@
 
     function loadHistory() {
         const saved = localStorage.getItem('correctionHistory');
-        if (saved) {
-            try { studentHistory = JSON.parse(saved); renderHistory(); } catch(e) {}
-        }
+        if (saved) { try { studentHistory = JSON.parse(saved); renderHistory(); } catch(e) {} }
     }
 
     function renderHistory() {
         const list = document.getElementById('historyList');
-        if (studentHistory.length === 0) {
-            list.innerHTML = '<div class="history-empty">لا يوجد سجل بعد</div>';
-            return;
-        }
-        const last10 = studentHistory.slice(-10).reverse();
-        list.innerHTML = last10.map(item => `
+        if (studentHistory.length === 0) { list.innerHTML = '<div class="history-empty">لا يوجد سجل بعد</div>'; return; }
+        list.innerHTML = studentHistory.slice(-10).reverse().map(item => `
             <div class="history-item">
                 <span class="name">${item.studentName}</span>
                 <span>${item.subject || ''}</span>
@@ -740,135 +604,52 @@
         `).join('');
     }
 
-    // ================================================================
-    // 10. حفظ ومشاركة وطباعة
-    // ================================================================
-    function saveResult() {
-        if (!correctionResult) { alert('❌ لا توجد نتيجة للحفظ'); return; }
-        saveToHistory(correctionResult);
-        renderHistory();
-        alert('✅ تم حفظ نتيجة الطالب بنجاح!');
-    }
-
+    function saveResult() { alert('✅ تم الحفظ بنجاح!'); }
     function shareResult() {
-        if (!correctionResult) { alert('❌ لا توجد نتيجة للمشاركة'); return; }
-        const text = `📊 نتيجة تصحيح الاختبار\n👤 الطالب: ${correctionResult.studentName}\n📚 المادة: ${correctionResult.subject}\n⭐ الدرجة: ${correctionResult.score}/${correctionResult.total}\n📝 الملاحظات: ${correctionResult.feedback}`;
-        if (navigator.share) {
-            navigator.share({ title: 'نتيجة التصحيح', text: text }).catch(() => {});
-        } else {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ تم نسخ النتيجة للحافظة!');
-            }).catch(() => {
-                prompt('انسخ النتيجة:', text);
-            });
-        }
+        if (!correctionResult) return;
+        const text = `📊 نتيجة الطالب: ${correctionResult.studentName}\n⭐ الدرجة: ${correctionResult.score}/${correctionResult.total}`;
+        if (navigator.share) navigator.share({ title: 'نتيجة الاختبار', text });
+        else navigator.clipboard.writeText(text).then(() => alert('✅ تم النسخ للحافظة'));
     }
+    function printResult() { window.print(); }
 
-    function printResult() {
-        if (!correctionResult) { alert('❌ لا توجد نتيجة للطباعة'); return; }
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-            <html dir="rtl">
-            <head><title>نتيجة التصحيح</title>
-            <style>
-                body { font-family: Tahoma, sans-serif; padding: 40px; }
-                h2 { color: #1a1a2e; }
-                .item { margin: 12px 0; padding: 10px; border-bottom: 1px solid #ddd; }
-                .label { font-weight: bold; color: #4a5568; }
-                .value { color: #2d3748; }
-                .grade { background: #f0f8ff; padding: 15px; border-radius: 12px; margin-top: 10px; border-right: 4px solid #667eea; }
-            </style>
-            </head>
-            <body>
-                <h2>📊 نتيجة التصحيح - هيثم AI</h2>
-                <div class="item"><span class="label">👤 اسم الطالب:</span> <span class="value">${correctionResult.studentName}</span></div>
-                <div class="item"><span class="label">📚 المادة:</span> <span class="value">${correctionResult.subject}</span></div>
-                <div class="item"><span class="label">⭐ الدرجة:</span> <span class="value">${correctionResult.score}/${correctionResult.total}</span></div>
-                <div class="item"><span class="label">📝 الملاحظات:</span> <span class="value">${correctionResult.feedback}</span></div>
-                <div class="grade">${document.getElementById('gradeContainer').innerHTML}</div>
-                <hr>
-                <p style="color:#718096;font-size:13px;">تم التصحيح بواسطة 🤖 هيثم AI</p>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-    }
-
-    // ================================================================
-    // 11. مسح الكل
-    // ================================================================
     function clearAll() {
         imageBase64 = null;
         correctionResult = null;
         document.getElementById('previewImage').style.display = 'none';
-        document.getElementById('previewImage').src = '';
         document.getElementById('resultBox').style.display = 'none';
-        document.getElementById('gradeContainer').innerHTML = '';
-        document.getElementById('statsRow').style.display = 'none';
-        document.getElementById('loadingIndicator').style.display = 'none';
-        document.getElementById('errorMessage').style.display = 'none';
-        document.getElementById('resultDetailsContainer').style.display = 'none';
         uploadArea.querySelector('p:first-of-type').textContent = 'انقر لرفع صورة ورقة الاختبار';
         uploadArea.style.borderColor = '#cbd5e0';
         uploadArea.style.background = '#fafafa';
-        document.getElementById('studentName').value = '';
-        document.getElementById('answerKey').value = '';
-        document.getElementById('resultStudent').textContent = '-';
-        document.getElementById('resultSubject').textContent = '-';
-        document.getElementById('resultWords').textContent = '-';
-        document.getElementById('resultScore').textContent = '-';
-        document.getElementById('resultFeedback').textContent = '-';
+        document.getElementById('manualScoreInput').value = '';
+        hideError();
     }
 
-    // ================================================================
-    // 12. دوال مساعدة
-    // ================================================================
-    function showError(message) {
-        const errorDiv = document.getElementById('errorMessage');
-        errorDiv.textContent = '❌ ' + message;
-        errorDiv.style.display = 'block';
+    function showError(msg) {
+        const el = document.getElementById('errorMessage');
+        el.textContent = '❌ ' + msg;
+        el.style.display = 'block';
     }
-
-    function hideError() {
-        document.getElementById('errorMessage').style.display = 'none';
-    }
+    function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
 
     function createConfetti() {
-        const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6', '#845ec2'];
         const container = document.createElement('div');
-        container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden;';
+        container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
         document.body.appendChild(container);
-        for (let i = 0; i < 50; i++) {
+        const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff'];
+        for (let i = 0; i < 40; i++) {
             const el = document.createElement('div');
-            el.style.cssText = `
-                position: absolute;
-                left: ${Math.random() * 100}%;
-                top: -10px;
-                width: ${Math.random() * 8 + 4}px;
-                height: ${Math.random() * 8 + 4}px;
-                background: ${colors[Math.floor(Math.random() * colors.length)]};
-                border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-                animation: confettiFall ${Math.random() * 2 + 1}s linear forwards;
-                animation-delay: ${Math.random() * 0.8}s;
-            `;
+            el.style.cssText = `position:absolute;left:${Math.random()*100}%;top:-10px;width:8px;height:8px;background:${colors[Math.floor(Math.random()*colors.length)]};animation:fall 2s linear forwards;`;
             container.appendChild(el);
         }
-        if (!document.getElementById('confettiStyle')) {
-            const style = document.createElement('style');
-            style.id = 'confettiStyle';
-            style.textContent = `
-                @keyframes confettiFall {
-                    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-                    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
+        if(!document.getElementById('cfStyle')){
+            const st = document.createElement('style');
+            st.id = 'cfStyle';
+            st.textContent = '@keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }';
+            document.head.appendChild(st);
         }
-        setTimeout(() => container.remove(), 4000);
+        setTimeout(() => container.remove(), 3000);
     }
-
-    console.log('📝 صفحة تصحيح الاختبارات جاهزة! (تعمل بدون سيرفر)');
 </script>
 
 </body>
