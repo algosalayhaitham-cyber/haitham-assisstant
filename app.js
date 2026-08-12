@@ -10,7 +10,7 @@ if ('serviceWorker' in navigator) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  // --- 🌟 إصلاح مشكلة الفتح على المقالي: فرض العرض على واجهة هيثم الرئيسية أولاً ---
+  // --- 🌟 إصلاح جذر المشكلة: إخفاء المقالي بالقوة وفتح واجهة هيثم أولاً ---
   forceOpenHomeByDefault();
 
   // --- 1. إدارة الثيم (الوضع الداكن / الفاتح) ---
@@ -554,26 +554,34 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ================================================================
-  // ===== وظيفة إجبار التطبيق على فتح الشاشة الرئيسية (هيثم) وإخفاء المقالي =====
+  // ===== دالة قوية جداً لفرض فتح واجهة هيثم وإغلاق المقالي بالقوة =====
   // ================================================================
   function forceOpenHomeByDefault() {
-    // محاولة إخفاء أي أقسام تصحيح أو مقالي قد تفتح تلقائياً عند التشغيل
-    const essaySections = document.querySelectorAll('#essay, .essay-section, [data-section="essay"]');
-    essaySections.forEach(sec => {
-      sec.style.display = 'none';
+    // إخفاء كل ما يتعلق بالمقالي أو التصحيح بغض النظر عن أسماء الـ IDs
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(el => {
+      const id = el.id ? el.id.toLowerCase() : '';
+      const cls = el.className && typeof el.className === 'string' ? el.className.toLowerCase() : '';
+      
+      // إذا كان العنصر يخص قسم المقالي أو التصحيح، قم بإخفائه تلقائياً عند التشغيل
+      if (id.includes('essay') || cls.includes('essay') || id.includes('correct') || cls.includes('correct')) {
+        if (el.tagName === 'DIV' || el.tagName === 'SECTION') {
+          el.style.display = 'none';
+        }
+      }
     });
 
-    // إظهار القسم الرئيسي أو محادثة هيثم
-    const homeSections = document.querySelectorAll('#home, .chat-container, .main-section, .hero');
-    homeSections.forEach(sec => {
+    // إظهار الشاشة الرئيسية بفرض العرض
+    const chatContainers = document.querySelectorAll('.chat-container, #chatForm, #messages, main, .main-content');
+    chatContainers.forEach(sec => {
       sec.style.display = 'block';
     });
 
-    // ضبط الأيقونة النشطة في الشريط السفلي (جعل هيثم نشطة وإلغاء نشاط البقية)
-    const navButtons = document.querySelectorAll('.nav-btn, .tab-btn');
+    // تصحيح الأزرار في الشريط السفلي (جعل زر هيثم هو النشط فقط)
+    const navButtons = document.querySelectorAll('nav button, .nav-btn, footer button, .tab-btn');
     navButtons.forEach(btn => {
       const text = btn.textContent || '';
-      if (text.includes('هيثم') || btn.getAttribute('data-target') === 'home' || btn.querySelector('.fa-brain, img')) {
+      if (text.includes('هيثم') || btn.querySelector('.fa-brain, img')) {
         btn.classList.add('active');
       } else if (text.includes('مقالي') || text.includes('تصحيح')) {
         btn.classList.remove('active');
