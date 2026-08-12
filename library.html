@@ -6,20 +6,13 @@
     <title>📚 المكتبة - هيثم AI</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ===== تنسيقات المكتبة ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tahoma', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -29,12 +22,10 @@
             box-shadow: 0 30px 80px rgba(0,0,0,0.5);
             animation: slideIn 0.6s ease;
         }
-
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(-40px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         .header {
             display: flex;
             align-items: center;
@@ -45,7 +36,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .header h1 {
             color: #1a1a2e;
             font-size: 30px;
@@ -53,7 +43,6 @@
             align-items: center;
             gap: 10px;
         }
-
         .header h1 span {
             background: linear-gradient(135deg, #667eea, #764ba2);
             padding: 5px 15px;
@@ -61,7 +50,6 @@
             color: white;
             font-size: 14px;
         }
-
         .back-btn {
             background: #4A90D9;
             color: white;
@@ -74,27 +62,9 @@
             transition: 0.3s;
             text-decoration: none;
         }
-
-        .back-btn:hover {
-            background: #357ABD;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.4);
-        }
-
-        /* ===== البحث والتصنيفات ===== */
-        .search-section {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-
+        .back-btn:hover { background: #357ABD; transform: translateY(-2px); }
+        .search-section { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px; }
+        .search-box { flex: 1; min-width: 200px; position: relative; }
         .search-box input {
             width: 100%;
             padding: 14px 20px 14px 45px;
@@ -105,14 +75,12 @@
             background: #f7fafc;
             font-family: inherit;
         }
-
         .search-box input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
             background: white;
         }
-
         .search-box .search-icon {
             position: absolute;
             left: 15px;
@@ -121,14 +89,7 @@
             font-size: 20px;
             color: #a0aec0;
         }
-
-        .categories {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
+        .categories { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
         .cat-btn {
             padding: 10px 22px;
             background: #e2e8f0;
@@ -143,137 +104,61 @@
             align-items: center;
             gap: 6px;
         }
-
-        .cat-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
+        .cat-btn:hover { transform: translateY(-2px); }
         .cat-btn.active {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
-
-        /* ===== شبكة الكتب ===== */
         .library-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
             margin-top: 10px;
         }
-
         .book-card {
             background: white;
             padding: 25px;
             border-radius: 18px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             transition: all 0.4s ease;
-            cursor: pointer;
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
         }
-
-        .book-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 0 18px 18px 0;
-            opacity: 0;
-            transition: 0.4s ease;
-        }
-
         .book-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
             border-color: #667eea;
         }
+        .book-card .icon { font-size: 45px; margin-bottom: 12px; display: block; }
+        .book-card h3 { color: #1a1a2e; font-size: 18px; margin-bottom: 6px; }
+        .book-card p { color: #718096; font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+        .book-card .meta { display: flex; gap: 12px; flex-wrap: wrap; margin: 10px 0; font-size: 13px; color: #a0aec0; }
+        .book-card .meta span { display: flex; align-items: center; gap: 4px; }
+        
+        /* التقييم بالنجوم التفاعلي */
+        .stars { display: flex; gap: 3px; margin: 8px 0; direction: ltr; }
+        .stars .star { font-size: 18px; color: #e2e8f0; cursor: pointer; transition: 0.2s; }
+        .stars .star.active { color: #f6ad55; }
+        .stars .star:hover { transform: scale(1.2); }
 
-        .book-card:hover::before {
-            opacity: 1;
-        }
-
-        .book-card .icon {
-            font-size: 45px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .book-card h3 {
-            color: #1a1a2e;
-            font-size: 18px;
-            margin-bottom: 6px;
-        }
-
-        .book-card p {
-            color: #718096;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .book-card .meta {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin: 10px 0;
-            font-size: 13px;
-            color: #a0aec0;
-        }
-
-        .book-card .meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .book-card .badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 3px 14px;
-            border-radius: 20px;
-            font-size: 11px;
+        .card-actions { display: flex; gap: 8px; margin-top: 15px; }
+        .card-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
             font-weight: bold;
-        }
-
-        .book-card .badge-free {
-            background: #48bb78;
-        }
-
-        .book-card .badge-premium {
-            background: #ed8936;
-        }
-
-        /* ===== التقييم بالنجوم ===== */
-        .stars {
-            display: flex;
-            gap: 3px;
-            margin: 8px 0;
-            direction: ltr;
-        }
-
-        .stars .star {
-            font-size: 18px;
-            color: #e2e8f0;
+            font-size: 12px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
         }
+        .btn-view { background: #ebf8ff; color: #3182ce; }
+        .btn-view:hover { background: #3182ce; color: white; }
+        .btn-del { background: #fff5f5; color: #e53e3e; }
+        .btn-del:hover { background: #e53e3e; color: white; }
 
-        .stars .star.active {
-            color: #f6ad55;
-        }
-
-        .stars .star:hover {
-            transform: scale(1.2);
-        }
-
-        /* ===== زر إضافة كتاب ===== */
         .add-book-btn {
             display: inline-block;
             background: linear-gradient(135deg, #48bb78, #38a169);
@@ -285,167 +170,57 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            margin-top: 10px;
         }
+        .add-book-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4); }
 
-        .add-book-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4);
-        }
-
-        /* ===== نافذة إضافة كتاب ===== */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
             backdrop-filter: blur(6px);
-            justify-content: center;
-            align-items: center;
+            justify-content: center; align-items: center;
             z-index: 9999;
         }
-
-        .modal.active {
-            display: flex;
-        }
-
+        .modal.active { display: flex; }
         .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 35px;
-            max-width: 500px;
-            width: 90%;
+            background: white; border-radius: 24px; padding: 35px;
+            max-width: 500px; width: 90%;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
+            animation: slideIn 0.3s ease; position: relative; max-height: 90vh; overflow-y: auto;
         }
-
-        .modal-content h2 {
-            color: #1a1a2e;
-            margin-bottom: 20px;
-        }
-
-        .modal-content .input-group {
-            margin-bottom: 15px;
-        }
-
-        .modal-content .input-group label {
-            display: block;
-            font-weight: bold;
-            color: #2d3748;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
+        .modal-content h2 { color: #1a1a2e; margin-bottom: 20px; }
+        .modal-content .input-group { margin-bottom: 15px; }
+        .modal-content .input-group label { display: block; font-weight: bold; color: #2d3748; margin-bottom: 5px; font-size: 14px; }
         .modal-content .input-group input,
         .modal-content .input-group textarea,
         .modal-content .input-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: 0.3s;
-            font-family: inherit;
-            background: #f7fafc;
+            width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0;
+            border-radius: 10px; font-size: 14px; transition: 0.3s; font-family: inherit; background: #f7fafc;
         }
-
         .modal-content .input-group input:focus,
-        .modal-content .input-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        }
-
+        .modal-content .input-group textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1); }
         .modal-content .btn-save {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.3s;
+            background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+            border: none; padding: 14px 30px; border-radius: 30px; font-size: 16px;
+            font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s;
         }
+        .close-modal { position: absolute; top: 15px; left: 20px; background: transparent; border: none; font-size: 24px; color: #95a5a6; cursor: pointer; }
 
-        .modal-content .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
+        .empty-state { text-align: center; padding: 60px 20px; color: #a0aec0; }
+        .empty-state .icon { font-size: 80px; margin-bottom: 15px; }
 
-        .modal-content .close-modal {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            background: transparent;
-            border: none;
-            font-size: 24px;
-            color: #95a5a6;
-            cursor: pointer;
-        }
-
-        .modal-content {
-            position: relative;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #a0aec0;
-        }
-
-        .empty-state .icon {
-            font-size: 80px;
-            margin-bottom: 15px;
-        }
-        .empty-state h3 {
-            color: #4a5568;
-            margin-bottom: 8px;
-        }
-
-        /* ===== ملخصات ===== */
         .summary-section {
             background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
-            border-radius: 18px;
-            padding: 25px;
-            margin: 25px 0;
-            border-right: 5px solid #667eea;
+            border-radius: 18px; padding: 25px; margin: 25px 0; border-right: 5px solid #667eea;
         }
-
-        .summary-section h3 {
-            color: #1a1a2e;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
+        .summary-section h3 { color: #1a1a2e; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
         .summary-item {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            transition: 0.3s;
-            cursor: pointer;
+            background: white; padding: 15px 20px; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04); transition: 0.3s; cursor: pointer;
         }
-
-        .summary-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1);
-        }
-
+        .summary-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1); }
         .summary-item .icon { font-size: 28px; }
         .summary-item h4 { color: #1a1a2e; margin: 5px 0; font-size: 15px; }
         .summary-item p { color: #718096; font-size: 13px; }
@@ -453,25 +228,21 @@
         @media (max-width: 768px) {
             .container { padding: 20px; }
             .header { flex-direction: column; align-items: stretch; }
-            .library-grid { grid-template-columns: 1fr; }
-            .summary-grid { grid-template-columns: 1fr; }
-            .search-section { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- الهيدر -->
     <div class="header">
         <h1>📚 المكتبة <span>هيثم AI</span></h1>
         <button class="back-btn" onclick="window.location.href='index.html'">🔙 رجوع للرئيسية</button>
     </div>
 
-    <!-- ===== قسم الملخصات ===== -->
+    <!-- قسم الملخصات -->
     <div class="summary-section">
         <h3>📝 ملخصات سريعة</h3>
-        <div class="summary-grid" id="summaryGrid">
+        <div class="summary-grid">
             <div class="summary-item" onclick="showSummary('الرياضيات')">
                 <div class="icon">📐</div>
                 <h4>الرياضيات</h4>
@@ -505,7 +276,7 @@
         </div>
     </div>
 
-    <!-- ===== البحث والتصنيفات ===== -->
+    <!-- البحث والفلترة -->
     <div class="search-section">
         <div class="search-box">
             <input type="text" id="searchBooks" placeholder="🔍 ابحث عن كتاب أو ملخص..." oninput="filterBooks()">
@@ -522,17 +293,15 @@
         <button class="cat-btn" data-cat="history" onclick="filterCategory('history')">🏛️ تاريخ</button>
     </div>
 
-    <!-- ===== شبكة الكتب ===== -->
+    <!-- شبكة الكتب -->
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 15px;">
         <h3 style="color: #1a1a2e;">📖 الكتب المتاحة</h3>
         <button class="add-book-btn" onclick="openAddBookModal()">➕ إضافة كتاب جديد</button>
     </div>
 
-    <div class="library-grid" id="libraryGrid">
-        <!-- الكتب ستظهر هنا عبر JavaScript -->
-    </div>
+    <div class="library-grid" id="libraryGrid"></div>
 
-    <!-- ===== نافذة إضافة كتاب ===== -->
+    <!-- نافذة إضافة كتاب -->
     <div class="modal" id="addBookModal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeAddBookModal()">✕</button>
@@ -567,108 +336,44 @@
         </div>
     </div>
 
-    <!-- ===== نافذة عرض الملخص ===== -->
+    <!-- نافذة عرض الملخص -->
     <div class="modal" id="summaryModal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeSummaryModal()">✕</button>
             <h2 id="summaryTitle">📝 الملخص</h2>
-            <div id="summaryContent" style="line-height: 1.8; color: #2d3748; font-size: 15px;">
-                <!-- المحتوى هنا -->
-            </div>
+            <div id="summaryContent" style="line-height: 1.8; color: #2d3748; font-size: 15px;"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // =============================================
-    // 1. قاعدة بيانات الكتب
-    // =============================================
     let books = [
-        {
-            id: 1,
-            title: 'الرياضيات الأساسية',
-            desc: 'شرح مفصل للجبر والهندسة والتفاضل مع أمثلة تطبيقية',
-            category: 'math',
-            icon: '📐',
-            link: '/books/math_basics.pdf',
-            views: 150,
-            downloads: 45,
-            rating: 4.5,
-            stars: 4,
-            premium: false
-        },
-        {
-            id: 2,
-            title: 'الفيزياء الحديثة',
-            desc: 'النظرية النسبية وميكانيكا الكم وتطبيقاتها',
-            category: 'science',
-            icon: '⚡',
-            link: '/books/modern_physics.pdf',
-            views: 120,
-            downloads: 30,
-            rating: 4.2,
-            stars: 4,
-            premium: false
-        },
-        {
-            id: 3,
-            title: 'قواعد اللغة العربية',
-            desc: 'النحو والصرف والبلاغة مع تمارين محلولة',
-            category: 'arabic',
-            icon: '📖',
-            link: '/books/arabic_grammar.pdf',
-            views: 200,
-            downloads: 80,
-            rating: 4.8,
-            stars: 5,
-            premium: false
-        },
-        {
-            id: 4,
-            title: 'الكيمياء العضوية',
-            desc: 'المركبات العضوية، التفاعلات، والآليات',
-            category: 'science',
-            icon: '🧪',
-            link: '/books/organic_chemistry.pdf',
-            views: 90,
-            downloads: 25,
-            rating: 4.0,
-            stars: 4,
-            premium: false
-        },
-        {
-            id: 5,
-            title: 'English Grammar',
-            desc: 'Complete guide to English grammar with exercises',
-            category: 'english',
-            icon: '🇬🇧',
-            link: '/books/english_grammar.pdf',
-            views: 180,
-            downloads: 60,
-            rating: 4.6,
-            stars: 5,
-            premium: false
-        },
-        {
-            id: 6,
-            title: 'تاريخ الحضارات',
-            desc: 'رحلة عبر الحضارات القديمة والحديثة',
-            category: 'history',
-            icon: '🏛️',
-            link: '/books/history_civilizations.pdf',
-            views: 75,
-            downloads: 20,
-            rating: 3.8,
-            stars: 3,
-            premium: false
-        }
+        { id: 1, title: 'الرياضيات الأساسية', desc: 'شرح مفصل للجبر والهندسة والتفاضل مع أمثلة تطبيقية', category: 'math', icon: '📐', link: '#', views: 150, downloads: 45, rating: 4.5 },
+        { id: 2, title: 'الفيزياء الحديثة', desc: 'النظرية النسبية وميكانيكا الكم وتطبيقاتها', category: 'science', icon: '⚡', link: '#', views: 120, downloads: 30, rating: 4.2 },
+        { id: 3, title: 'قواعد اللغة العربية', desc: 'النحو والصرف والبلاغة مع تمارين محلولة', category: 'arabic', icon: '📖', link: '#', views: 200, downloads: 80, rating: 4.8 },
+        { id: 4, title: 'الكيمياء العضوية', desc: 'المركبات العضوية، التفاعلات، والآليات', category: 'science', icon: '🧪', link: '#', views: 90, downloads: 25, rating: 4.0 },
+        { id: 5, title: 'English Grammar', desc: 'Complete guide to English grammar with exercises', category: 'english', icon: '🇬🇧', link: '#', views: 180, downloads: 60, rating: 4.6 },
+        { id: 6, title: 'تاريخ الحضارات', desc: 'رحلة عبر الحضارات القديمة والحديثة', category: 'history', icon: '🏛️', link: '#', views: 75, downloads: 20, rating: 3.8 }
     ];
 
     let bookIdCounter = 7;
+    let currentCategory = 'all';
 
-    // =============================================
-    // 2. عرض الكتب
-    // =============================================
+    function loadBooks() {
+        const saved = localStorage.getItem('haitham_books');
+        if (saved) {
+            try {
+                books = JSON.parse(saved);
+                if(books.length > 0) bookIdCounter = Math.max(...books.map(b => b.id)) + 1;
+            } catch(e) {}
+        }
+        renderBooks();
+    }
+
+    function saveBooks() {
+        localStorage.setItem('haitham_books', JSON.stringify(books));
+    }
+
     function renderBooks(filter = 'all', search = '') {
         const grid = document.getElementById('libraryGrid');
         grid.innerHTML = '';
@@ -693,9 +398,8 @@
         filtered.forEach(book => {
             const card = document.createElement('div');
             card.className = 'book-card';
-            card.onclick = () => openBook(book);
 
-            const starsHtml = generateStars(book.rating);
+            const starsHtml = generateStarsRating(book.id, book.rating);
 
             card.innerHTML = `
                 <span class="icon">${book.icon}</span>
@@ -705,34 +409,44 @@
                 <div class="meta">
                     <span>👁️ ${book.views}</span>
                     <span>📥 ${book.downloads}</span>
-                    <span>⭐ ${book.rating}</span>
+                    <span>⭐ ${book.rating.toFixed(1)}</span>
                 </div>
-                <span class="badge ${book.premium ? 'badge-premium' : 'badge-free'}">
-                    ${book.premium ? '💎 مميز' : '🆓 مجاني'}
-                </span>
+                <div class="card-actions">
+                    <button class="btn-view" onclick="openBook(${book.id})">📂 معاينة/تحميل</button>
+                    <button class="btn-del" onclick="deleteBook(${book.id})">🗑️ حذف</button>
+                </div>
             `;
             grid.appendChild(card);
         });
     }
 
-    // =============================================
-    // 3. نظام النجوم
-    // =============================================
-    function generateStars(rating) {
+    function generateStarsRating(bookId, rating) {
         const full = Math.floor(rating);
-        const half = rating % 1 >= 0.5 ? 1 : 0;
-        const empty = 5 - full - half;
         let html = '';
-        for (let i = 0; i < full; i++) html += '<span class="star active">★</span>';
-        if (half) html += '<span class="star active">☆</span>';
-        for (let i = 0; i < empty; i++) html += '<span class="star">★</span>';
+        for (let i = 1; i <= 5; i++) {
+            const active = i <= full ? 'active' : '';
+            html += `<span class="star ${active}" onclick="rateBook(${bookId}, ${i})">★</span>`;
+        }
         return html;
     }
 
-    // =============================================
-    // 4. الفلترة والبحث
-    // =============================================
-    let currentCategory = 'all';
+    function rateBook(bookId, stars) {
+        const book = books.find(b => b.id === bookId);
+        if (book) {
+            book.rating = (book.rating + stars) / 2; // حساب متوسط جديد
+            saveBooks();
+            filterBooks();
+            alert(`⭐ شكراً لك! تم تقييم كتاب "${book.title}" بـ ${stars} نجوم.`);
+        }
+    }
+
+    function deleteBook(bookId) {
+        if (confirm('هل أنت متأكد من حذف هذا الكتاب نهائياً؟')) {
+            books = books.filter(b => b.id !== bookId);
+            saveBooks();
+            filterBooks();
+        }
+    }
 
     function filterCategory(cat) {
         currentCategory = cat;
@@ -747,107 +461,43 @@
         renderBooks(currentCategory, search);
     }
 
-    // =============================================
-    // 5. فتح كتاب
-    // =============================================
-    function openBook(book) {
-        // زيادة عدد المشاهدات
-        book.views++;
-        renderBooks(currentCategory, document.getElementById('searchBooks').value.trim());
+    function openBook(bookId) {
+        const book = books.find(b => b.id === bookId);
+        if (!book) return;
 
-        if (book.link) {
+        book.views++;
+        book.downloads++;
+        saveBooks();
+        filterBooks();
+
+        if (book.link && book.link !== '#') {
             window.open(book.link, '_blank');
         } else {
-            alert(`📚 ${book.title}\n\n${book.desc}\n\n⭐ التقييم: ${book.rating}/5\n👁️ ${book.views} مشاهدة\n📥 ${book.downloads} تحميل`);
+            alert(`📚 تفاصيل الكتاب:\n\nالعنوان: ${book.title}\nالوصف: ${book.desc}\n⭐ التقييم: ${book.rating.toFixed(1)}/5\n👁️ المشاهدات: ${book.views}`);
         }
     }
 
-    // =============================================
-    // 6. عرض الملخصات
-    // =============================================
     const summaries = {
-        'الرياضيات': `
-            <h4>📐 ملخص الرياضيات الأساسية</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li>📌 <strong>المعادلات:</strong> حل المعادلات من الدرجة الأولى والثانية</li>
-                <li>📌 <strong>الهندسة:</strong> مساحات وحجوم الأشكال الهندسية</li>
-                <li>📌 <strong>التفاضل:</strong> قواعد الاشتقاق وتطبيقاتها</li>
-                <li>📌 <strong>التكامل:</strong> التكامل غير المحدد والمحدد</li>
-            </ul>
-            <p style="margin-top: 15px; color: #718096;">💡 نصيحة: راجع القوانين الأساسية قبل حل التمارين</p>
-        `,
-        'الفيزياء': `
-            <h4>⚡ ملخص الفيزياء الحديثة</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li>📌 <strong>النظرية النسبية:</strong> النسبية الخاصة والعامة</li>
-                <li>📌 <strong>ميكانيكا الكم:</strong> ازدواجية الموجة-الجسيم</li>
-                <li>📌 <strong>الطاقة:</strong> قوانين حفظ الطاقة والشغل</li>
-                <li>📌 <strong>الحركة:</strong> قوانين نيوتن والحركة الدائرية</li>
-            </ul>
-        `,
-        'الكيمياء': `
-            <h4>🧪 ملخص الكيمياء العضوية</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li>📌 <strong>المركبات العضوية:</strong> الألكانات، الألكينات، الألكاينات</li>
-                <li>📌 <strong>التفاعلات:</strong> الاستبدال، الإضافة، الأكسدة</li>
-                <li>📌 <strong>المجموعات الوظيفية:</strong> الكحولات، الألدهيدات، الأحماض</li>
-                <li>📌 <strong>الآليات:</strong> آليات التفاعلات العضوية</li>
-            </ul>
-        `,
-        'اللغة العربية': `
-            <h4>📖 ملخص قواعد اللغة العربية</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li>📌 <strong>النحو:</strong> أقسام الكلمة، الجملة الاسمية والفعلية</li>
-                <li>📌 <strong>الصرف:</strong> تصريف الأفعال والأسماء</li>
-                <li>📌 <strong>البلاغة:</strong> التشبيه، الاستعارة، الكناية</li>
-                <li>📌 <strong>الإملاء:</strong> قواعد الهمزة والتاء المربوطة</li>
-            </ul>
-        `,
-        'اللغة الإنجليزية': `
-            <h4>🇬🇧 English Grammar Summary</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li>📌 <strong>Tenses:</strong> Present, Past, Future</li>
-                <li>📌 <strong>Parts of Speech:</strong> Nouns, Verbs, Adjectives</li>
-                <li>📌 <strong>Sentence Structure:</strong> Simple, Compound, Complex</li>
-                <li>📌 <strong>Common Mistakes:</strong> Prepositions, Articles</li>
-            </ul>
-        `,
-        'التاريخ': `
-            <h4>🏛️ ملخص تاريخ الحضارات</h4>
-            <ul style="list-style: none; padding: 0;">
-                <li>📌 <strong>الحضارات القديمة:</strong> مصر، بلاد الرافدين، اليونان</li>
-                <li>📌 <strong>العصر الإسلامي:</strong> الخلافة الراشدة، العباسية، الأندلس</li>
-                <li>📌 <strong>العصر الحديث:</strong> النهضة الأوروبية، الثورات</li>
-                <li>📌 <strong>شخصيات مؤثرة:</strong> صلاح الدين، عمر بن الخطاب</li>
-            </ul>
-        `
+        'الرياضيات': `<h4>📐 ملخص الرياضيات</h4><p>المعادلات الخطية والتربيعية، حساب المثلثات، وقواعد التفاضل والتكامل الأساسية.</p>`,
+        'الفيزياء': `<h4>⚡ ملخص الفيزياء</h4><p>قوانين الحركة لنيوتن، الديناميكا الحرارية، ونظرية الشغل والطاقة.</p>`,
+        'الكيمياء': `<h4>🧪 ملخص الكيمياء</h4><p>الجدول الدوري، الروابط الكيميائية، ومقدمة في الكيمياء العضوية.</p>`,
+        'اللغة العربية': `<h4>📖 ملخص اللغة العربية</h4><p>النحو والصرف، المبتدأ والخبر، الأفعال الخمسة، وبلاغة البيان.</p>`,
+        'اللغة الإنجليزية': `<h4>🇬🇧 English Summary</h4><p>Tenses structure, common grammar rules, and essential vocabulary.</p>`,
+        'التاريخ': `<h4>🏛️ ملخص التاريخ</h4><p>أبرز المحطات الحضارية والتاريخية وتأثيرها على العصر الحديث.</p>`
     };
 
     function showSummary(topic) {
-        const modal = document.getElementById('summaryModal');
         document.getElementById('summaryTitle').textContent = `📝 ملخص ${topic}`;
-        document.getElementById('summaryContent').innerHTML = summaries[topic] || `<p>❌ لا يوجد ملخص لهذا الموضوع حالياً</p>`;
-        modal.classList.add('active');
+        document.getElementById('summaryContent').innerHTML = summaries[topic] || '<p>لا يتوفر ملخص حالياً.</p>';
+        document.getElementById('summaryModal').classList.add('active');
     }
 
     function closeSummaryModal() {
         document.getElementById('summaryModal').classList.remove('active');
     }
 
-    // =============================================
-    // 7. إضافة كتاب جديد
-    // =============================================
-    function openAddBookModal() {
-        document.getElementById('addBookModal').classList.add('active');
-    }
-
-    function closeAddBookModal() {
-        document.getElementById('addBookModal').classList.remove('active');
-        document.getElementById('bookTitle').value = '';
-        document.getElementById('bookDesc').value = '';
-        document.getElementById('bookLink').value = '';
-        document.getElementById('bookIcon').value = '📚';
-    }
+    function openAddBookModal() { document.getElementById('addBookModal').classList.add('active'); }
+    function closeAddBookModal() { document.getElementById('addBookModal').classList.remove('active'); }
 
     function addNewBook() {
         const title = document.getElementById('bookTitle').value.trim();
@@ -857,75 +507,31 @@
         const icon = document.getElementById('bookIcon').value.trim() || '📚';
 
         if (!title || !desc) {
-            alert('❌ الرجاء إدخال عنوان ووصف للكتاب');
+            alert('❌ الرجاء إدخال عنوان ووصف الكتاب على الأقل.');
             return;
         }
 
         const newBook = {
             id: bookIdCounter++,
-            title: title,
-            desc: desc,
-            category: category,
-            icon: icon,
+            title, desc, category, icon,
             link: link || '#',
-            views: 0,
-            downloads: 0,
-            rating: 0,
-            stars: 0,
-            premium: false
+            views: 0, downloads: 0, rating: 5.0
         };
 
         books.push(newBook);
+        saveBooks();
         renderBooks(currentCategory, document.getElementById('searchBooks').value.trim());
         closeAddBookModal();
         alert(`✅ تم إضافة كتاب "${title}" بنجاح!`);
     }
 
-    // =============================================
-    // 8. إغلاق النوافذ بالضغط خارجها
-    // =============================================
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
-            }
+            if (e.target === this) this.classList.remove('active');
         });
     });
 
-    // =============================================
-    // 9. تحميل الكتب عند بدء التشغيل
-    // =============================================
-    renderBooks();
-
-    // =============================================
-    // 10. حفظ الكتب في localStorage
-    // =============================================
-    function saveBooks() {
-        localStorage.setItem('haitham_books', JSON.stringify(books));
-    }
-
-    function loadBooks() {
-        const saved = localStorage.getItem('haitham_books');
-        if (saved) {
-            try {
-                books = JSON.parse(saved);
-                bookIdCounter = Math.max(...books.map(b => b.id)) + 1;
-                renderBooks();
-            } catch(e) {}
-        }
-    }
-
-    // حفظ الكتب عند الإضافة
-    const originalAddBook = addNewBook;
-    addNewBook = function() {
-        originalAddBook();
-        saveBooks();
-    };
-
-    // تحميل الكتب المحفوظة
     loadBooks();
-
-    console.log('📚 تم تحميل المكتبة بنجاح!');
 </script>
 
 </body>
