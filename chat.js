@@ -1,4 +1,4 @@
-// api/chat.js - Vercel Serverless
+// api/chat.js - Vercel Serverless (نسخة محسنة تدعم النصوص والصور والمعرفة)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,11 +8,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body || {};
+    const { message, image, knowledge } = req.body || {};
 
-    if (!message) {
+    if (!message && !image) {
       return res.status(400).json({
-        reply: 'اكتب رسالتك أولًا'
+        reply: 'اكتب رسالتك أو أرفق صورة أولًا'
       });
     }
 
@@ -20,31 +20,48 @@ export default async function handler(req, res) {
 
     if (!OPENAI_API_KEY) {
       return res.status(500).json({
-        reply: 'خطأ: مفتاح OpenAI غير مضاف في Vercel'
+        reply: 'خطأ: مفتاح OpenAI غير مضاف في إعدادات Vercel'
+      });
+    }
+
+    // بناء رسالة المستخدم (تدعم النصوص المباشرة أو الصور)
+    let userContent = [];
+    
+    if (message) {
+      userContent.push({
+        type: 'text',
+        text: knowledge ? `سياق معلومة مسبقة:\n${knowledge}\n\nسؤال المستخدم: ${message}` : message
+      });
+    }
+
+    if (image) {
+      userContent.push({
+        type: 'image_url',
+        image_url: {
+          url: image
+        }
       });
     }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
-
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
-
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content:
-              'أنت المساعد هيثم AI، مساعد تعليمي ذكي باللغة العربية. قدم إجابات واضحة ومفيدة ومنظمة للطلاب والمعلمين.'
+            content: 'أنت المساعد هيثم AI، مساعد تعليمي ذكي باللغة العربية متخصص في المواد الدراسية (الرياضيات، العلوم، وغيرها). قدم إجابات واضحة، دقيقة، ومفيدة ومنظمة للطلاب والمعلمين.'
           },
           {
             role: 'user',
-            content: message
+            content: userContent.length === 1 && userContent[0].type === 'text' ? userContent[0].text : userContent
           }
-        ]
+        ],
+        max_tokens: 1500
       })
     });
 
@@ -52,11 +69,8 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       console.error('OpenAI Error:', data);
-
       return res.status(response.status).json({
-        reply:
-          data?.error?.message ||
-          'حدث خطأ من خدمة الذكاء الاصطناعي'
+        reply: data?.error?.message || 'حدث خطأ من خدمة الذكاء الاصطناعي'
       });
     }
 
@@ -74,7 +88,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Server Error:', error);
-
     return res.status(500).json({
       reply: 'حدث خطأ في الخادم: ' + error.message
     });
