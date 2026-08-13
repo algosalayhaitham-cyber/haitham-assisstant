@@ -69,12 +69,10 @@
 
 <div class="card">
 
-    <!-- 👇 شعار القائد الصغير -->
     <div class="logo-container">
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABkCAYAAADDhn8AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAgSSURBVHic7Z1bbBxVGMf/38zZ..." alt="شعار القائد الصغير" class="logo-image">
     </div>
 
-    <!-- 👇 صورتك الشخصية -->
     <div class="avatar-wrapper">
         <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgICAg..." alt="الأستاذ هيثم القصلي" />
     </div>
@@ -94,9 +92,7 @@
         هنا نصنع التميز معاً – تصحيح، شرح، وتطوير مستمر.
     </div>
 
-    <!-- 👇 الأزرار -->
     <div class="btn-group">
-        <!-- ✅ هذا الزر يودي إلى صفحة المحادثة -->
         <a href="home.html" class="btn btn-primary">
             🚀 دخول إلى المنصة
         </a>
