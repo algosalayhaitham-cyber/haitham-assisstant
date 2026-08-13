@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>هيثم AI - الأستاذ هيثم القصلي</title>
     <style>
-        /* كل التنسيقات السابقة (نفس اللي عندك) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tahoma', 'Segoe UI', sans-serif;
@@ -31,8 +30,6 @@
             from { opacity: 0; transform: translateY(40px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        /* ===== الهيدر ===== */
         .header {
             display: flex;
             align-items: center;
@@ -95,8 +92,6 @@
         .header-btn-primary:hover {
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
         }
-
-        /* ===== قسم الترحيب (الموجود في صفحة الترحيب) ===== */
         .welcome-section {
             text-align: center;
             padding: 20px 0 30px;
@@ -164,8 +159,6 @@
             margin: 12px auto 22px;
             border-radius: 10px;
         }
-
-        /* ===== بقية التنسيقات (البطاقات، المحادثة، الفوتر) ===== */
         .hero {
             text-align: center;
             padding: 10px 0 20px;
@@ -302,6 +295,80 @@
             font-size: 13px;
         }
 
+        /* ===== صندوق المحادثة الجديد ===== */
+        #chatForm {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+        }
+        #input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 16px;
+            resize: none;
+            font-family: inherit;
+        }
+        #input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+        #input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        #chatForm .btn-send {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #chatForm .btn-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        #messages {
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+        #messages .msg {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+        }
+        #messages .msg.user {
+            background: rgba(102, 126, 234, 0.2);
+            text-align: right;
+        }
+        #messages .msg.ai {
+            background: rgba(255,255,255,0.04);
+            text-align: left;
+        }
+        #messages .msg b {
+            color: #f6b26b;
+            display: block;
+            margin-bottom: 4px;
+        }
+        #messages .msg p {
+            color: rgba(255,255,255,0.8);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
             .container { padding: 25px 18px; }
             .header { flex-direction: column; align-items: stretch; text-align: center; }
@@ -316,6 +383,8 @@
             .welcome-section .name { font-size: 24px; }
             .welcome-section .avatar-wrapper { width: 90px; height: 90px; }
             .welcome-section .logo-image { max-width: 120px; }
+            #chatForm { flex-direction: column; }
+            #chatForm .btn-send { width: 100%; }
         }
         @media (max-width: 480px) {
             .grid { grid-template-columns: 1fr; }
@@ -327,7 +396,6 @@
 
 <div class="container">
 
-    <!-- ===== الهيدر ===== -->
     <div class="header">
         <div class="logo">
             <div class="logo-icon">🧠</div>
@@ -340,18 +408,13 @@
         </div>
     </div>
 
-    <!-- ===== قسم الترحيب (بصورتك وشعارك) ===== -->
     <div class="welcome-section">
-        <!-- شعار القائد الصغير -->
         <div class="logo-container">
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABkCAYAAADDhn8AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAgSSURBVHic7Z1bbBxVGMf/38zZ..." alt="شعار القائد الصغير" class="logo-image">
         </div>
-
-        <!-- صورتك الشخصية -->
         <div class="avatar-wrapper">
             <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgICAg..." alt="الأستاذ هيثم القصلي" />
         </div>
-
         <div class="name">
             الأستاذ <span class="highlight">هيثم القصلي</span>
         </div>
@@ -361,14 +424,12 @@
         <div class="divider"></div>
     </div>
 
-    <!-- ===== قسم الترحيب النصي ===== -->
     <div class="hero">
         <div class="greeting">👋</div>
         <h2>مرحباً بك في <span>هيثم AI</span></h2>
         <p>مساعدك الذكي لإعداد التحضير، بنوك الأسئلة، الشروحات الرياضية، والأعمال المدرسية.</p>
     </div>
 
-    <!-- ===== البطاقات ===== -->
     <div class="grid">
         <div class="card card-featured" onclick="window.location.href='correction.html'">
             <span class="badge-new">جديد</span>
@@ -403,6 +464,14 @@
         </div>
     </div>
 
+    <!-- ===== صندوق المحادثة الجديد ===== -->
+    <form id="chatForm">
+        <textarea id="input" rows="1" placeholder="اكتب سؤالك هنا..."></textarea>
+        <button type="submit" class="btn-send">إرسال</button>
+    </form>
+
+    <div id="messages"></div>
+
     <!-- ===== شريط المحادثة السريع ===== -->
     <div class="chat-quick" id="chat">
         <div class="avatar">🤖</div>
@@ -417,7 +486,6 @@
         </div>
     </div>
 
-    <!-- ===== الفوتر ===== -->
     <div class="footer">
         تطبيق هيثم AI &copy; 2026 - الأستاذ هيثم القصلي - جميع الحقوق محفوظة
     </div>
@@ -430,9 +498,11 @@
     if (hour >= 5 && hour < 12) greeting.textContent = '🌅';
     else if (hour >= 12 && hour < 17) greeting.textContent = '☀️';
     else if (hour >= 17 && hour < 21) greeting.textContent = '🌇';
-    else greeting.textContent = '
-🌙';
+    else greeting.textContent = '🌙';
 </script>
 
+<!-- ===== تحميل app.js ===== -->
+<script src="app.js"></script>
+
 </body>
-</html> 
+</html>
