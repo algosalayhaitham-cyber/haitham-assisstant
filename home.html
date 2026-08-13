@@ -80,6 +80,7 @@
         .header-actions {
             display: flex;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .header-btn {
@@ -322,10 +323,10 @@
             <h1>هيثم <span>AI</span></h1>
         </div>
         <div class="header-actions">
-            <!-- 👇 زر الرجوع للترحيب -->
             <button class="header-btn" onclick="window.location.href='index.html'">🏠 الترحيب</button>
             <button class="header-btn" onclick="window.location.href='correction.html'">📝 تصحيح</button>
             <button class="header-btn" onclick="window.location.href='library.html'">📚 المكتبة</button>
+            <button class="header-btn header-btn-primary" onclick="window.location.href='exam.html'">📝 اختبار</button>
         </div>
     </div>
 
@@ -352,16 +353,17 @@
             <p>ملخصات وكتب تعليمية</p>
         </div>
 
+        <!-- ✅ بطاقة إنشاء الاختبار (جديدة) -->
+        <div class="card" onclick="window.location.href='exam.html'">
+            <span class="icon">📝</span>
+            <h3>إنشاء اختبار</h3>
+            <p>أسئلة موضوعية + تصحيح آلي</p>
+        </div>
+
         <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">💬</span>
             <h3>المحادثة</h3>
             <p>اسأل هيثم أي سؤال</p>
-        </div>
-
-        <div class="card" onclick="window.location.href='#chat'">
-            <span class="icon">📄</span>
-            <h3>إنشاء اختبار</h3>
-            <p>أسئلة + نموذج إجابة</p>
         </div>
 
         <div class="card" onclick="window.location.href='#chat'">
