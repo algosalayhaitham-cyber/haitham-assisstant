@@ -1,0 +1,12 @@
+{
+  "name": "haitham-assistant",
+  "version": "1.0.0",
+  "description": "هيثم AI - المساعد التعليمي الذكي",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+} 
