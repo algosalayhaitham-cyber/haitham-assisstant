@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>هيثم AI - المساعد التعليمي الذكي</title>
+    <title>هيثم AI - الأستاذ هيثم القصلي</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* كل التنسيقات السابقة (نفس اللي عندك) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tahoma', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -20,7 +16,6 @@
             justify-content: center;
             padding: 20px;
         }
-
         .container {
             max-width: 1100px;
             width: 100%;
@@ -32,12 +27,12 @@
             box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6);
             animation: fadeUp 1s ease;
         }
-
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(40px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* ===== الهيدر ===== */
         .header {
             display: flex;
             align-items: center;
@@ -46,13 +41,11 @@
             gap: 15px;
             margin-bottom: 30px;
         }
-
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .logo-icon {
             font-size: 45px;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -64,25 +57,21 @@
             justify-content: center;
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
         }
-
         .logo h1 {
             color: white;
             font-size: 28px;
         }
-
         .logo h1 span {
             background: linear-gradient(135deg, #667eea, #764ba2);
             padding: 2px 12px;
             border-radius: 30px;
             font-size: 14px;
         }
-
         .header-actions {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
-
         .header-btn {
             background: rgba(255, 255, 255, 0.08);
             color: white;
@@ -95,45 +84,107 @@
             font-weight: bold;
             text-decoration: none;
         }
-
         .header-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
-
         .header-btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
         }
-
         .header-btn-primary:hover {
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
-            transform: translateY(-2px);
         }
 
+        /* ===== قسم الترحيب (الموجود في صفحة الترحيب) ===== */
+        .welcome-section {
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 30px;
+        }
+        .welcome-section .avatar-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(135deg, #f6b26b, #e67e22);
+            box-shadow: 0 12px 40px rgba(230, 126, 34, 0.35);
+        }
+        .welcome-section .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #0b0e1a;
+            display: block;
+        }
+        .welcome-section .logo-container {
+            margin: 0 auto 15px;
+            text-align: center;
+        }
+        .welcome-section .logo-image {
+            max-width: 160px;
+            height: auto;
+            border-radius: 16px;
+            filter: drop-shadow(0 8px 30px rgba(255,215,0,0.15));
+            transition: 0.3s;
+        }
+        .welcome-section .logo-image:hover {
+            transform: scale(1.03);
+        }
+        .welcome-section .name {
+            font-size: 30px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+        .welcome-section .name .highlight {
+            background: linear-gradient(to left, #f6b26b, #f1c40f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .welcome-section .title {
+            font-size: 17px;
+            color: rgba(255,255,255,0.6);
+            margin: 6px 0 16px;
+            font-weight: 400;
+        }
+        .welcome-section .title strong {
+            color: #f6b26b;
+            font-weight: 600;
+        }
+        .welcome-section .divider {
+            width: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, #f6b26b, #e67e22);
+            margin: 12px auto 22px;
+            border-radius: 10px;
+        }
+
+        /* ===== بقية التنسيقات (البطاقات، المحادثة، الفوتر) ===== */
         .hero {
             text-align: center;
-            padding: 30px 0 40px;
+            padding: 10px 0 20px;
         }
-
         .hero .greeting {
             font-size: 48px;
             margin-bottom: 10px;
         }
-
         .hero h2 {
             color: white;
             font-size: 36px;
             margin-bottom: 10px;
         }
-
         .hero h2 span {
             background: linear-gradient(135deg, #f6ad55, #ed8936);
             padding: 2px 16px;
             border-radius: 30px;
             font-size: 32px;
         }
-
         .hero p {
             color: rgba(255, 255, 255, 0.6);
             font-size: 18px;
@@ -141,14 +192,12 @@
             margin: 0 auto;
             line-height: 1.8;
         }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 30px;
         }
-
         .card {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -157,57 +206,29 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
             color: white;
             text-decoration: none;
             position: relative;
             overflow: hidden;
         }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            opacity: 0;
-            transition: 0.4s;
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
         .card:hover {
             transform: translateY(-8px);
             border-color: rgba(102, 126, 234, 0.4);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
-
         .card .icon {
             font-size: 40px;
             display: block;
             margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
         }
-
         .card h3 {
             font-size: 18px;
             margin-bottom: 5px;
-            position: relative;
-            z-index: 1;
         }
-
         .card p {
             color: rgba(255, 255, 255, 0.5);
             font-size: 13px;
-            position: relative;
-            z-index: 1;
         }
-
         .card .badge-new {
             position: absolute;
             top: 12px;
@@ -218,18 +239,14 @@
             padding: 2px 12px;
             border-radius: 20px;
             font-weight: bold;
-            z-index: 2;
         }
-
         .card-featured {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
             border-color: rgba(102, 126, 234, 0.3);
         }
-
         .card-featured .icon {
             font-size: 50px;
         }
-
         .chat-quick {
             margin-top: 35px;
             background: rgba(255, 255, 255, 0.05);
@@ -241,26 +258,22 @@
             flex-wrap: wrap;
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
-
         .chat-quick .avatar {
             font-size: 40px;
         }
-
         .chat-quick .msg {
             flex: 1;
             color: rgba(255, 255, 255, 0.7);
             font-size: 15px;
         }
-
         .chat-quick .msg strong {
             color: white;
         }
-
         .chat-quick .actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
-
         .chat-quick .actions button {
             background: rgba(255, 255, 255, 0.08);
             border: none;
@@ -271,19 +284,15 @@
             color: white;
             transition: 0.3s;
         }
-
         .chat-quick .actions button:hover {
             background: rgba(255, 255, 255, 0.15);
         }
-
         .chat-quick .actions .btn-send {
             background: linear-gradient(135deg, #667eea, #764ba2);
         }
-
         .chat-quick .actions .btn-send:hover {
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
         }
-
         .footer {
             text-align: center;
             margin-top: 35px;
@@ -302,10 +311,12 @@
             .hero p { font-size: 16px; }
             .grid { grid-template-columns: 1fr 1fr; }
             .chat-quick { flex-direction: column; text-align: center; }
-            .chat-quick .actions { width: 100%; justify-content: center; }
+            .chat-quick .actions { justify-content: center; width: 100%; }
             .header-actions { justify-content: center; }
+            .welcome-section .name { font-size: 24px; }
+            .welcome-section .avatar-wrapper { width: 90px; height: 90px; }
+            .welcome-section .logo-image { max-width: 120px; }
         }
-
         @media (max-width: 480px) {
             .grid { grid-template-columns: 1fr; }
             .hero h2 { font-size: 22px; }
@@ -323,14 +334,34 @@
             <h1>هيثم <span>AI</span></h1>
         </div>
         <div class="header-actions">
-            <button class="header-btn" onclick="window.location.href='index.html'">🏠 الترحيب</button>
             <button class="header-btn" onclick="window.location.href='correction.html'">📝 تصحيح</button>
             <button class="header-btn" onclick="window.location.href='library.html'">📚 المكتبة</button>
-            <button class="header-btn header-btn-primary" onclick="window.location.href='exam.html'">📝 اختبار</button>
+            <button class="header-btn header-btn-primary" onclick="window.location.href='#chat'">💬 المحادثة</button>
         </div>
     </div>
 
-    <!-- ===== قسم الترحيب ===== -->
+    <!-- ===== قسم الترحيب (بصورتك وشعارك) ===== -->
+    <div class="welcome-section">
+        <!-- شعار القائد الصغير -->
+        <div class="logo-container">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABkCAYAAADDhn8AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAgSSURBVHic7Z1bbBxVGMf/38zZ..." alt="شعار القائد الصغير" class="logo-image">
+        </div>
+
+        <!-- صورتك الشخصية -->
+        <div class="avatar-wrapper">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgICAg..." alt="الأستاذ هيثم القصلي" />
+        </div>
+
+        <div class="name">
+            الأستاذ <span class="highlight">هيثم القصلي</span>
+        </div>
+        <div class="title">
+            <strong>🧑‍🏫 مدرس مادة الرياضيات</strong>
+        </div>
+        <div class="divider"></div>
+    </div>
+
+    <!-- ===== قسم الترحيب النصي ===== -->
     <div class="hero">
         <div class="greeting">👋</div>
         <h2>مرحباً بك في <span>هيثم AI</span></h2>
@@ -339,45 +370,37 @@
 
     <!-- ===== البطاقات ===== -->
     <div class="grid">
-
         <div class="card card-featured" onclick="window.location.href='correction.html'">
             <span class="badge-new">جديد</span>
             <span class="icon">📝</span>
             <h3>تصحيح أوراق</h3>
             <p>رفع صورة + تصحيح تفصيلي</p>
         </div>
-
         <div class="card" onclick="window.location.href='library.html'">
             <span class="icon">📚</span>
             <h3>المكتبة</h3>
             <p>ملخصات وكتب تعليمية</p>
         </div>
-
-        <!-- ✅ بطاقة إنشاء الاختبار (جديدة) -->
-        <div class="card" onclick="window.location.href='exam.html'">
-            <span class="icon">📝</span>
-            <h3>إنشاء اختبار</h3>
-            <p>أسئلة موضوعية + تصحيح آلي</p>
-        </div>
-
         <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">💬</span>
             <h3>المحادثة</h3>
             <p>اسأل هيثم أي سؤال</p>
         </div>
-
+        <div class="card" onclick="window.location.href='#chat'">
+            <span class="icon">📄</span>
+            <h3>إنشاء اختبار</h3>
+            <p>أسئلة + نموذج إجابة</p>
+        </div>
         <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">📐</span>
             <h3>حل مسألة</h3>
             <p>خطوات تفصيلية</p>
         </div>
-
         <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">📊</span>
             <h3>جدول مواصفات</h3>
             <p>توزيع الدرجات</p>
         </div>
-
     </div>
 
     <!-- ===== شريط المحادثة السريع ===== -->
@@ -396,7 +419,7 @@
 
     <!-- ===== الفوتر ===== -->
     <div class="footer">
-        تطبيق هيثم AI &copy; 2026 - جميع الحقوق محفوظة
+        تطبيق هيثم AI &copy; 2026 - الأستاذ هيثم القصلي - جميع الحقوق محفوظة
     </div>
 
 </div>
@@ -407,8 +430,9 @@
     if (hour >= 5 && hour < 12) greeting.textContent = '🌅';
     else if (hour >= 12 && hour < 17) greeting.textContent = '☀️';
     else if (hour >= 17 && hour < 21) greeting.textContent = '🌇';
-    else greeting.textContent = '🌙';
+    else greeting.textContent = '
+🌙';
 </script>
 
 </body>
-</html>
+</html> 
