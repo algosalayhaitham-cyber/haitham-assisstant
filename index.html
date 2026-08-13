@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>هيثم AI - المساعد التعليمي الذكي</title>
+
+    <!-- ===== إعادة التوجيه إلى صفحة الترحيب ===== -->
+    <script>
+        // إذا كان المستخدم في الصفحة الرئيسية، حوله إلى صفحة الترحيب
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+            window.location.href = 'welcome.html';
+        }
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -21,7 +30,6 @@
             padding: 20px;
         }
 
-        /* ===== الحاوية الرئيسية ===== */
         .container {
             max-width: 1100px;
             width: 100%;
@@ -39,7 +47,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ===== الهيدر ===== */
         .header {
             display: flex;
             align-items: center;
@@ -82,6 +89,7 @@
         .header-actions {
             display: flex;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .header-btn {
@@ -109,10 +117,8 @@
 
         .header-btn-primary:hover {
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
-            transform: translateY(-2px);
         }
 
-        /* ===== قسم الترحيب ===== */
         .hero {
             text-align: center;
             padding: 30px 0 40px;
@@ -144,7 +150,6 @@
             line-height: 1.8;
         }
 
-        /* ===== البطاقات ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -160,27 +165,10 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
             color: white;
             text-decoration: none;
             position: relative;
             overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            opacity: 0;
-            transition: 0.4s;
-        }
-
-        .card:hover::before {
-            opacity: 1;
         }
 
         .card:hover {
@@ -193,22 +181,16 @@
             font-size: 40px;
             display: block;
             margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
         }
 
         .card h3 {
             font-size: 18px;
             margin-bottom: 5px;
-            position: relative;
-            z-index: 1;
         }
 
         .card p {
             color: rgba(255, 255, 255, 0.5);
             font-size: 13px;
-            position: relative;
-            z-index: 1;
         }
 
         .card .badge-new {
@@ -221,10 +203,8 @@
             padding: 2px 12px;
             border-radius: 20px;
             font-weight: bold;
-            z-index: 2;
         }
 
-        /* ===== بطاقة مميزة ===== */
         .card-featured {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
             border-color: rgba(102, 126, 234, 0.3);
@@ -234,7 +214,6 @@
             font-size: 50px;
         }
 
-        /* ===== شريط المحادثة السريع ===== */
         .chat-quick {
             margin-top: 35px;
             background: rgba(255, 255, 255, 0.05);
@@ -264,6 +243,7 @@
         .chat-quick .actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .chat-quick .actions button {
@@ -289,7 +269,6 @@
             box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
         }
 
-        /* ===== الفوتر ===== */
         .footer {
             text-align: center;
             margin-top: 35px;
@@ -299,7 +278,6 @@
             font-size: 13px;
         }
 
-        /* ===== استجابة ===== */
         @media (max-width: 768px) {
             .container { padding: 25px 18px; }
             .header { flex-direction: column; align-items: stretch; text-align: center; }
@@ -309,7 +287,7 @@
             .hero p { font-size: 16px; }
             .grid { grid-template-columns: 1fr 1fr; }
             .chat-quick { flex-direction: column; text-align: center; }
-            .chat-quick .actions { width: 100%; justify-content: center; }
+            .chat-quick .actions { justify-content: center; width: 100%; }
             .header-actions { justify-content: center; }
         }
 
@@ -323,7 +301,6 @@
 
 <div class="container">
 
-    <!-- ===== الهيدر ===== -->
     <div class="header">
         <div class="logo">
             <div class="logo-icon">🧠</div>
@@ -332,18 +309,16 @@
         <div class="header-actions">
             <button class="header-btn" onclick="window.location.href='correction.html'">📝 تصحيح</button>
             <button class="header-btn" onclick="window.location.href='library.html'">📚 المكتبة</button>
-            <button class="header-btn header-btn-primary" onclick="window.location.href='index.html'#chat">💬 المحادثة</button>
+            <button class="header-btn header-btn-primary" onclick="window.location.href='#chat'">💬 المحادثة</button>
         </div>
     </div>
 
-    <!-- ===== قسم الترحيب ===== -->
     <div class="hero">
         <div class="greeting">👋</div>
         <h2>مرحباً بك في <span>هيثم AI</span></h2>
         <p>مساعدك الذكي لإعداد التحضير، بنوك الأسئلة، الشروحات الرياضية، والأعمال المدرسية.</p>
     </div>
 
-    <!-- ===== البطاقات ===== -->
     <div class="grid">
 
         <div class="card card-featured" onclick="window.location.href='correction.html'">
@@ -359,25 +334,25 @@
             <p>ملخصات وكتب تعليمية</p>
         </div>
 
-        <div class="card" onclick="window.location.href='index.html'#chat">
+        <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">💬</span>
             <h3>المحادثة</h3>
             <p>اسأل هيثم أي سؤال</p>
         </div>
 
-        <div class="card" onclick="window.location.href='index.html'#chat">
+        <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">📄</span>
             <h3>إنشاء اختبار</h3>
             <p>أسئلة + نموذج إجابة</p>
         </div>
 
-        <div class="card" onclick="window.location.href='index.html'#chat">
+        <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">📐</span>
             <h3>حل مسألة</h3>
             <p>خطوات تفصيلية</p>
         </div>
 
-        <div class="card" onclick="window.location.href='index.html'#chat">
+        <div class="card" onclick="window.location.href='#chat'">
             <span class="icon">📊</span>
             <h3>جدول مواصفات</h3>
             <p>توزيع الدرجات</p>
@@ -385,7 +360,6 @@
 
     </div>
 
-    <!-- ===== شريط المحادثة السريع ===== -->
     <div class="chat-quick" id="chat">
         <div class="avatar">🤖</div>
         <div class="msg">
@@ -395,20 +369,17 @@
         <div class="actions">
             <button>🎤</button>
             <button>📎</button>
-            <button class="btn-send" onclick="window.location.href='index.html'#chat">💬 ابدأ المحادثة</button>
+            <button class="btn-send" onclick="window.location.href='#chat'">💬 ابدأ المحادثة</button>
         </div>
     </div>
 
-    <!-- ===== الفوتر ===== -->
     <div class="footer">
         تطبيق هيثم AI &copy; 2026 - جميع الحقوق محفوظة
     </div>
 
 </div>
 
-<!-- ===== إضافة تفاعل بسيط ===== -->
 <script>
-    // تحية الصباح/المساء
     const hour = new Date().getHours();
     const greeting = document.querySelector('.greeting');
     if (hour >= 5 && hour < 12) greeting.textContent = '🌅';
