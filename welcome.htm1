@@ -35,7 +35,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== شعارك (صورة) ===== */
         .logo-container {
             margin: 0 auto 15px;
             text-align: center;
@@ -53,7 +52,6 @@
             transform: scale(1.03);
         }
 
-        /* ===== صورتك الشخصية ===== */
         .avatar-wrapper {
             width: 130px;
             height: 130px;
@@ -73,7 +71,6 @@
             display: block;
         }
 
-        /* ===== الاسم ===== */
         .name {
             font-size: 30px;
             font-weight: 700;
@@ -116,7 +113,6 @@
             margin-bottom: 28px;
         }
 
-        /* ===== الأزرار ===== */
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -177,17 +173,14 @@
 
 <div class="card">
 
-    <!-- ===== شعارك (صورة) ===== -->
     <div class="logo-container">
         <img src="شعارك.png" alt="شعار القائد الصغير" class="logo-image">
     </div>
 
-    <!-- ===== صورتك الشخصية ===== -->
     <div class="avatar-wrapper">
         <img src="صورتك.jpg" alt="الأستاذ هيثم القصلي" />
     </div>
 
-    <!-- ===== الاسم ===== -->
     <div class="name">
         الأستاذ <span class="highlight">هيثم القصلي</span>
     </div>
@@ -203,7 +196,6 @@
         هنا نصنع التميز معاً – تصحيح، شرح، وتطوير مستمر.
     </div>
 
-    <!-- ===== الأزرار ===== -->
     <div class="btn-group">
         <a href="index.html" class="btn btn-primary">
             🚀 دخول إلى المنصة
