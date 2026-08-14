@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ================================================================
     // 🔑 مفتاح DeepSeek API
     // ================================================================
-    const DEEPSEEK_API_KEY = 'sk-your-deepseek-api-key'; // استبدل بمفتاحك الحقيقي
+    const DEEPSEEK_API_KEY = 'sk-183e77f453374b7eb6a1adac32ffef14';
     const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
     // ================================================================
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: 'deepseek-v4-flash', // أو deepseek-v4-pro
+                    model: 'deepseek-chat',
                     messages: [
                         {
                             role: 'system',
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             content: message
                         }
                     ],
-                    temperature: 1.0,
+                    temperature: 0.7,
                     max_tokens: 2048
                 })
             });
