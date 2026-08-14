@@ -1,4 +1,4 @@
-// app.js - هيثم AI (نسخة تعمل مع Google Gemini API)
+// app.js - هيثم AI (نسخة تعمل مع Google Gemini API - مفتاح AQ.)
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('chatForm');
@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ================================================================
-    // 🔑 مفتاح Google Gemini API
+    // 🔑 مفتاح Google Gemini API (يبدأ بـ AQ.)
     // ================================================================
     const GEMINI_API_KEY = 'AQ.Ab8RN6LxsGbUFDuPVBrCKr0VVt8gLsyz7OcMomMcLQMkQhHUWA';
-    const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
+    const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
     // ================================================================
     // 💬 دوال المحادثة
@@ -43,13 +43,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ================================================================
-    // 🤖 دالة الاتصال بـ Gemini API
+    // 🤖 دالة الاتصال بـ Gemini API (مع Bearer Token)
     // ================================================================
     async function getAIResponse(message) {
         try {
             const response = await fetch(GEMINI_URL, {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${GEMINI_API_KEY}`, // 👈 الطريقة الصحيحة للمفتاح AQ.
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -151,5 +152,5 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    console.log('✅ هيثم AI جاهز مع Google Gemini API!');
+    console.log('✅ هيثم AI جاهز مع Google Gemini API (مفتاح AQ.)!');
 });
