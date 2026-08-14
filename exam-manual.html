@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبار يدوي - هيثم AI</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+padding:20px;
+font-family:Tahoma,Arial;
+background:linear-gradient(145deg,#0b0e1a,#1a1f35);
+color:#fff;
+min-height:100vh
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:#ffffff0f;
+border:1px solid #ffffff12;
+border-radius:30px;
+padding:30px
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px
+}
+
+.header h1{font-size:28px}
+
+.back,.btn{
+padding:12px 20px;
+border-radius:30px;
+border:0;
+text-decoration:none;
+cursor:pointer;
+font-weight:bold
+}
+
+.back{
+background:#ffffff12;
+color:#fff
+}
+
+.settings{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin:20px 0
+}
+
+.settings label{
+display:block;
+color:#f6b26b;
+margin-bottom:5px
+}
+
+.settings input{
+width:100%;
+padding:11px;
+background:#ffffff0d;
+border:1px solid #ffffff1a;
+color:#fff;
+border-radius:10px
+}
+
+.q{
+background:#ffffff09;
+border:1px solid #ffffff10;
+border-radius:14px;
+padding:16px;
+margin:12px 0
+}
+
+.qhead{
+display:flex;
+justify-content:space-between;
+gap:8px
+}
+
+.num{
+color:#f6b26b;
+font-weight:bold
+}
+
+.del{
+background:#ff000018;
+color:#ff7777;
+border:1px solid #ff000022;
+border-radius:20px;
+padding:4px 10px
+}
+
+.qtext,.opt{
+width:100%;
+padding:9px;
+background:#ffffff0d;
+border:1px solid #ffffff15;
+color:#fff;
+border-radius:8px;
+margin-top:8px
+}
+
+.opts{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+align-items:center;
+margin-top:10px
+}
+
+.group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:12px
+}
+
+.btn{
+flex:1;
+min-width:150px
+}
+
+.primary{
+background:linear-gradient(135deg,#f6b26b,#e67e22)
+}
+
+.success{
+background:linear-gradient(135deg,#48bb78,#38a169);
+color:#fff
+}
+
+.danger{
+background:#e55353;
+color:#fff
+}
+
+.outline{
+background:transparent;
+border:1px solid #555;
+color:#fff
+}
+
+.result{
+display:none;
+margin-top:20px;
+padding:20px;
+background:#ffffff09;
+border-radius:15px
+}
+
+.score{
+text-align:center;
+font-size:44px;
+color:#f6b26b;
+font-weight:bold
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+border-bottom:1px solid #ffffff0b;
+padding:8px
+}
+
+.ok{color:#48bb78}
+.no{color:#fc8181}
+
+@media(max-width:600px){
+.settings{grid-template-columns:1fr}
+.header{
+flex-direction:column;
+text-align:center
+}
+.group{flex-direction:column}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>📝 اختبار يدوي</h1>
+<a class="back" href="index.html">🔙 رجوع</a>
+</div>
+
+<div class="settings">
+
+<div>
+<label>📚 اسم الاختبار</label>
+<input id="title" value="اختبار الرياضيات">
+</div>
+
+<div>
+<label>👤 اسم الطالب</label>
+<input id="student" placeholder="أدخل اسم الطالب">
+</div>
+
+</div>
+
+<div>📋 الأسئلة (<span id="count">0</span>)</div>
+
+<div id="list"></div>
+
+<div class="group">
+<button class="btn primary" onclick="add('tf')">
+✅ صح/خطأ
+</button>
+
+<button class="btn primary" onclick="add('mcq')">
+🔘 اختيار من متعدد
+</button>
+
+<button class="btn danger" onclick="clearAll()">
+🗑️ مسح الكل
+</button>
+</div>
+
+<div class="group">
+
+<button class="btn success" onclick="submitExam()">
+📊 تصحيح الاختبار
+</button>
+
+<button class="btn outline" onclick="resetExam()">
+🔄 إعادة تعيين
+</button>
+
+</div>
+
+<div class="result" id="result">
+
+<div class="score" id="score">
+0 / 0
+</div>
+
+<div id="details"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let qs=[];
+let id=0;
+
+const esc=s=>String(s)
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;');
+
+function add(type){
+
+qs.push({
+id:++id,
+type,
+text:'السؤال الجديد',
+options:type==='mcq'?['','','','']:['صح','خطأ'],
+correct:0,
+user:null
+});
+
+render();
+}
+
+function render(){
+
+const l=document.getElementById('list');
+
+l.innerHTML='';
+
+document.getElementById('count').textContent=qs.length;
+
+qs.forEach((q,i)=>{
+
+let opts=q.options.map((o,j)=>{
+
+if(q.type==='mcq'){
+
+return `
+<label>
+<input type="radio"
+name="q${q.id}"
+onchange="answer(${q.id},${j})">
+
+<input
+class="opt"
+value="${esc(o)}"
+placeholder="خيار ${j+1}"
+onchange="option(${q.id},${j},this.value)">
+</label>
+`;
+
+}
+
+return `
+<label>
+<input type="radio"
+name="q${q.id}"
+onchange="answer(${q.id},${j})">
+
+${o}
+</label>
+`;
+
+}).join('');
+
+l.innerHTML+=`
+
+<div class="q">
+
+<div class="qhead">
+
+<span class="num">
+سؤال ${i+1}
+</span>
+
+<button class="del"
+onclick="del(${q.id})">
+✕ حذف
+</button>
+
+</div>
+
+<input
+class="qtext"
+value="${esc(q.text)}"
+onchange="text(${q.id},this.value)">
+
+<div class="opts">
+
+${opts}
+
+<label>
+الإجابة الصحيحة
+
+<select onchange="correct(${q.id},this.value)">
+
+${q.options.map((_,j)=>`
+
+<option
+value="${j}"
+${j===q.correct?'selected':''}>
+
+${q.type==='tf'?(j?'خطأ':'صح'):j+1}
+
+</option>
+
+`).join('')}
+
+</select>
+
+</label>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function text(i,v){
+
+let q=qs.find(x=>x.id===i);
+
+if(q)q.text=v;
+
+}
+
+function option(i,j,v){
+
+let q=qs.find(x=>x.id===i);
+
+if(q)q.options[j]=v;
+
+}
+
+function correct(i,v){
+
+let q=qs.find(x=>x.id===i);
+
+if(q)q.correct=+v;
+
+}
+
+function answer(i,v){
+
+let q=qs.find(x=>x.id===i);
+
+if(q)q.user=+v;
+
+}
+
+function del(i){
+
+qs=qs.filter(q=>q.id!==i);
+
+render();
+
+}
+
+function clearAll(){
+
+if(confirm('هل تريد مسح جميع الأسئلة؟')){
+
+qs=[];
+id=0;
+
+render();
+
+}
+
+}
+
+function submitExam(){
+
+if(!qs.length){
+
+alert('❌ أضف أسئلة أولًا');
+
+return;
+
+}
+
+if(qs.some(q=>q.user===null)){
+
+alert('❌ أجب على جميع الأسئلة أولًا');
+
+return;
+
+}
+
+let c=qs.filter(q=>q.user===q.correct).length;
+
+document.getElementById('score').textContent=
+`${c} / ${qs.length} (${Math.round(c/qs.length*100)}%)`;
+
+document.getElementById('details').innerHTML=
+
+qs.map((q,i)=>`
+
+<div class="item">
+
+<span>سؤال ${i+1}</span>
+
+<span class="${q.user===q.correct?'ok':'no'}">
+
+${q.user===q.correct?'✅ صحيح':'❌ خطأ'}
+
+</span>
+
+</div>
+
+`).join('');
+
+document.getElementById('result').style.display='block';
+
+}
+
+function resetExam(){
+
+qs.forEach(q=>q.user=null);
+
+render();
+
+document.getElementById('result').style.display='none';
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
