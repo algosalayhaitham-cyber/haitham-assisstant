@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>إنشاء اختبار - هيثم AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Tahoma, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    padding: 20px;
+    color: white;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header .icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: rgba(255,255,255,0.65);
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 25px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    color: #f6b26b;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+select option {
+    color: black;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.generate-btn {
+    width: 100%;
+    margin-top: 22px;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.result {
+    display: none;
+}
+
+.result h2 {
+    color: #f6b26b;
+    margin-bottom: 15px;
+}
+
+#examResult {
+    background: rgba(0,0,0,0.15);
+    padding: 20px;
+    border-radius: 15px;
+    line-height: 2;
+    white-space: normal;
+}
+
+.back-btn {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    text-decoration: none;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #f6b26b;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="icon">📄</div>
+        <h1>إنشاء اختبار</h1>
+        <p>أنشئ اختبارًا تعليميًا متكاملًا بواسطة هيثم AI</p>
+    </div>
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label>📚 المادة</label>
+
+                <select id="subject">
+                    <option value="الرياضيات">الرياضيات</option>
+                    <option value="اللغة العربية">اللغة العربية</option>
+                    <option value="اللغة الإنجليزية">اللغة الإنجليزية</option>
+                    <option value="العلوم">العلوم</option>
+                    <option value="الدراسات الاجتماعية">الدراسات الاجتماعية</option>
+                    <option value="القرآن الكريم">القرآن الكريم</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>🎓 الصف</label>
+
+                <select id="grade">
+                    <option value="الصف الخامس">الصف الخامس</option>
+                    <option value="الصف السادس">الصف السادس</option>
+                    <option value="الصف السابع">الصف السابع</option>
+                    <option value="الصف الثامن">الصف الثامن</option>
+                    <option value="الصف التاسع">الصف التاسع</option>
+                    <option value="الأول الثانوي">الأول الثانوي</option>
+                    <option value="الثاني الثانوي">الثاني الثانوي</option>
+                    <option value="الثالث الثانوي">الثالث الثانوي</option>
+                </select>
+            </div>
+
+            <div class="field full">
+                <label>📖 موضوع الاختبار</label>
+
+                <textarea
+                    id="topic"
+                    placeholder="مثال: الكسور العشرية، المعادلات، النسبة والتناسب..."
+                ></textarea>
+            </div>
+
+            <div class="field">
+                <label>🔢 عدد الأسئلة</label>
+
+                <select id="count">
+                    <option value="5">5 أسئلة</option>
+                    <option value="10" selected>10 أسئلة</option>
+                    <option value="15">15 سؤالًا</option>
+                    <option value="20">20 سؤالًا</option>
+                    <option value="25">25 سؤالًا</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>🎯 مستوى الصعوبة</label>
+
+                <select id="difficulty">
+                    <option value="سهل">سهل</option>
+                    <option value="متوسط" selected>متوسط</option>
+                    <option value="صعب">صعب</option>
+                    <option value="متدرج">متدرج من السهل إلى الصعب</option>
+                </select>
+            </div>
+
+            <div class="field full">
+                <label>📝 نوع الأسئلة</label>
+
+                <select id="type">
+                    <option value="اختيار من متعدد">اختيار من متعدد</option>
+                    <option value="صح أو خطأ">صح أو خطأ</option>
+                    <option value="أسئلة متنوعة">أسئلة متنوعة</option>
+                    <option value="أسئلة مقالية">أسئلة مقالية</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button class="generate-btn" id="generateBtn">
+            🤖 إنشاء الاختبار
+        </button>
+
+    </div>
+
+    <div class="card result" id="resultBox">
+
+        <h2>📋 الاختبار الناتج</h2>
+
+        <div id="examResult"></div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">
+        ⬅️ العودة إلى الصفحة الرئيسية
+    </a>
+
+</div>
+
+<script>
+
+const generateBtn = document.getElementById("generateBtn");
+const resultBox = document.getElementById("resultBox");
+const examResult = document.getElementById("examResult");
+
+generateBtn.addEventListener("click", async function () {
+
+    const subject = document.getElementById("subject").value;
+    const grade = document.getElementById("grade").value;
+    const topic = document.getElementById("topic").value.trim();
+    const count = document.getElementById("count").value;
+    const difficulty = document.getElementById("difficulty").value;
+    const type = document.getElementById("type").value;
+
+    if (!topic) {
+        alert("اكتب موضوع الاختبار أولًا");
+        return;
+    }
+
+    generateBtn.disabled = true;
+    generateBtn.textContent = "⏳ جاري إنشاء الاختبار...";
+
+    resultBox.style.display = "block";
+
+    examResult.innerHTML = `
+        <div class="loading">
+            🤖 هيثم AI يقوم بإعداد الاختبار...
+        </div>
+    `;
+
+    const prompt = `
+أنشئ اختبارًا تعليميًا متكاملًا وفق البيانات التالية:
+
+المادة: ${subject}
+الصف: ${grade}
+موضوع الاختبار: ${topic}
+عدد الأسئلة: ${count}
+مستوى الصعوبة: ${difficulty}
+نوع الأسئلة: ${type}
+
+أريد الاختبار باللغة العربية وبصياغة مناسبة للطلاب.
+
+اكتب في البداية:
+اسم المدرسة: ______________________
+اسم الطالب: ______________________
+الصف: ${grade}
+المادة: ${subject}
+الدرجة: ______________________
+التاريخ: ______________________
+
+ثم اكتب الأسئلة مرقمة ومنظمة.
+
+إذا كان نوع الأسئلة اختيارًا من متعدد، ضع أربعة خيارات لكل سؤال.
+
+وفي النهاية أنشئ قسمًا منفصلًا بعنوان:
+"نموذج الإجابة"
+
+واكتب الإجابات الصحيحة بوضوح.
+
+لا تشرح طريقة إعداد الاختبار، بل أعطني الاختبار جاهزًا للطباعة.
+`;
+
+    try {
+
+        const response = await fetch("/api/chat", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: prompt
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.reply || "حدث خطأ أثناء إنشاء الاختبار");
+        }
+
+        examResult.innerHTML = formatText(data.reply);
+
+    } catch (error) {
+
+        examResult.innerHTML = `
+            <div style="color:#ff8a8a;">
+                ❌ حدث خطأ أثناء إنشاء الاختبار
+                <br><br>
+                ${error.message}
+            </div>
+        `;
+
+    } finally {
+
+        generateBtn.disabled = false;
+        generateBtn.textContent = "🤖 إنشاء الاختبار";
+    }
+
+});
+
+function formatText(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\n/g, "<br>");
+}
+
+</script>
+
+</body>
+</html>
