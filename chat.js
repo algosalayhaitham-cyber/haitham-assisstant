@@ -1,99 +1,75 @@
 // api/chat.js
-// هيثم AI - Gemini API
-// Vercel Serverless Function
+// هيثم AI - Gemini Backend
+// جميع طلبات الذكاء الاصطناعي تمر من هنا
 
 export default async function handler(req, res) {
-
-    // السماح بالـ POST فقط
+    // السماح بـ POST فقط
     if (req.method !== "POST") {
         return res.status(405).json({
-            reply: "الطريقة غير مسموحة"
+            reply: "طريقة الطلب غير مسموحة"
         });
     }
 
     try {
+        const {
+            message,
+            knowledge = "",
+            image = null
+        } = req.body || {};
 
-        const { message, image, knowledge } = req.body || {};
-
-        // التأكد من وجود طلب
         if (!message && !image) {
             return res.status(400).json({
-                reply: "اكتب رسالتك أو أرفق صورة أولًا."
+                reply: "اكتب رسالتك أو أرفق صورة أولًا"
             });
         }
 
-        // =========================================================
-        // مفتاح Gemini من Vercel Environment Variables
-        // =========================================================
-
+        // مفتاح Gemini محفوظ في Vercel Environment Variables
         const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
         if (!GEMINI_API_KEY) {
-
             return res.status(500).json({
                 reply:
-                    "❌ مفتاح Gemini غير موجود في Vercel.\n\n" +
-                    "أضف متغيرًا باسم GEMINI_API_KEY في Environment Variables."
+                    "❌ مفتاح Gemini غير مضاف في إعدادات Vercel.\n\n" +
+                    "أضف متغيرًا باسم GEMINI_API_KEY ثم أعد نشر المشروع."
             });
-
         }
 
-        // =========================================================
-        // إعداد النص
-        // =========================================================
+        // النموذج
+        const MODEL = "gemini-2.5-flash";
 
-        let finalMessage = message || "";
+        const GEMINI_URL =
+            `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
-        if (knowledge) {
-            finalMessage =
-                "معلومات مساعدة مسبقة:\n" +
-                knowledge +
-                "\n\n" +
-                "طلب المستخدم:\n" +
-                finalMessage;
-        }
-
-        // =========================================================
         // تعليمات هيثم AI
-        // =========================================================
-
         const systemInstruction = `
-أنت "هيثم AI"، المساعد التعليمي الذكي الخاص بالأستاذ هيثم القصلي.
+أنت هيثم AI، المساعد التعليمي الذكي الخاص بالأستاذ هيثم القصلي.
 
-مهمتك مساعدة المعلمين والطلاب في:
-- الرياضيات
-- العلوم
-- اللغة العربية
-- اللغة الإنجليزية
-- الدراسات الاجتماعية
-- القرآن الكريم
-- إعداد الاختبارات
-- حل المسائل
-- شرح الدروس
-- إعداد الخطط والتحاضير
-- إنشاء الأسئلة ونماذج الإجابة
-- تحليل الصور التعليمية وأوراق الأسئلة
+أنت مساعد متخصص في التعليم والمناهج الدراسية، وخاصة الرياضيات.
 
-قواعد الإجابة:
-1. أجب باللغة العربية ما لم يطلب المستخدم لغة أخرى.
-2. اجعل الإجابة واضحة ومنظمة وسهلة الفهم.
-3. عند حل المسائل الرياضية، اشرح الخطوات بالتفصيل.
-4. عند إنشاء اختبار، اجعله مناسبًا للصف والموضوع وعدد الأسئلة المطلوب.
-5. لا تخترع معلومات إذا لم تكن متأكدًا منها.
-6. تعامل مع المستخدم باحترام وود.
-7. إذا كان السؤال غامضًا، اطلب توضيحًا مناسبًا.
-8. إذا أرسل المستخدم صورة، حلل محتواها وأجب عن طلبه.
+مهمتك:
+- الإجابة باللغة العربية.
+- تقديم إجابات واضحة ومنظمة.
+- شرح المسائل خطوة بخطوة.
+- مساعدة المعلمين في إعداد الاختبارات والتحضير والأنشطة.
+- مراعاة مستوى الطالب والصف الدراسي.
+- عند إنشاء اختبار، اجعله جاهزًا للطباعة.
+- لا تخترع معلومات عندما تكون غير متأكد.
+- إذا كان السؤال رياضيًا، تحقق من الحل قبل تقديمه.
 `;
 
-        // =========================================================
-        // تجهيز أجزاء الطلب
-        // =========================================================
+        let textPrompt = message || "";
+
+        if (knowledge) {
+            textPrompt =
+                `المعلومات الإضافية المتاحة:\n${knowledge}\n\n` +
+                `طلب المستخدم:\n${textPrompt}`;
+        }
 
         const parts = [];
 
-        if (finalMessage) {
+        if (textPrompt) {
             parts.push({
-                text: systemInstruction + "\n\n" + finalMessage
+                text: `${systemInstruction}\n\n${textPrompt}`
             });
         } else {
             parts.push({
@@ -101,119 +77,75 @@ export default async function handler(req, res) {
             });
         }
 
-        // =========================================================
-        // دعم الصور
-        // =========================================================
-
+        // دعم الصور إذا أرسلها التطبيق
         if (image) {
-
-            let base64Image = image;
-            let mimeType = "image/jpeg";
+            let imageData = image;
 
             // إذا كانت الصورة Data URL
-            if (image.startsWith("data:")) {
-
-                const match = image.match(
-                    /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/
+            if (imageData.startsWith("data:")) {
+                const match = imageData.match(
+                    /^data:(.*?);base64,(.*)$/
                 );
 
                 if (match) {
-                    mimeType = match[1];
-                    base64Image = match[2];
+                    parts.push({
+                        inline_data: {
+                            mime_type: match[1],
+                            data: match[2]
+                        }
+                    });
                 }
-
             }
-
-            parts.push({
-                inline_data: {
-                    mime_type: mimeType,
-                    data: base64Image
-                }
-            });
         }
 
-        // =========================================================
-        // الاتصال بـ Gemini
-        // =========================================================
-
-        const MODEL = "gemini-2.5-flash";
-
-        const GEMINI_URL =
-            `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
-
         const response = await fetch(GEMINI_URL, {
-
             method: "POST",
-
             headers: {
                 "Content-Type": "application/json",
                 "x-goog-api-key": GEMINI_API_KEY
             },
-
             body: JSON.stringify({
-
                 contents: [
                     {
                         role: "user",
-                        parts: parts
+                        parts
                     }
                 ],
-
                 generationConfig: {
-                    temperature: 0.7,
+                    temperature: 0.4,
                     maxOutputTokens: 4000
                 }
-
             })
-
         });
-
-        // =========================================================
-        // قراءة رد Gemini
-        // =========================================================
 
         const data = await response.json();
 
-        if (!response.ok) {
+        console.log("Gemini status:", response.status);
 
-            console.error("Gemini API Error:", data);
+        if (!response.ok) {
+            console.error("Gemini Error:", data);
 
             return res.status(response.status).json({
-
                 reply:
                     data?.error?.message ||
-                    "حدث خطأ أثناء الاتصال بخدمة Gemini."
-
+                    "حدث خطأ أثناء الاتصال بخدمة Gemini"
             });
         }
-
-        // =========================================================
-        // استخراج الإجابة
-        // =========================================================
 
         const reply =
             data?.candidates?.[0]?.content?.parts
-                ?.filter(part => part.text)
-                ?.map(part => part.text)
-                ?.join("\n")
-            || "";
+                ?.map(part => part.text || "")
+                .join("")
+                .trim();
 
         if (!reply) {
-
-            console.error("Gemini Empty Response:", data);
-
             return res.status(500).json({
-                reply: "❌ لم يصل رد نصي من Gemini."
+                reply: "❌ لم يصل رد من الذكاء الاصطناعي."
             });
-
         }
 
-        // =========================================================
-        // إرسال الإجابة للواجهة
-        // =========================================================
-
         return res.status(200).json({
-            reply: reply
+            reply
         });
 
     } catch (error) {
@@ -221,12 +153,9 @@ export default async function handler(req, res) {
         console.error("Server Error:", error);
 
         return res.status(500).json({
-
             reply:
                 "❌ حدث خطأ في الخادم:\n" +
                 error.message
-
         });
-
     }
-                  }
+}
