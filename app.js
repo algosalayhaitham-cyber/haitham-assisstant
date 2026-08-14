@@ -1,4 +1,4 @@
-// app.js - هيثم AI (نسخة تعمل مع Google Gemini API)
+// app.js - هيثم AI (نسخة تعمل مع DeepSeek API)
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('chatForm');
@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ================================================================
-    // 🔑 ضع مفتاح API الخاص بك هنا
+    // 🔑 مفتاح DeepSeek API
     // ================================================================
-    const GEMINI_API_KEY = 'AIzaSy...'; // استبدل بمفتاحك الحقيقي
-    const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
+    const DEEPSEEK_API_KEY = 'sk-your-deepseek-api-key'; // استبدل بمفتاحك الحقيقي
+    const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
     // ================================================================
     // 💬 دوال المحادثة
@@ -43,36 +43,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ================================================================
-    // 🤖 دالة الاتصال بـ Gemini API
+    // 🤖 دالة الاتصال بـ DeepSeek API
     // ================================================================
     async function getAIResponse(message) {
         try {
-            const response = await fetch(GEMINI_URL, {
+            const response = await fetch(DEEPSEEK_URL, {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `أنت هيثم AI، مساعد تعليمي ذكي ومتخصص في الرياضيات والمواد الدراسية. أجب عن السؤال التالي بأسلوب مفصل وسهل الفهم:\n\nالسؤال: ${message}`
-                        }]
-                    }]
+                    model: 'deepseek-v4-flash', // أو deepseek-v4-pro
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'أنت هيثم AI، مساعد تعليمي ذكي ومتخصص في الرياضيات والمواد الدراسية. أجب عن الأسئلة بأسلوب مفصل وسهل الفهم.'
+                        },
+                        {
+                            role: 'user',
+                            content: message
+                        }
+                    ],
+                    temperature: 1.0,
+                    max_tokens: 2048
                 })
             });
 
             if (!response.ok) {
-                throw new Error('فشل الاتصال بـ Gemini API');
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || 'فشل الاتصال بـ DeepSeek API');
             }
 
             const data = await response.json();
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'عذراً، لم أستطع فهم السؤال.';
+            const reply = data.choices?.[0]?.message?.content || 'عذراً، لم أستطع فهم السؤال.';
 
             return reply;
 
         } catch (error) {
-            console.error('❌ خطأ في Gemini:', error);
-            return '❌ حدث خطأ في الاتصال بالذكاء الاصطناعي. تأكد من مفتاح API.';
+            console.error('❌ خطأ في DeepSeek:', error);
+            return `❌ حدث خطأ في الاتصال بالذكاء الاصطناعي: ${error.message}`;
         }
     }
 
@@ -150,5 +160,5 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    console.log('✅ هيثم AI جاهز مع Google Gemini!');
+    console.log('✅ هيثم AI جاهز مع DeepSeek API!');
 });
