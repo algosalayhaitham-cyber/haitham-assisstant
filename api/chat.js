@@ -1,94 +1,140 @@
-const handler = async (req, res) => {
+export default async function handler(req, res) {
+
   if (req.method !== 'POST') {
-    return res.status(405).json({ reply: 'Method not allowed' });
+    return res.status(405).json({
+      reply: 'Method not allowed'
+    });
   }
 
   try {
-    const { message, image } = req.body || {};
+
+    const { message, image, knowledge } = req.body || {};
 
     if (!message && !image) {
-      return res.status(400).json({ reply: 'اكتب رسالتك أو أرفق صورة أولاً' });
-    }
-
-    const apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
-
-    if (!apiKey) {
-      return res.status(500).json({
-        reply: 'مفتاح API غير موجود في Vercel'
+      return res.status(400).json({
+        reply: 'اكتب رسالتك أو أرفق صورة أولًا'
       });
     }
 
-    // استخدام نموذج الرؤية عند وجود صورة، ونموذج النص السريع عند عدم وجودها
-    const modelName = image ? 'llama-3.2-11b-vision-preview' : 'llama-3.3-70b-versatile';
+    const apiKey = process.env.OPENAI_API_KEY;
 
-    // تجهيز محتوى رسالة المستخدم (نص فقط أو نص + صورة)
-    let userContent;
-
-    if (image) {
-      userContent = [
-        { 
-          type: "text", 
-          text: message || "اقرأ واشرح هذه الصورة أو احل المسألة الموجودة فيها بالتفصيل." 
-        },
-        { 
-          type: "image_url", 
-          image_url: { url: image } 
-        }
-      ];
-    } else {
-      userContent = message;
+    if (!apiKey) {
+      return res.status(500).json({
+        reply: '❌ مفتاح OPENAI_API_KEY غير موجود في Vercel. أضفه من Settings → Environment Variables ثم أعد النشر.'
+      });
     }
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: modelName,
-        messages: [
-          {
-            role: 'system',
-            content: `أنت هيثم AI، معلم رياضيات وعلوم ذكي وتفاعلي ومجيب بصري.
-- إذا أرفق الطالب صورة، قم بقراءة وتحليل النص أو المسألة الرياضية فيها بدقة واشرح خطوات الحل بالتفصيل.
-- تعامل بمرونة تامة مع الرموز والأرقام:
-  1. إذا كتب أو أرفق الطالب بالأرقام والرموز العربية (مثل: س، ص، ١، ٢)، أجب بنفس النمط العربي.
-  2. إذا كانت بالأرقام والرموز الإنجليزية (مثل: x, y, 1, 2)، أجب بالنمط الإنجليزي.
-- اشرح خطوات الحل بالترتيب وبأسلوب تعليمي مبسط ومحفز.
-- استخدم التنسيق الواضح للرموز والمعادلات.`
-          },
-          {
-            role: 'user',
-            content: userContent
-          }
-        ]
-      })
-    });
+    const content = [];
+
+    if (message) {
+
+      content.push({
+        type: 'text',
+        text: knowledge
+          ? `سياق معلومة مسبقة:
+${knowledge}
+
+سؤال المستخدم:
+${message}`
+          : message
+      });
+
+    }
+
+    if (image) {
+
+      content.push({
+        type: 'image_url',
+        image_url: {
+          url: image
+        }
+      });
+
+    }
+
+    const response = await fetch(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+
+        body: JSON.stringify({
+
+          model: 'gpt-4o-mini',
+
+          messages: [
+
+            {
+              role: 'system',
+
+              content:
+                'أنت هيثم AI، مساعد تعليمي ذكي باللغة العربية. قدم إجابات واضحة ودقيقة ومنظمة ومناسبة للطلاب والمعلمين.'
+            },
+
+            {
+              role: 'user',
+
+              content:
+                content.length === 1 &&
+                content[0].type === 'text'
+                  ? content[0].text
+                  : content
+
+            }
+
+          ],
+
+          max_tokens: 2000
+
+        })
+
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
+
+      console.error('OpenAI Error:', data);
+
       return res.status(response.status).json({
-        reply: data?.error?.message || 'خطأ من مزود الخدمة'
+        reply:
+          data?.error?.message ||
+          'حدث خطأ من خدمة الذكاء الاصطناعي'
       });
+
     }
 
-    const reply = data?.choices?.[0]?.message?.content;
+    const reply =
+      data?.choices?.[0]?.message?.content;
+
+    if (!reply) {
+
+      return res.status(500).json({
+        reply:
+          'وصل رد غير متوقع من الذكاء الاصطناعي'
+      });
+
+    }
 
     return res.status(200).json({
-      reply: reply || 'لم يصل رد من الذكاء الاصطناعي'
+      reply
     });
 
   } catch (error) {
-    console.error(error);
+
+    console.error('Server Error:', error);
 
     return res.status(500).json({
-      reply: 'خطأ في الخادم: ' + error.message
+      reply:
+        'حدث خطأ في الخادم: ' +
+        error.message
     });
+
   }
-};
 
-module.exports = handler;
-
- 
+}
