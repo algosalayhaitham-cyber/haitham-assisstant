@@ -1,4 +1,4 @@
-// app.js - هيثم AI (نسخة معدلة للبحث في المحتوى)
+// app.js - هيثم AI (نسخة تعمل مع Google Gemini API)
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('chatForm');
@@ -11,59 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ================================================================
-    // 📚 قاعدة المعرفة (نفسها لكن مع توسيع الكلمات المفتاحية)
+    // 🔑 ضع مفتاح API الخاص بك هنا
     // ================================================================
-    const KNOWLEDGE_BASE = {
-        // ... ضع هنا جميع المواضيع القديمة والجديدة ...
-        // (يمكنك نسخها من الكود السابق)
-    };
+    const GEMINI_API_KEY = 'AIzaSy...'; // استبدل بمفتاحك الحقيقي
+    const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
 
     // ================================================================
-    // 🔍 دالة البحث المعدلة (تبحث في المحتوى أيضاً)
-    // ================================================================
-    function searchKnowledge(query) {
-        if (!query) return null;
-        const lowerQuery = query.toLowerCase();
-        let bestMatch = null;
-        let highestScore = 0;
-
-        for (const [topic, data] of Object.entries(KNOWLEDGE_BASE)) {
-            let score = 0;
-
-            // 1. البحث في الكلمات المفتاحية
-            for (const keyword of data.keywords) {
-                if (lowerQuery.includes(keyword)) {
-                    score += 3;
-                }
-            }
-
-            // 2. البحث في محتوى الإجابة
-            const contentLines = data.content.split('\n');
-            for (const line of contentLines) {
-                if (line.toLowerCase().includes(lowerQuery)) {
-                    score += 1;
-                }
-            }
-
-            // 3. كلمات رئيسية عامة
-            const importantWords = ['معادلة', 'جذر', 'مشتقة', 'تكامل', 'مساحة', 'محيط', 'نظرية', 'قانون', 'متجه', 'مصفوفة', 'متتالية', 'احتمال', 'وسط', 'تباين'];
-            for (const word of importantWords) {
-                if (lowerQuery.includes(word) && data.content.includes(word)) {
-                    score += 2;
-                }
-            }
-
-            if (score > highestScore) {
-                highestScore = score;
-                bestMatch = data.content;
-            }
-        }
-
-        return highestScore >= 2 ? bestMatch : null;
-    }
-
-    // ================================================================
-    // 💬 دوال المحادثة (نفسها)
+    // 💬 دوال المحادثة
     // ================================================================
     function loadChatHistory() {
         const saved = localStorage.getItem('haitham_chat_history');
@@ -88,26 +42,43 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('haitham_chat_history', JSON.stringify(items));
     }
 
-    function getHaithamReply(message) {
-        const knowledge = searchKnowledge(message);
-        if (knowledge) {
-            return knowledge + '\n\n📖 هذه المعلومات مأخوذة من ملخصات هيثم AI.';
-        }
+    // ================================================================
+    // 🤖 دالة الاتصال بـ Gemini API
+    // ================================================================
+    async function getAIResponse(message) {
+        try {
+            const response = await fetch(GEMINI_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `أنت هيثم AI، مساعد تعليمي ذكي ومتخصص في الرياضيات والمواد الدراسية. أجب عن السؤال التالي بأسلوب مفصل وسهل الفهم:\n\nالسؤال: ${message}`
+                        }]
+                    }]
+                })
+            });
 
-        const lower = message.toLowerCase();
-        if (lower.includes('السلام') || lower.includes('مرحب')) {
-            return '👋 وعليكم السلام! كيف يمكنني مساعدتك اليوم؟';
+            if (!response.ok) {
+                throw new Error('فشل الاتصال بـ Gemini API');
+            }
+
+            const data = await response.json();
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'عذراً، لم أستطع فهم السؤال.';
+
+            return reply;
+
+        } catch (error) {
+            console.error('❌ خطأ في Gemini:', error);
+            return '❌ حدث خطأ في الاتصال بالذكاء الاصطناعي. تأكد من مفتاح API.';
         }
-        if (lower.includes('شكر')) {
-            return '🌟 العفو! أنا هنا لمساعدتك دائماً.';
-        }
-        if (lower.includes('اسم')) {
-            return '🧠 أنا هيثم AI، مساعدك التعليمي الذكي!';
-        }
-        
-        return '📚 شكراً لسؤالك! أنا هنا لمساعدتك.\n\n💡 ما الذي تريد معرفته بالضبط؟';
     }
 
+    // ================================================================
+    // 💬 إرسال الرسالة
+    // ================================================================
     function sendMessage(message) {
         if (!message || !message.trim()) return;
         
@@ -125,18 +96,26 @@ document.addEventListener('DOMContentLoaded', function () {
         messages.appendChild(typing);
         messages.scrollTop = messages.scrollHeight;
         
-        setTimeout(() => {
+        getAIResponse(message).then(reply => {
             const typingEl = document.getElementById('typing');
             if (typingEl) typingEl.remove();
             
-            const reply = getHaithamReply(message);
             const aiMsg = document.createElement('div');
             aiMsg.className = 'msg ai';
             aiMsg.innerHTML = `<b>هيثم AI</b><p>${reply.replace(/\n/g, '<br>')}</p>`;
             messages.appendChild(aiMsg);
             messages.scrollTop = messages.scrollHeight;
             saveChatHistory();
-        }, 800 + Math.random() * 700);
+        }).catch(error => {
+            const typingEl = document.getElementById('typing');
+            if (typingEl) typingEl.remove();
+            
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'msg ai';
+            aiMsg.innerHTML = `<b>هيثم AI</b><p>❌ حدث خطأ: ${error.message}</p>`;
+            messages.appendChild(aiMsg);
+            messages.scrollTop = messages.scrollHeight;
+        });
     }
 
     // ================================================================
@@ -171,5 +150,5 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    console.log('✅ هيثم AI جاهز! (يبحث في المحتوى أيضاً)');
+    console.log('✅ هيثم AI جاهز مع Google Gemini!');
 });
