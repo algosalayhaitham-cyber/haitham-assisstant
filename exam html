@@ -1,294 +1,303 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>إنشاء اختبار - هيثم AI</title>
+<meta charset="UTF-8">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-        body {
-            font-family: Tahoma, "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            padding: 20px;
-            color: white;
-        }
+<title>إنشاء اختبار - هيثم AI</title>
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: auto;
-        }
+<style>
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        .header .icon {
-            font-size: 55px;
-            margin-bottom: 10px;
-        }
+body {
 
-        .header h1 {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
+    font-family:
+        Tahoma,
+        "Segoe UI",
+        sans-serif;
 
-        .header p {
-            color: rgba(255,255,255,0.65);
-            line-height: 1.8;
-        }
+    background:
+        linear-gradient(
+            135deg,
+            #0f0c29,
+            #302b63,
+            #24243e
+        );
 
-        .card {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 25px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-        }
+    min-height: 100vh;
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
+    padding: 20px;
 
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    color: white;
+}
 
-        .field.full {
-            grid-column: 1 / -1;
-        }
+.container {
 
-        label {
-            font-weight: bold;
-            color: #f6b26b;
-        }
+    width: 100%;
 
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.08);
-            color: white;
-            font-size: 16px;
-            font-family: inherit;
-        }
+    max-width: 900px;
 
-        select option {
-            color: black;
-            background: white;
-        }
+    margin: auto;
+}
 
-        textarea {
-            min-height: 110px;
-            resize: vertical;
-        }
+.header {
 
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
-        }
+    text-align: center;
 
-        .generate-btn {
-            width: 100%;
-            margin-top: 22px;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    margin-bottom: 25px;
+}
 
-        .generate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
-        }
+.header .icon {
 
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
+    font-size: 55px;
 
-        .result {
-            display: none;
-        }
+    margin-bottom: 10px;
+}
 
-        .result h2 {
-            color: #f6b26b;
-            margin-bottom: 15px;
-            font-size: 23px;
-        }
+.header h1 {
 
-        #examResult {
-            background: rgba(0,0,0,0.15);
-            padding: 20px;
-            border-radius: 15px;
-            line-height: 2;
-            min-height: 100px;
-            overflow-wrap: break-word;
-        }
+    font-size: 30px;
 
-        .loading {
-            text-align: center;
-            padding: 25px;
-            color: #f6b26b;
-            font-size: 17px;
-        }
+    margin-bottom: 8px;
+}
 
-        .error-box {
-            color: #ff8a8a;
-            background: rgba(255,70,70,0.08);
-            border: 1px solid rgba(255,100,100,0.2);
-            padding: 18px;
-            border-radius: 12px;
-            line-height: 1.9;
-        }
+.header p {
 
-        .back-btn {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            padding: 13px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.08);
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-        }
+    color:
+        rgba(255,255,255,0.65);
+}
 
-        .back-btn:hover {
-            background: rgba(255,255,255,0.15);
-        }
+.card {
 
-        .print-btn {
-            width: 100%;
-            margin-top: 15px;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #f6b26b, #e67e22);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-        }
+    background:
+        rgba(255,255,255,0.08);
 
-        .print-btn:hover {
-            transform: translateY(-2px);
-        }
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
 
-        @media (max-width: 600px) {
+    border-radius: 25px;
 
-            body {
-                padding: 12px;
-            }
+    padding: 25px;
 
-            .card {
-                padding: 18px;
-            }
+    margin-bottom: 20px;
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,0.25);
+}
 
-            .field.full {
-                grid-column: auto;
-            }
+.form-grid {
 
-            .header h1 {
-                font-size: 25px;
-            }
+    display: grid;
 
-            .header .icon {
-                font-size: 48px;
-            }
-        }
+    grid-template-columns:
+        1fr 1fr;
 
-        /* ================================
-           تنسيق الطباعة
-        ================================= */
+    gap: 18px;
+}
 
-        @media print {
+.field {
 
-            body {
-                background: white;
-                color: black;
-                padding: 0;
-            }
+    display: flex;
 
-            .header,
-            .card:not(.result),
-            .back-btn,
-            .print-btn {
-                display: none !important;
-            }
+    flex-direction: column;
 
-            .container {
-                max-width: 100%;
-                width: 100%;
-            }
+    gap: 8px;
+}
 
-            .result {
-                display: block !important;
-                background: white;
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                margin: 0;
-            }
+.full {
 
-            .result h2 {
-                color: black;
-            }
+    grid-column:
+        1 / -1;
+}
 
-            #examResult {
-                background: white;
-                color: black;
-                padding: 0;
-                line-height: 2;
-            }
-        }
-    </style>
+label {
+
+    font-weight: bold;
+
+    color: #f6b26b;
+}
+
+input,
+select,
+textarea {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.15);
+
+    background:
+        rgba(255,255,255,0.08);
+
+    color: white;
+
+    font-size: 16px;
+
+    font-family: inherit;
+}
+
+select option {
+
+    color: black;
+}
+
+textarea {
+
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+
+    outline: none;
+
+    border-color: #667eea;
+}
+
+.generate-btn {
+
+    width: 100%;
+
+    margin-top: 22px;
+
+    padding: 16px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.generate-btn:disabled {
+
+    opacity: 0.6;
+
+    cursor: wait;
+}
+
+.result {
+
+    display: none;
+}
+
+.result h2 {
+
+    color: #f6b26b;
+
+    margin-bottom: 15px;
+}
+
+#examResult {
+
+    background:
+        rgba(0,0,0,0.15);
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    line-height: 2;
+
+    min-height: 100px;
+}
+
+.loading {
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: #f6b26b;
+}
+
+.back-btn {
+
+    display: block;
+
+    text-align: center;
+
+    margin-top: 15px;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    color: white;
+
+    text-decoration: none;
+}
+
+@media(max-width:600px) {
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+
+        grid-column: auto;
+    }
+
+    .header h1 {
+
+        font-size: 25px;
+    }
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- =========================
-         العنوان
-    ========================== -->
-
     <div class="header">
 
-        <div class="icon">📄</div>
+        <div class="icon">
+            📄
+        </div>
 
-        <h1>إنشاء اختبار</h1>
+        <h1>
+            إنشاء اختبار
+        </h1>
 
         <p>
             أنشئ اختبارًا تعليميًا متكاملًا بواسطة هيثم AI
@@ -297,43 +306,40 @@
     </div>
 
 
-    <!-- =========================
-         نموذج إنشاء الاختبار
-    ========================== -->
-
     <div class="card">
 
         <div class="form-grid">
 
-            <!-- المادة -->
 
             <div class="field">
 
-                <label>📚 المادة</label>
+                <label>
+                    📚 المادة
+                </label>
 
                 <select id="subject">
 
-                    <option value="الرياضيات">
+                    <option>
                         الرياضيات
                     </option>
 
-                    <option value="اللغة العربية">
+                    <option>
                         اللغة العربية
                     </option>
 
-                    <option value="اللغة الإنجليزية">
+                    <option>
                         اللغة الإنجليزية
                     </option>
 
-                    <option value="العلوم">
+                    <option>
                         العلوم
                     </option>
 
-                    <option value="الدراسات الاجتماعية">
+                    <option>
                         الدراسات الاجتماعية
                     </option>
 
-                    <option value="القرآن الكريم">
+                    <option>
                         القرآن الكريم
                     </option>
 
@@ -342,43 +348,43 @@
             </div>
 
 
-            <!-- الصف -->
-
             <div class="field">
 
-                <label>🎓 الصف</label>
+                <label>
+                    🎓 الصف
+                </label>
 
                 <select id="grade">
 
-                    <option value="الصف الخامس">
+                    <option>
                         الصف الخامس
                     </option>
 
-                    <option value="الصف السادس">
+                    <option>
                         الصف السادس
                     </option>
 
-                    <option value="الصف السابع">
+                    <option>
                         الصف السابع
                     </option>
 
-                    <option value="الصف الثامن">
+                    <option>
                         الصف الثامن
                     </option>
 
-                    <option value="الصف التاسع">
+                    <option>
                         الصف التاسع
                     </option>
 
-                    <option value="الأول الثانوي">
+                    <option>
                         الأول الثانوي
                     </option>
 
-                    <option value="الثاني الثانوي">
+                    <option>
                         الثاني الثانوي
                     </option>
 
-                    <option value="الثالث الثانوي">
+                    <option>
                         الثالث الثانوي
                     </option>
 
@@ -387,25 +393,25 @@
             </div>
 
 
-            <!-- موضوع الاختبار -->
-
             <div class="field full">
 
-                <label>📖 موضوع الاختبار</label>
+                <label>
+                    📖 موضوع الاختبار
+                </label>
 
                 <textarea
                     id="topic"
-                    placeholder="مثال: الكسور العشرية، المعادلات، النسبة والتناسب..."
-                ></textarea>
+                    placeholder="مثال: الكسور العشرية، المعادلات، النسبة والتناسب...">
+                </textarea>
 
             </div>
 
 
-            <!-- عدد الأسئلة -->
-
             <div class="field">
 
-                <label>🔢 عدد الأسئلة</label>
+                <label>
+                    🔢 عدد الأسئلة
+                </label>
 
                 <select id="count">
 
@@ -425,36 +431,32 @@
                         20 سؤالًا
                     </option>
 
-                    <option value="25">
-                        25 سؤالًا
-                    </option>
-
                 </select>
 
             </div>
 
 
-            <!-- الصعوبة -->
-
             <div class="field">
 
-                <label>🎯 مستوى الصعوبة</label>
+                <label>
+                    🎯 مستوى الصعوبة
+                </label>
 
                 <select id="difficulty">
 
-                    <option value="سهل">
+                    <option>
                         سهل
                     </option>
 
-                    <option value="متوسط" selected>
+                    <option selected>
                         متوسط
                     </option>
 
-                    <option value="صعب">
+                    <option>
                         صعب
                     </option>
 
-                    <option value="متدرج">
+                    <option>
                         متدرج من السهل إلى الصعب
                     </option>
 
@@ -463,27 +465,27 @@
             </div>
 
 
-            <!-- نوع الأسئلة -->
-
             <div class="field full">
 
-                <label>📝 نوع الأسئلة</label>
+                <label>
+                    📝 نوع الأسئلة
+                </label>
 
                 <select id="type">
 
-                    <option value="اختيار من متعدد">
+                    <option>
                         اختيار من متعدد
                     </option>
 
-                    <option value="صح أو خطأ">
+                    <option>
                         صح أو خطأ
                     </option>
 
-                    <option value="أسئلة متنوعة">
+                    <option>
                         أسئلة متنوعة
                     </option>
 
-                    <option value="أسئلة مقالية">
+                    <option>
                         أسئلة مقالية
                     </option>
 
@@ -494,26 +496,20 @@
         </div>
 
 
-        <!-- زر إنشاء الاختبار -->
-
         <button
             class="generate-btn"
-            id="generateBtn"
-        >
+            id="generateBtn">
+
             🤖 إنشاء الاختبار
+
         </button>
 
     </div>
 
 
-    <!-- =========================
-         نتيجة الاختبار
-    ========================== -->
-
     <div
         class="card result"
-        id="resultBox"
-    >
+        id="resultBox">
 
         <h2>
             📋 الاختبار الناتج
@@ -521,24 +517,15 @@
 
         <div id="examResult"></div>
 
-        <button
-            class="print-btn"
-            id="printBtn"
-            onclick="window.print()"
-        >
-            🖨️ طباعة الاختبار
-        </button>
-
     </div>
 
 
-    <!-- العودة -->
-
     <a
         href="index.html"
-        class="back-btn"
-    >
+        class="back-btn">
+
         ⬅️ العودة إلى الصفحة الرئيسية
+
     </a>
 
 </div>
@@ -546,142 +533,96 @@
 
 <script>
 
-    // =========================================================
-    // عناصر الصفحة
-    // =========================================================
+const generateBtn =
+    document.getElementById(
+        "generateBtn"
+    );
 
-    const generateBtn =
-        document.getElementById("generateBtn");
+const resultBox =
+    document.getElementById(
+        "resultBox"
+    );
 
-    const resultBox =
-        document.getElementById("resultBox");
-
-    const examResult =
-        document.getElementById("examResult");
-
-    const printBtn =
-        document.getElementById("printBtn");
-
-
-    // =========================================================
-    // حماية النص من HTML
-    // =========================================================
-
-    function escapeHTML(text) {
-
-        return String(text)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-
-    }
+const examResult =
+    document.getElementById(
+        "examResult"
+    );
 
 
-    // =========================================================
-    // تنسيق رد الذكاء الاصطناعي
-    // =========================================================
+generateBtn.addEventListener(
+    "click",
+    async function () {
 
-    function formatText(text) {
+        const subject =
+            document.getElementById(
+                "subject"
+            ).value;
 
-        return escapeHTML(text)
-            .replace(/\n/g, "<br>");
+        const grade =
+            document.getElementById(
+                "grade"
+            ).value;
 
-    }
+        const topic =
+            document.getElementById(
+                "topic"
+            ).value.trim();
 
+        const count =
+            document.getElementById(
+                "count"
+            ).value;
 
-    // =========================================================
-    // إنشاء الاختبار
-    // =========================================================
+        const difficulty =
+            document.getElementById(
+                "difficulty"
+            ).value;
 
-    generateBtn.addEventListener(
-        "click",
-        async function () {
-
-            const subject =
-                document.getElementById("subject").value;
-
-            const grade =
-                document.getElementById("grade").value;
-
-            const topic =
-                document
-                    .getElementById("topic")
-                    .value
-                    .trim();
-
-            const count =
-                document.getElementById("count").value;
-
-            const difficulty =
-                document.getElementById("difficulty").value;
-
-            const type =
-                document.getElementById("type").value;
+        const type =
+            document.getElementById(
+                "type"
+            ).value;
 
 
-            // =====================================================
-            // التأكد من كتابة الموضوع
-            // =====================================================
+        if (!topic) {
 
-            if (!topic) {
+            alert(
+                "اكتب موضوع الاختبار أولًا"
+            );
 
-                alert(
-                    "⚠️ اكتب موضوع الاختبار أولًا"
-                );
-
-                document
-                    .getElementById("topic")
-                    .focus();
-
-                return;
-
-            }
+            return;
+        }
 
 
-            // =====================================================
-            // حالة الانتظار
-            // =====================================================
+        generateBtn.disabled =
+            true;
 
-            generateBtn.disabled = true;
-
-            generateBtn.textContent =
-                "⏳ جاري إنشاء الاختبار...";
+        generateBtn.textContent =
+            "⏳ جاري إنشاء الاختبار...";
 
 
-            resultBox.style.display = "block";
-
-            printBtn.style.display = "none";
-
-            examResult.innerHTML = `
-
-                <div class="loading">
-
-                    🤖 هيثم AI يقوم الآن بإعداد الاختبار...
-
-                    <br><br>
-
-                    ⏳ يرجى الانتظار قليلًا
-
-                </div>
-
-            `;
+        resultBox.style.display =
+            "block";
 
 
-            // =====================================================
-            // الطلب المرسل إلى Gemini
-            // =====================================================
+        examResult.innerHTML = `
+            <div class="loading">
+                🤖 هيثم AI يقوم بإعداد الاختبار...
+            </div>
+        `;
 
-            const prompt = `
 
-أنت الآن مسؤول عن إنشاء اختبار مدرسي جاهز للطباعة.
+        const prompt = `
 
-أنشئ اختبارًا تعليميًا متكاملًا وفق البيانات التالية:
+أنشئ اختبارًا تعليميًا متكاملًا باللغة العربية.
 
-المادة: ${subject}
+البيانات:
 
-الصف: ${grade}
+المادة:
+${subject}
+
+الصف:
+${grade}
 
 موضوع الاختبار:
 ${topic}
@@ -696,83 +637,46 @@ ${difficulty}
 ${type}
 
 
-أريد الاختبار باللغة العربية وبصياغة مناسبة تمامًا لطلاب ${grade}.
+اكتب الاختبار جاهزًا للطباعة.
 
+ابدأ بالبيانات التالية:
 
-اكتب في بداية الاختبار:
+اسم المدرسة: __________________________
 
-اسم المدرسة: ______________________________
-
-اسم الطالب: ______________________________
+اسم الطالب: __________________________
 
 الصف: ${grade}
 
 المادة: ${subject}
 
-الدرجة: ______________________________
+الدرجة: __________________________
 
-التاريخ: ______________________________
-
-
-ثم اكتب الأسئلة مرقمة ومنظمة.
+التاريخ: __________________________
 
 
-إذا كان نوع الأسئلة اختيارًا من متعدد:
+ثم اكتب الأسئلة بشكل واضح ومرقم.
 
-ضع أربعة خيارات لكل سؤال، واستخدم:
+إذا كان الاختبار اختيارًا من متعدد:
+ضع أربعة خيارات لكل سؤال.
 
-أ) 
-ب)
-ج)
-د)
-
-
-إذا كان نوع الأسئلة صح أو خطأ:
-
-اكتب عبارات واضحة ومناسبة للدرس.
-
-
-إذا كان نوع الأسئلة أسئلة متنوعة:
-
-نوّع بين أنواع الأسئلة بما يناسب المادة والموضوع.
-
-
-إذا كان نوع الأسئلة أسئلة مقالية:
-
-اكتب أسئلة تحتاج إلى إجابات تحريرية.
-
-
-في نهاية الاختبار أنشئ قسمًا منفصلًا بعنوان:
+في النهاية ضع:
 
 نموذج الإجابة
 
+ثم اكتب الإجابات الصحيحة بوضوح.
 
-ثم اكتب الإجابات الصحيحة بوضوح وترتيب.
-
-
-مهم جدًا:
-
-- لا تشرح طريقة إعداد الاختبار.
-- لا تتحدث عن أنك ذكاء اصطناعي.
-- لا تضع كلامًا خارج الاختبار.
-- أعطني الاختبار جاهزًا للطباعة.
-- اجعل الأسئلة مناسبة للصف المحدد.
-- راعِ مستوى الصعوبة المطلوب.
-- اجعل الإجابات دقيقة.
-- في الرياضيات تأكد من صحة جميع العمليات والحلول.
-
+لا تشرح طريقة إعداد الاختبار.
+أعطني الاختبار مباشرة جاهزًا للطباعة.
 `;
 
 
-            // =====================================================
-            // الاتصال بـ api/chat.js
-            // =====================================================
+        try {
 
-            try {
-
-                const response = await fetch(
+            const response =
+                await fetch(
                     "/api/chat",
                     {
+
                         method: "POST",
 
                         headers: {
@@ -780,132 +684,133 @@ ${type}
                                 "application/json"
                         },
 
-                        body: JSON.stringify({
-                            message: prompt
-                        })
+                        body:
+                            JSON.stringify({
+                                message:
+                                    prompt
+                            })
+
                     }
                 );
 
 
-                // =================================================
-                // قراءة الرد
-                // =================================================
+            let data;
 
-                let data;
+            try {
 
-                try {
-
-                    data =
-                        await response.json();
-
-                } catch (jsonError) {
-
-                    throw new Error(
-                        "الخادم لم يرجع استجابة صحيحة. تأكد من نشر api/chat.js."
-                    );
-
-                }
-
-
-                // =================================================
-                // التحقق من حالة الطلب
-                // =================================================
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data?.reply ||
-                        "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي."
-                    );
-
-                }
-
-
-                // =================================================
-                // التأكد من وجود الرد
-                // =================================================
-
-                if (!data || !data.reply) {
-
-                    throw new Error(
-                        "لم يصل الاختبار من الذكاء الاصطناعي."
-                    );
-
-                }
-
-
-                // =================================================
-                // عرض الاختبار
-                // =================================================
-
-                examResult.innerHTML =
-                    formatText(data.reply);
-
-                printBtn.style.display =
-                    "block";
-
-
-                // الانتقال إلى النتيجة
-                resultBox.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
+                data =
+                    await response.json();
 
             } catch (error) {
 
-                console.error(
-                    "Exam Error:",
-                    error
+                throw new Error(
+                    "الخادم لم يُرجع JSON صحيحًا."
                 );
-
-
-                examResult.innerHTML = `
-
-                    <div class="error-box">
-
-                        ❌ حدث خطأ أثناء إنشاء الاختبار
-
-                        <br><br>
-
-                        <strong>
-                            تفاصيل الخطأ:
-                        </strong>
-
-                        <br>
-
-                        ${escapeHTML(
-                            error.message
-                        )}
-
-                        <br><br>
-
-                        إذا ظهرت رسالة
-                        "مفتاح Gemini غير موجود في Vercel"
-                        فتأكد من إضافة
-                        GEMINI_API_KEY
-                        في إعدادات Vercel.
-
-                    </div>
-
-                `;
-
-                printBtn.style.display =
-                    "none";
-
-            } finally {
-
-                generateBtn.disabled = false;
-
-                generateBtn.textContent =
-                    "🤖 إنشاء الاختبار";
 
             }
 
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.reply ||
+                    "حدث خطأ أثناء إنشاء الاختبار"
+                );
+
+            }
+
+
+            if (!data.reply) {
+
+                throw new Error(
+                    "لم يصل الاختبار من الذكاء الاصطناعي"
+                );
+
+            }
+
+
+            examResult.innerHTML =
+                formatText(
+                    data.reply
+                );
+
+
+        } catch (error) {
+
+            console.error(
+                "Exam Error:",
+                error
+            );
+
+            examResult.innerHTML = `
+
+                <div style="
+                    color:#ff8a8a;
+                    line-height:1.9;
+                ">
+
+                    ❌ حدث خطأ أثناء إنشاء الاختبار
+
+                    <br><br>
+
+                    ${escapeHtml(
+                        error.message
+                    )}
+
+                    <br><br>
+
+                    <small>
+                    إذا ظهرت مشكلة في المفتاح،
+                    تأكد من وجود
+                    GEMINI_API_KEY
+                    في Vercel.
+                    </small>
+
+                </div>
+
+            `;
+
+        } finally {
+
+            generateBtn.disabled =
+                false;
+
+            generateBtn.textContent =
+                "🤖 إنشاء الاختبار";
+
         }
-    );
+
+    }
+);
+
+
+function formatText(text) {
+
+    return escapeHtml(text)
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+
+}
+
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
 
 </script>
 
 </body>
+
 </html>
