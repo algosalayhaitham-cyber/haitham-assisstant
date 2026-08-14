@@ -1,205 +1,290 @@
-// app.js - هيثم AI
-// الاتصال يكون عبر Vercel /api/chat وليس مباشرة من المتصفح
+// app.js
+// هيثم AI - الواجهة الرئيسية
 
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('chatForm');
-    const input = document.getElementById('input');
-    const messages = document.getElementById('messages');
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("input");
+    const messages = document.getElementById("messages");
 
     if (!form || !input || !messages) {
-        console.warn('⚠️ عناصر المحادثة غير موجودة');
+        console.warn("⚠️ عناصر المحادثة غير موجودة");
         return;
     }
 
+    // =========================================================
+    // حماية النصوص من HTML
+    // =========================================================
+
+    function escapeHTML(text) {
+
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+    // =========================================================
+    // سجل المحادثة
+    // =========================================================
+
     function loadChatHistory() {
-        const saved = localStorage.getItem('haitham_chat_history');
 
-        if (saved) {
-            try {
-                const history = JSON.parse(saved);
+        const saved =
+            localStorage.getItem("haitham_chat_history");
 
-                messages.innerHTML = history.map(msg =>
-                    `<div class="msg ${msg.role}">
-                        <b>${msg.role === 'user' ? 'أنت' : 'هيثم AI'}</b>
-                        <p>${escapeHtml(msg.text)}</p>
-                    </div>`
-                ).join('');
-            } catch (e) {
-                console.warn('تعذر تحميل سجل المحادثة');
-            }
+        if (!saved) return;
+
+        try {
+
+            const history = JSON.parse(saved);
+
+            messages.innerHTML = history.map(msg => {
+
+                return `
+                    <div class="msg ${msg.role}">
+                        <b>
+                            ${msg.role === "user" ? "أنت" : "هيثم AI"}
+                        </b>
+                        <p>${escapeHTML(msg.text).replace(/\n/g, "<br>")}</p>
+                    </div>
+                `;
+
+            }).join("");
+
+        } catch (error) {
+
+            console.error("خطأ في تحميل المحادثة:", error);
+
         }
+
     }
 
     loadChatHistory();
 
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text || '';
-        return div.innerHTML;
-    }
+    // =========================================================
+    // حفظ المحادثة
+    // =========================================================
 
     function saveChatHistory() {
+
         const items = [];
 
-        document.querySelectorAll('.msg').forEach(msg => {
-            const role = msg.classList.contains('user') ? 'user' : 'ai';
-            const text = msg.querySelector('p')?.textContent || '';
+        messages.querySelectorAll(".msg").forEach(msg => {
+
+            const role =
+                msg.classList.contains("user")
+                    ? "user"
+                    : "ai";
+
+            const text =
+                msg.querySelector("p")?.textContent || "";
 
             items.push({
                 role,
                 text
             });
+
         });
 
         localStorage.setItem(
-            'haitham_chat_history',
+            "haitham_chat_history",
             JSON.stringify(items)
         );
+
     }
 
+    // =========================================================
+    // الاتصال بـ API
+    // =========================================================
+
     async function getAIResponse(message) {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
+
+        const response = await fetch("/api/chat", {
+
+            method: "POST",
+
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
                 message: message
             })
+
         });
 
         let data;
 
         try {
+
             data = await response.json();
-        } catch (error) {
+
+        } catch {
+
             throw new Error(
-                'الخادم أعاد استجابة غير صالحة'
+                "الخادم لم يرجع استجابة صحيحة."
             );
+
         }
 
         if (!response.ok) {
+
             throw new Error(
-                data?.reply || 'حدث خطأ في الاتصال بالخادم'
+                data?.reply ||
+                "حدث خطأ في الاتصال بالذكاء الاصطناعي."
             );
+
         }
 
-        return data?.reply || 'لم يصل رد من الذكاء الاصطناعي';
+        return data.reply || "لم يصل رد من هيثم AI.";
+
     }
 
+    // =========================================================
+    // إرسال الرسالة
+    // =========================================================
+
     async function sendMessage(message) {
+
         if (!message || !message.trim()) return;
 
-        const userMsg = document.createElement('div');
-        userMsg.className = 'msg user';
+        // رسالة المستخدم
+        const userMsg =
+            document.createElement("div");
 
-        const userText = document.createElement('p');
-        userText.textContent = message;
+        userMsg.className = "msg user";
 
-        userMsg.innerHTML = '<b>أنت</b>';
-        userMsg.appendChild(userText);
+        userMsg.innerHTML = `
+            <b>أنت</b>
+            <p>${escapeHTML(message)}</p>
+        `;
 
         messages.appendChild(userMsg);
-        messages.scrollTop = messages.scrollHeight;
+
+        messages.scrollTop =
+            messages.scrollHeight;
 
         saveChatHistory();
 
-        const typing = document.createElement('div');
-        typing.className = 'msg ai';
-        typing.id = 'typing';
-        typing.innerHTML =
-            '<b>هيثم AI</b><p>⏳ جاري التفكير...</p>';
+        // رسالة الانتظار
+        const typing =
+            document.createElement("div");
+
+        typing.className = "msg ai";
+        typing.id = "typing";
+
+        typing.innerHTML = `
+            <b>هيثم AI</b>
+            <p>⏳ جاري التفكير...</p>
+        `;
 
         messages.appendChild(typing);
-        messages.scrollTop = messages.scrollHeight;
+
+        messages.scrollTop =
+            messages.scrollHeight;
 
         try {
-            const reply = await getAIResponse(message);
 
-            const typingEl = document.getElementById('typing');
+            const reply =
+                await getAIResponse(message);
 
-            if (typingEl) {
-                typingEl.remove();
-            }
+            typing.remove();
 
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'msg ai';
+            const aiMsg =
+                document.createElement("div");
 
-            const title = document.createElement('b');
-            title.textContent = 'هيثم AI';
+            aiMsg.className = "msg ai";
 
-            const replyText = document.createElement('p');
-            replyText.innerHTML = escapeHtml(reply)
-                .replace(/\n/g, '<br>');
-
-            aiMsg.appendChild(title);
-            aiMsg.appendChild(replyText);
+            aiMsg.innerHTML = `
+                <b>هيثم AI</b>
+                <p>
+                    ${escapeHTML(reply).replace(/\n/g, "<br>")}
+                </p>
+            `;
 
             messages.appendChild(aiMsg);
-            messages.scrollTop = messages.scrollHeight;
+
+            messages.scrollTop =
+                messages.scrollHeight;
 
             saveChatHistory();
 
         } catch (error) {
-            const typingEl = document.getElementById('typing');
 
-            if (typingEl) {
-                typingEl.remove();
-            }
+            if (typing) typing.remove();
 
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'msg ai';
+            const aiMsg =
+                document.createElement("div");
 
-            aiMsg.innerHTML =
-                `<b>هيثم AI</b>
-                 <p>❌ ${escapeHtml(error.message)}</p>`;
+            aiMsg.className = "msg ai";
+
+            aiMsg.innerHTML = `
+                <b>هيثم AI</b>
+                <p>
+                    ❌ ${escapeHTML(error.message)}
+                </p>
+            `;
 
             messages.appendChild(aiMsg);
-            messages.scrollTop = messages.scrollHeight;
+
+            messages.scrollTop =
+                messages.scrollHeight;
+
         }
+
     }
 
-    form.addEventListener('submit', function (e) {
+    // =========================================================
+    // زر الإرسال
+    // =========================================================
+
+    form.addEventListener("submit", function (e) {
+
         e.preventDefault();
 
-        const message = input.value.trim();
+        const message =
+            input.value.trim();
 
         if (!message) return;
 
-        input.value = '';
+        input.value = "";
 
         sendMessage(message);
+
     });
 
-    const sendBtn = document.querySelector('.btn-send');
+    // =========================================================
+    // Enter
+    // =========================================================
 
-    if (sendBtn) {
-        sendBtn.addEventListener('click', function (e) {
+    input.addEventListener("keydown", function (e) {
+
+        if (
+            e.key === "Enter" &&
+            !e.shiftKey
+        ) {
+
             e.preventDefault();
 
-            const message = input.value.trim();
+            const message =
+                input.value.trim();
 
             if (!message) return;
 
-            input.value = '';
+            input.value = "";
 
             sendMessage(message);
-        });
-    }
 
-    input.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-
-            const message = this.value.trim();
-
-            if (!message) return;
-
-            this.value = '';
-
-            sendMessage(message);
         }
+
     });
 
-    console.log('✅ هيثم AI جاهز ويستخدم /api/chat');
+    console.log(
+        "✅ هيثم AI يعمل عبر Gemini API"
+    );
+
 });
