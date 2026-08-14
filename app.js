@@ -1,235 +1,195 @@
 // app.js
-// هيثم AI - الواجهة الرئيسية
+// هيثم AI
+// الاتصال بالذكاء الاصطناعي يتم من خلال /api/chat
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("chatForm");
     const input = document.getElementById("input");
     const messages = document.getElementById("messages");
+    const sendBtn = document.getElementById("sendBtn");
 
     if (!form || !input || !messages) {
-        console.warn("⚠️ عناصر المحادثة غير موجودة");
+        console.error("عناصر المحادثة غير موجودة");
         return;
     }
 
-    // =========================================================
-    // حماية النصوص من HTML
-    // =========================================================
 
-    function escapeHTML(text) {
+    // =====================================================
+    // فتح صفحة إنشاء الاختبار
+    // =====================================================
 
-        return String(text)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+    window.openExam = function () {
+        window.location.href = "exam.html";
+    };
 
-    }
 
-    // =========================================================
-    // سجل المحادثة
-    // =========================================================
+    // =====================================================
+    // الانتقال إلى المحادثة
+    // =====================================================
 
-    function loadChatHistory() {
+    window.goChat = function () {
 
-        const saved =
-            localStorage.getItem("haitham_chat_history");
+        const chat = document.getElementById("chat");
 
-        if (!saved) return;
-
-        try {
-
-            const history = JSON.parse(saved);
-
-            messages.innerHTML = history.map(msg => {
-
-                return `
-                    <div class="msg ${msg.role}">
-                        <b>
-                            ${msg.role === "user" ? "أنت" : "هيثم AI"}
-                        </b>
-                        <p>${escapeHTML(msg.text).replace(/\n/g, "<br>")}</p>
-                    </div>
-                `;
-
-            }).join("");
-
-        } catch (error) {
-
-            console.error("خطأ في تحميل المحادثة:", error);
-
-        }
-
-    }
-
-    loadChatHistory();
-
-    // =========================================================
-    // حفظ المحادثة
-    // =========================================================
-
-    function saveChatHistory() {
-
-        const items = [];
-
-        messages.querySelectorAll(".msg").forEach(msg => {
-
-            const role =
-                msg.classList.contains("user")
-                    ? "user"
-                    : "ai";
-
-            const text =
-                msg.querySelector("p")?.textContent || "";
-
-            items.push({
-                role,
-                text
+        if (chat) {
+            chat.scrollIntoView({
+                behavior: "smooth"
             });
 
-        });
-
-        localStorage.setItem(
-            "haitham_chat_history",
-            JSON.stringify(items)
-        );
-
-    }
-
-    // =========================================================
-    // الاتصال بـ API
-    // =========================================================
-
-    async function getAIResponse(message) {
-
-        const response = await fetch("/api/chat", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                message: message
-            })
-
-        });
-
-        let data;
-
-        try {
-
-            data = await response.json();
-
-        } catch {
-
-            throw new Error(
-                "الخادم لم يرجع استجابة صحيحة."
-            );
-
+            setTimeout(() => {
+                input.focus();
+            }, 500);
         }
 
-        if (!response.ok) {
+    };
 
-            throw new Error(
-                data?.reply ||
-                "حدث خطأ في الاتصال بالذكاء الاصطناعي."
-            );
 
-        }
+    // =====================================================
+    // إرسال طلب سريع
+    // =====================================================
 
-        return data.reply || "لم يصل رد من هيثم AI.";
+    window.sendQuick = function (text) {
 
+        goChat();
+
+        input.value = text;
+
+        setTimeout(() => {
+            input.focus();
+        }, 500);
+
+    };
+
+
+    // =====================================================
+    // إضافة رسالة
+    // =====================================================
+
+    function addMessage(role, text) {
+
+        const div = document.createElement("div");
+
+        div.className =
+            `msg ${role}`;
+
+        const title =
+            role === "user"
+                ? "أنت"
+                : "هيثم AI";
+
+        div.innerHTML = `
+            <b>${title}</b>
+            <p></p>
+        `;
+
+        div.querySelector("p").textContent = text;
+
+        messages.appendChild(div);
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+        return div;
     }
 
-    // =========================================================
-    // إرسال الرسالة
-    // =========================================================
+
+    // =====================================================
+    // إرسال الرسالة إلى الخادم
+    // =====================================================
 
     async function sendMessage(message) {
 
-        if (!message || !message.trim()) return;
+        if (!message.trim()) {
+            return;
+        }
 
-        // رسالة المستخدم
-        const userMsg =
-            document.createElement("div");
+        addMessage("user", message);
 
-        userMsg.className = "msg user";
+        input.value = "";
 
-        userMsg.innerHTML = `
-            <b>أنت</b>
-            <p>${escapeHTML(message)}</p>
-        `;
+        sendBtn.disabled = true;
+        sendBtn.textContent = "⏳";
 
-        messages.appendChild(userMsg);
 
-        messages.scrollTop =
-            messages.scrollHeight;
+        const loading =
+            addMessage(
+                "ai",
+                "⏳ جاري التفكير..."
+            );
 
-        saveChatHistory();
-
-        // رسالة الانتظار
-        const typing =
-            document.createElement("div");
-
-        typing.className = "msg ai";
-        typing.id = "typing";
-
-        typing.innerHTML = `
-            <b>هيثم AI</b>
-            <p>⏳ جاري التفكير...</p>
-        `;
-
-        messages.appendChild(typing);
-
-        messages.scrollTop =
-            messages.scrollHeight;
 
         try {
 
+            const response =
+                await fetch("/api/chat", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: message
+                    })
+
+                });
+
+
+            // محاولة قراءة JSON
+            let data;
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                throw new Error(
+                    "الخادم لم يُرجع استجابة صحيحة. تأكد من نشر api/chat.js في Vercel."
+                );
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.reply ||
+                    "حدث خطأ من الخادم"
+                );
+
+            }
+
+
             const reply =
-                await getAIResponse(message);
+                data.reply ||
+                "لم يصل رد من هيثم AI.";
 
-            typing.remove();
 
-            const aiMsg =
-                document.createElement("div");
+            loading.querySelector("p")
+                .textContent = reply;
 
-            aiMsg.className = "msg ai";
-
-            aiMsg.innerHTML = `
-                <b>هيثم AI</b>
-                <p>
-                    ${escapeHTML(reply).replace(/\n/g, "<br>")}
-                </p>
-            `;
-
-            messages.appendChild(aiMsg);
-
-            messages.scrollTop =
-                messages.scrollHeight;
-
-            saveChatHistory();
 
         } catch (error) {
 
-            if (typing) typing.remove();
+            console.error(
+                "Chat Error:",
+                error
+            );
 
-            const aiMsg =
-                document.createElement("div");
+            loading.querySelector("p")
+                .textContent =
+                "❌ " +
+                error.message;
 
-            aiMsg.className = "msg ai";
+        } finally {
 
-            aiMsg.innerHTML = `
-                <b>هيثم AI</b>
-                <p>
-                    ❌ ${escapeHTML(error.message)}
-                </p>
-            `;
-
-            messages.appendChild(aiMsg);
+            sendBtn.disabled = false;
+            sendBtn.textContent = "إرسال";
 
             messages.scrollTop =
                 messages.scrollHeight;
@@ -238,53 +198,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    // =========================================================
+
+    // =====================================================
     // زر الإرسال
-    // =========================================================
+    // =====================================================
 
-    form.addEventListener("submit", function (e) {
+    form.addEventListener(
+        "submit",
+        function (event) {
 
-        e.preventDefault();
-
-        const message =
-            input.value.trim();
-
-        if (!message) return;
-
-        input.value = "";
-
-        sendMessage(message);
-
-    });
-
-    // =========================================================
-    // Enter
-    // =========================================================
-
-    input.addEventListener("keydown", function (e) {
-
-        if (
-            e.key === "Enter" &&
-            !e.shiftKey
-        ) {
-
-            e.preventDefault();
+            event.preventDefault();
 
             const message =
                 input.value.trim();
 
-            if (!message) return;
-
-            input.value = "";
+            if (!message) {
+                return;
+            }
 
             sendMessage(message);
 
         }
+    );
 
-    });
+
+    // =====================================================
+    // Enter للإرسال
+    // =====================================================
+
+    input.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                const message =
+                    input.value.trim();
+
+                if (!message) {
+                    return;
+                }
+
+                sendMessage(message);
+
+            }
+
+        }
+    );
+
 
     console.log(
-        "✅ هيثم AI يعمل عبر Gemini API"
+        "✅ هيثم AI جاهز"
     );
 
 });
