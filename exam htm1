@@ -1,402 +1,909 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>إنشاء اختبار - هيثم AI</title>
+    <title>إنشاء اختبار - هيثم AI</title>
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-body {
-    font-family: Tahoma, "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    min-height: 100vh;
-    padding: 20px;
-    color: white;
-}
+        body {
+            font-family: Tahoma, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
 
-.container {
-    width: 100%;
-    max-width: 900px;
-    margin: auto;
-}
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+        }
 
-.header {
-    text-align: center;
-    margin-bottom: 25px;
-}
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-.header .icon {
-    font-size: 55px;
-    margin-bottom: 10px;
-}
+        .header .icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
 
-.header h1 {
-    font-size: 30px;
-    margin-bottom: 8px;
-}
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
 
-.header p {
-    color: rgba(255,255,255,0.65);
-}
+        .header p {
+            color: rgba(255,255,255,0.65);
+            line-height: 1.8;
+        }
 
-.card {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 25px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-}
+        .card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
 
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.field.full {
-    grid-column: 1 / -1;
-}
+        .field.full {
+            grid-column: 1 / -1;
+        }
 
-label {
-    font-weight: bold;
-    color: #f6b26b;
-}
+        label {
+            font-weight: bold;
+            color: #f6b26b;
+        }
 
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.08);
-    color: white;
-    font-size: 16px;
-    font-family: inherit;
-}
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 16px;
+            font-family: inherit;
+        }
 
-select option {
-    color: black;
-}
+        select option {
+            color: black;
+            background: white;
+        }
 
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
 
-input:focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    border-color: #667eea;
-}
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+        }
 
-.generate-btn {
-    width: 100%;
-    margin-top: 22px;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .generate-btn {
+            width: 100%;
+            margin-top: 22px;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.generate-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102,126,234,0.4);
-}
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
 
-.generate-btn:disabled {
-    opacity: 0.6;
-    cursor: wait;
-}
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
 
-.result {
-    display: none;
-}
+        .result {
+            display: none;
+        }
 
-.result h2 {
-    color: #f6b26b;
-    margin-bottom: 15px;
-}
+        .result h2 {
+            color: #f6b26b;
+            margin-bottom: 15px;
+            font-size: 23px;
+        }
 
-#examResult {
-    background: rgba(0,0,0,0.15);
-    padding: 20px;
-    border-radius: 15px;
-    line-height: 2;
-    white-space: normal;
-}
+        #examResult {
+            background: rgba(0,0,0,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            line-height: 2;
+            min-height: 100px;
+            overflow-wrap: break-word;
+        }
 
-.back-btn {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    padding: 13px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.08);
-    color: white;
-    text-decoration: none;
-}
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #f6b26b;
+            font-size: 17px;
+        }
 
-.loading {
-    text-align: center;
-    padding: 20px;
-    color: #f6b26b;
-}
+        .error-box {
+            color: #ff8a8a;
+            background: rgba(255,70,70,0.08);
+            border: 1px solid rgba(255,100,100,0.2);
+            padding: 18px;
+            border-radius: 12px;
+            line-height: 1.9;
+        }
 
-@media (max-width: 600px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
 
-    .field.full {
-        grid-column: auto;
-    }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
 
-    .header h1 {
-        font-size: 25px;
-    }
-}
-</style>
+        .print-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f6b26b, #e67e22);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .header .icon {
+                font-size: 48px;
+            }
+        }
+
+        /* ================================
+           تنسيق الطباعة
+        ================================= */
+
+        @media print {
+
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+            }
+
+            .header,
+            .card:not(.result),
+            .back-btn,
+            .print-btn {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .result {
+                display: block !important;
+                background: white;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .result h2 {
+                color: black;
+            }
+
+            #examResult {
+                background: white;
+                color: black;
+                padding: 0;
+                line-height: 2;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
 
+    <!-- =========================
+         العنوان
+    ========================== -->
+
     <div class="header">
+
         <div class="icon">📄</div>
+
         <h1>إنشاء اختبار</h1>
-        <p>أنشئ اختبارًا تعليميًا متكاملًا بواسطة هيثم AI</p>
+
+        <p>
+            أنشئ اختبارًا تعليميًا متكاملًا بواسطة هيثم AI
+        </p>
+
     </div>
+
+
+    <!-- =========================
+         نموذج إنشاء الاختبار
+    ========================== -->
 
     <div class="card">
 
         <div class="form-grid">
 
+            <!-- المادة -->
+
             <div class="field">
+
                 <label>📚 المادة</label>
 
                 <select id="subject">
-                    <option value="الرياضيات">الرياضيات</option>
-                    <option value="اللغة العربية">اللغة العربية</option>
-                    <option value="اللغة الإنجليزية">اللغة الإنجليزية</option>
-                    <option value="العلوم">العلوم</option>
-                    <option value="الدراسات الاجتماعية">الدراسات الاجتماعية</option>
-                    <option value="القرآن الكريم">القرآن الكريم</option>
+
+                    <option value="الرياضيات">
+                        الرياضيات
+                    </option>
+
+                    <option value="اللغة العربية">
+                        اللغة العربية
+                    </option>
+
+                    <option value="اللغة الإنجليزية">
+                        اللغة الإنجليزية
+                    </option>
+
+                    <option value="العلوم">
+                        العلوم
+                    </option>
+
+                    <option value="الدراسات الاجتماعية">
+                        الدراسات الاجتماعية
+                    </option>
+
+                    <option value="القرآن الكريم">
+                        القرآن الكريم
+                    </option>
+
                 </select>
+
             </div>
 
+
+            <!-- الصف -->
+
             <div class="field">
+
                 <label>🎓 الصف</label>
 
                 <select id="grade">
-                    <option value="الصف الخامس">الصف الخامس</option>
-                    <option value="الصف السادس">الصف السادس</option>
-                    <option value="الصف السابع">الصف السابع</option>
-                    <option value="الصف الثامن">الصف الثامن</option>
-                    <option value="الصف التاسع">الصف التاسع</option>
-                    <option value="الأول الثانوي">الأول الثانوي</option>
-                    <option value="الثاني الثانوي">الثاني الثانوي</option>
-                    <option value="الثالث الثانوي">الثالث الثانوي</option>
+
+                    <option value="الصف الخامس">
+                        الصف الخامس
+                    </option>
+
+                    <option value="الصف السادس">
+                        الصف السادس
+                    </option>
+
+                    <option value="الصف السابع">
+                        الصف السابع
+                    </option>
+
+                    <option value="الصف الثامن">
+                        الصف الثامن
+                    </option>
+
+                    <option value="الصف التاسع">
+                        الصف التاسع
+                    </option>
+
+                    <option value="الأول الثانوي">
+                        الأول الثانوي
+                    </option>
+
+                    <option value="الثاني الثانوي">
+                        الثاني الثانوي
+                    </option>
+
+                    <option value="الثالث الثانوي">
+                        الثالث الثانوي
+                    </option>
+
                 </select>
+
             </div>
 
+
+            <!-- موضوع الاختبار -->
+
             <div class="field full">
+
                 <label>📖 موضوع الاختبار</label>
 
                 <textarea
                     id="topic"
                     placeholder="مثال: الكسور العشرية، المعادلات، النسبة والتناسب..."
                 ></textarea>
+
             </div>
 
+
+            <!-- عدد الأسئلة -->
+
             <div class="field">
+
                 <label>🔢 عدد الأسئلة</label>
 
                 <select id="count">
-                    <option value="5">5 أسئلة</option>
-                    <option value="10" selected>10 أسئلة</option>
-                    <option value="15">15 سؤالًا</option>
-                    <option value="20">20 سؤالًا</option>
-                    <option value="25">25 سؤالًا</option>
+
+                    <option value="5">
+                        5 أسئلة
+                    </option>
+
+                    <option value="10" selected>
+                        10 أسئلة
+                    </option>
+
+                    <option value="15">
+                        15 سؤالًا
+                    </option>
+
+                    <option value="20">
+                        20 سؤالًا
+                    </option>
+
+                    <option value="25">
+                        25 سؤالًا
+                    </option>
+
                 </select>
+
             </div>
 
+
+            <!-- الصعوبة -->
+
             <div class="field">
+
                 <label>🎯 مستوى الصعوبة</label>
 
                 <select id="difficulty">
-                    <option value="سهل">سهل</option>
-                    <option value="متوسط" selected>متوسط</option>
-                    <option value="صعب">صعب</option>
-                    <option value="متدرج">متدرج من السهل إلى الصعب</option>
+
+                    <option value="سهل">
+                        سهل
+                    </option>
+
+                    <option value="متوسط" selected>
+                        متوسط
+                    </option>
+
+                    <option value="صعب">
+                        صعب
+                    </option>
+
+                    <option value="متدرج">
+                        متدرج من السهل إلى الصعب
+                    </option>
+
                 </select>
+
             </div>
 
+
+            <!-- نوع الأسئلة -->
+
             <div class="field full">
+
                 <label>📝 نوع الأسئلة</label>
 
                 <select id="type">
-                    <option value="اختيار من متعدد">اختيار من متعدد</option>
-                    <option value="صح أو خطأ">صح أو خطأ</option>
-                    <option value="أسئلة متنوعة">أسئلة متنوعة</option>
-                    <option value="أسئلة مقالية">أسئلة مقالية</option>
+
+                    <option value="اختيار من متعدد">
+                        اختيار من متعدد
+                    </option>
+
+                    <option value="صح أو خطأ">
+                        صح أو خطأ
+                    </option>
+
+                    <option value="أسئلة متنوعة">
+                        أسئلة متنوعة
+                    </option>
+
+                    <option value="أسئلة مقالية">
+                        أسئلة مقالية
+                    </option>
+
                 </select>
+
             </div>
 
         </div>
 
-        <button class="generate-btn" id="generateBtn">
+
+        <!-- زر إنشاء الاختبار -->
+
+        <button
+            class="generate-btn"
+            id="generateBtn"
+        >
             🤖 إنشاء الاختبار
         </button>
 
     </div>
 
-    <div class="card result" id="resultBox">
 
-        <h2>📋 الاختبار الناتج</h2>
+    <!-- =========================
+         نتيجة الاختبار
+    ========================== -->
+
+    <div
+        class="card result"
+        id="resultBox"
+    >
+
+        <h2>
+            📋 الاختبار الناتج
+        </h2>
 
         <div id="examResult"></div>
 
+        <button
+            class="print-btn"
+            id="printBtn"
+            onclick="window.print()"
+        >
+            🖨️ طباعة الاختبار
+        </button>
+
     </div>
 
-    <a href="index.html" class="back-btn">
+
+    <!-- العودة -->
+
+    <a
+        href="index.html"
+        class="back-btn"
+    >
         ⬅️ العودة إلى الصفحة الرئيسية
     </a>
 
 </div>
 
+
 <script>
 
-const generateBtn = document.getElementById("generateBtn");
-const resultBox = document.getElementById("resultBox");
-const examResult = document.getElementById("examResult");
+    // =========================================================
+    // عناصر الصفحة
+    // =========================================================
 
-generateBtn.addEventListener("click", async function () {
+    const generateBtn =
+        document.getElementById("generateBtn");
 
-    const subject = document.getElementById("subject").value;
-    const grade = document.getElementById("grade").value;
-    const topic = document.getElementById("topic").value.trim();
-    const count = document.getElementById("count").value;
-    const difficulty = document.getElementById("difficulty").value;
-    const type = document.getElementById("type").value;
+    const resultBox =
+        document.getElementById("resultBox");
 
-    if (!topic) {
-        alert("اكتب موضوع الاختبار أولًا");
-        return;
+    const examResult =
+        document.getElementById("examResult");
+
+    const printBtn =
+        document.getElementById("printBtn");
+
+
+    // =========================================================
+    // حماية النص من HTML
+    // =========================================================
+
+    function escapeHTML(text) {
+
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
     }
 
-    generateBtn.disabled = true;
-    generateBtn.textContent = "⏳ جاري إنشاء الاختبار...";
 
-    resultBox.style.display = "block";
+    // =========================================================
+    // تنسيق رد الذكاء الاصطناعي
+    // =========================================================
 
-    examResult.innerHTML = `
-        <div class="loading">
-            🤖 هيثم AI يقوم بإعداد الاختبار...
-        </div>
-    `;
+    function formatText(text) {
 
-    const prompt = `
+        return escapeHTML(text)
+            .replace(/\n/g, "<br>");
+
+    }
+
+
+    // =========================================================
+    // إنشاء الاختبار
+    // =========================================================
+
+    generateBtn.addEventListener(
+        "click",
+        async function () {
+
+            const subject =
+                document.getElementById("subject").value;
+
+            const grade =
+                document.getElementById("grade").value;
+
+            const topic =
+                document
+                    .getElementById("topic")
+                    .value
+                    .trim();
+
+            const count =
+                document.getElementById("count").value;
+
+            const difficulty =
+                document.getElementById("difficulty").value;
+
+            const type =
+                document.getElementById("type").value;
+
+
+            // =====================================================
+            // التأكد من كتابة الموضوع
+            // =====================================================
+
+            if (!topic) {
+
+                alert(
+                    "⚠️ اكتب موضوع الاختبار أولًا"
+                );
+
+                document
+                    .getElementById("topic")
+                    .focus();
+
+                return;
+
+            }
+
+
+            // =====================================================
+            // حالة الانتظار
+            // =====================================================
+
+            generateBtn.disabled = true;
+
+            generateBtn.textContent =
+                "⏳ جاري إنشاء الاختبار...";
+
+
+            resultBox.style.display = "block";
+
+            printBtn.style.display = "none";
+
+            examResult.innerHTML = `
+
+                <div class="loading">
+
+                    🤖 هيثم AI يقوم الآن بإعداد الاختبار...
+
+                    <br><br>
+
+                    ⏳ يرجى الانتظار قليلًا
+
+                </div>
+
+            `;
+
+
+            // =====================================================
+            // الطلب المرسل إلى Gemini
+            // =====================================================
+
+            const prompt = `
+
+أنت الآن مسؤول عن إنشاء اختبار مدرسي جاهز للطباعة.
+
 أنشئ اختبارًا تعليميًا متكاملًا وفق البيانات التالية:
 
 المادة: ${subject}
-الصف: ${grade}
-موضوع الاختبار: ${topic}
-عدد الأسئلة: ${count}
-مستوى الصعوبة: ${difficulty}
-نوع الأسئلة: ${type}
 
-أريد الاختبار باللغة العربية وبصياغة مناسبة للطلاب.
-
-اكتب في البداية:
-اسم المدرسة: ______________________
-اسم الطالب: ______________________
 الصف: ${grade}
+
+موضوع الاختبار:
+${topic}
+
+عدد الأسئلة:
+${count}
+
+مستوى الصعوبة:
+${difficulty}
+
+نوع الأسئلة:
+${type}
+
+
+أريد الاختبار باللغة العربية وبصياغة مناسبة تمامًا لطلاب ${grade}.
+
+
+اكتب في بداية الاختبار:
+
+اسم المدرسة: ______________________________
+
+اسم الطالب: ______________________________
+
+الصف: ${grade}
+
 المادة: ${subject}
-الدرجة: ______________________
-التاريخ: ______________________
+
+الدرجة: ______________________________
+
+التاريخ: ______________________________
+
 
 ثم اكتب الأسئلة مرقمة ومنظمة.
 
-إذا كان نوع الأسئلة اختيارًا من متعدد، ضع أربعة خيارات لكل سؤال.
 
-وفي النهاية أنشئ قسمًا منفصلًا بعنوان:
-"نموذج الإجابة"
+إذا كان نوع الأسئلة اختيارًا من متعدد:
 
-واكتب الإجابات الصحيحة بوضوح.
+ضع أربعة خيارات لكل سؤال، واستخدم:
 
-لا تشرح طريقة إعداد الاختبار، بل أعطني الاختبار جاهزًا للطباعة.
+أ) 
+ب)
+ج)
+د)
+
+
+إذا كان نوع الأسئلة صح أو خطأ:
+
+اكتب عبارات واضحة ومناسبة للدرس.
+
+
+إذا كان نوع الأسئلة أسئلة متنوعة:
+
+نوّع بين أنواع الأسئلة بما يناسب المادة والموضوع.
+
+
+إذا كان نوع الأسئلة أسئلة مقالية:
+
+اكتب أسئلة تحتاج إلى إجابات تحريرية.
+
+
+في نهاية الاختبار أنشئ قسمًا منفصلًا بعنوان:
+
+نموذج الإجابة
+
+
+ثم اكتب الإجابات الصحيحة بوضوح وترتيب.
+
+
+مهم جدًا:
+
+- لا تشرح طريقة إعداد الاختبار.
+- لا تتحدث عن أنك ذكاء اصطناعي.
+- لا تضع كلامًا خارج الاختبار.
+- أعطني الاختبار جاهزًا للطباعة.
+- اجعل الأسئلة مناسبة للصف المحدد.
+- راعِ مستوى الصعوبة المطلوب.
+- اجعل الإجابات دقيقة.
+- في الرياضيات تأكد من صحة جميع العمليات والحلول.
+
 `;
 
-    try {
 
-        const response = await fetch("/api/chat", {
-            method: "POST",
+            // =====================================================
+            // الاتصال بـ api/chat.js
+            // =====================================================
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+            try {
 
-            body: JSON.stringify({
-                message: prompt
-            })
-        });
+                const response = await fetch(
+                    "/api/chat",
+                    {
+                        method: "POST",
 
-        const data = await response.json();
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
 
-        if (!response.ok) {
-            throw new Error(data.reply || "حدث خطأ أثناء إنشاء الاختبار");
+                        body: JSON.stringify({
+                            message: prompt
+                        })
+                    }
+                );
+
+
+                // =================================================
+                // قراءة الرد
+                // =================================================
+
+                let data;
+
+                try {
+
+                    data =
+                        await response.json();
+
+                } catch (jsonError) {
+
+                    throw new Error(
+                        "الخادم لم يرجع استجابة صحيحة. تأكد من نشر api/chat.js."
+                    );
+
+                }
+
+
+                // =================================================
+                // التحقق من حالة الطلب
+                // =================================================
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data?.reply ||
+                        "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي."
+                    );
+
+                }
+
+
+                // =================================================
+                // التأكد من وجود الرد
+                // =================================================
+
+                if (!data || !data.reply) {
+
+                    throw new Error(
+                        "لم يصل الاختبار من الذكاء الاصطناعي."
+                    );
+
+                }
+
+
+                // =================================================
+                // عرض الاختبار
+                // =================================================
+
+                examResult.innerHTML =
+                    formatText(data.reply);
+
+                printBtn.style.display =
+                    "block";
+
+
+                // الانتقال إلى النتيجة
+                resultBox.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+
+            } catch (error) {
+
+                console.error(
+                    "Exam Error:",
+                    error
+                );
+
+
+                examResult.innerHTML = `
+
+                    <div class="error-box">
+
+                        ❌ حدث خطأ أثناء إنشاء الاختبار
+
+                        <br><br>
+
+                        <strong>
+                            تفاصيل الخطأ:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHTML(
+                            error.message
+                        )}
+
+                        <br><br>
+
+                        إذا ظهرت رسالة
+                        "مفتاح Gemini غير موجود في Vercel"
+                        فتأكد من إضافة
+                        GEMINI_API_KEY
+                        في إعدادات Vercel.
+
+                    </div>
+
+                `;
+
+                printBtn.style.display =
+                    "none";
+
+            } finally {
+
+                generateBtn.disabled = false;
+
+                generateBtn.textContent =
+                    "🤖 إنشاء الاختبار";
+
+            }
+
         }
-
-        examResult.innerHTML = formatText(data.reply);
-
-    } catch (error) {
-
-        examResult.innerHTML = `
-            <div style="color:#ff8a8a;">
-                ❌ حدث خطأ أثناء إنشاء الاختبار
-                <br><br>
-                ${error.message}
-            </div>
-        `;
-
-    } finally {
-
-        generateBtn.disabled = false;
-        generateBtn.textContent = "🤖 إنشاء الاختبار";
-    }
-
-});
-
-function formatText(text) {
-
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\n/g, "<br>");
-}
+    );
 
 </script>
 
