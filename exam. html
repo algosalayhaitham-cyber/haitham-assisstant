@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إنشاء اختبار - هيثم AI</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,Arial;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;padding:20px;color:#fff}
+.container{max-width:900px;margin:auto}
+.header{text-align:center;margin-bottom:25px}
+.icon{font-size:55px}
+.header h1{font-size:30px;margin:8px}
+.header p{color:#aaa}
+.card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:25px;padding:25px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{display:flex;flex-direction:column;gap:8px}
+.full{grid-column:1/-1}
+label{font-weight:bold;color:#f6b26b}
+input,select,textarea{width:100%;padding:14px;border-radius:12px;border:1px solid #ffffff25;background:#ffffff12;color:#fff;font-size:16px;font-family:inherit}
+select option{color:#000}
+textarea{min-height:110px}
+.btn{width:100%;margin-top:22px;padding:16px;border:0;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:18px;font-weight:bold;cursor:pointer}
+.btn:disabled{opacity:.6}
+.result{display:none}
+.result h2{color:#f6b26b;margin-bottom:15px}
+.out{background:#0003;padding:20px;border-radius:15px;line-height:2.1}
+.loading{text-align:center;color:#f6b26b}
+.err{color:#ff9b9b;background:#ff000015;padding:15px;border-radius:10px}
+.back{display:block;text-align:center;padding:13px;border-radius:12px;background:#ffffff12;color:#fff;text-decoration:none;margin-top:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<div class="icon">📄</div>
+<h1>إنشاء اختبار</h1>
+<p>أنشئ اختبارًا تعليميًا متكاملًا بواسطة هيثم AI</p>
+</div>
+
+<div class="card">
+
+<div class="grid">
+
+<div class="field">
+<label>📚 المادة</label>
+<select id="subject">
+<option>الرياضيات</option>
+<option>اللغة العربية</option>
+<option>اللغة الإنجليزية</option>
+<option>العلوم</option>
+<option>الدراسات الاجتماعية</option>
+<option>القرآن الكريم</option>
+</select>
+</div>
+
+<div class="field">
+<label>🎓 الصف</label>
+<select id="grade">
+<option>الصف الخامس</option>
+<option>الصف السادس</option>
+<option>الصف السابع</option>
+<option>الصف الثامن</option>
+<option>الصف التاسع</option>
+<option>الأول الثانوي</option>
+<option>الثاني الثانوي</option>
+<option>الثالث الثانوي</option>
+</select>
+</div>
+
+<div class="field full">
+<label>📖 موضوع الاختبار</label>
+<textarea id="topic" placeholder="مثال: الكسور العشرية، المعادلات، النسبة والتناسب..."></textarea>
+</div>
+
+<div class="field">
+<label>🔢 عدد الأسئلة</label>
+<select id="count">
+<option>5</option>
+<option selected>10</option>
+<option>15</option>
+<option>20</option>
+<option>25</option>
+</select>
+</div>
+
+<div class="field">
+<label>🎯 مستوى الصعوبة</label>
+<select id="difficulty">
+<option>سهل</option>
+<option selected>متوسط</option>
+<option>صعب</option>
+<option>متدرج</option>
+</select>
+</div>
+
+<div class="field full">
+<label>📝 نوع الأسئلة</label>
+<select id="type">
+<option>اختيار من متعدد</option>
+<option>صح أو خطأ</option>
+<option>أسئلة متنوعة</option>
+<option>أسئلة مقالية</option>
+</select>
+</div>
+
+</div>
+
+<button class="btn" id="generate">🤖 إنشاء الاختبار</button>
+
+</div>
+
+<div class="card result" id="box">
+<h2>📋 الاختبار الناتج</h2>
+<div class="out" id="out"></div>
+</div>
+
+<a class="back" href="index.html">⬅️ العودة للرئيسية</a>
+<a class="back" href="exam-manual.html">📝 الاختبار اليدوي</a>
+
+</div>
+
+<script>
+
+const b=document.getElementById('generate');
+const box=document.getElementById('box');
+const out=document.getElementById('out');
+
+const esc=s=>String(s)
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;')
+.replace(/'/g,'&#039;');
+
+b.onclick=async()=>{
+
+const subject=document.getElementById('subject').value;
+const grade=document.getElementById('grade').value;
+const topic=document.getElementById('topic').value.trim();
+const count=document.getElementById('count').value;
+const difficulty=document.getElementById('difficulty').value;
+const type=document.getElementById('type').value;
+
+if(!topic){
+alert('اكتب موضوع الاختبار أولًا');
+return;
+}
+
+b.disabled=true;
+b.textContent='⏳ جاري إنشاء الاختبار...';
+
+box.style.display='block';
+
+out.innerHTML=
+'<div class="loading">🤖 هيثم AI يقوم بإعداد الاختبار...</div>';
+
+const message=`
+
+أنشئ اختبارًا تعليميًا باللغة العربية.
+
+المادة: ${subject}
+الصف: ${grade}
+موضوع الاختبار: ${topic}
+عدد الأسئلة: ${count}
+مستوى الصعوبة: ${difficulty}
+نوع الأسئلة: ${type}
+
+ابدأ الاختبار بالبيانات التالية:
+
+اسم المدرسة: ______________________
+اسم الطالب: ______________________
+الصف: ${grade}
+المادة: ${subject}
+الدرجة: ______________________
+التاريخ: ______________________
+
+إذا كان اختيارًا من متعدد ضع أربعة خيارات لكل سؤال.
+
+وفي النهاية ضع عنوان:
+
+نموذج الإجابة
+
+واكتب الإجابات الصحيحة بوضوح.
+
+أعطني الاختبار جاهزًا للطباعة.
+`;
+
+try{
+
+const r=await fetch('/api/chat',{
+method:'POST',
+headers:{
+'Content-Type':'application/json'
+},
+body:JSON.stringify({
+message:message
+})
+});
+
+const raw=await r.text();
+
+let d;
+
+try{
+d=JSON.parse(raw);
+}catch{
+throw new Error(
+'المسار /api/chat غير متاح. تأكد أن chat.js موجود داخل مجلد api ثم أعد نشر المشروع.'
+);
+}
+
+if(!r.ok){
+throw new Error(d.reply || 'حدث خطأ أثناء إنشاء الاختبار');
+}
+
+if(!d.reply){
+throw new Error('لم يصل رد من الذكاء الاصطناعي');
+}
+
+out.innerHTML=esc(d.reply).replace(/\n/g,'<br>');
+
+}catch(e){
+
+out.innerHTML=
+'<div class="err">❌ '+esc(e.message)+'</div>';
+
+}finally{
+
+b.disabled=false;
+b.textContent='🤖 إنشاء الاختبار';
+
+}
+
+};
+
+</script>
+
+</body>
+</html>
