@@ -1,326 +1,171 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>هيثم AI - الأستاذ هيثم القصلي</title>
+    <title>هيثم AI - المساعد التعليمي الذكي</title>
 
     <style>
-        /* ================================
-           إصلاح أساسي للشاشة
-        ================================= */
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
         body {
-            width: 100%;
-            max-width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-
-            font-family: Tahoma, "Segoe UI", Arial, sans-serif;
-
+            font-family: Tahoma, "Segoe UI", sans-serif;
             background:
-                radial-gradient(circle at top right, rgba(118,75,162,0.35), transparent 35%),
-                radial-gradient(circle at bottom left, rgba(102,126,234,0.20), transparent 35%),
-                linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+                linear-gradient(
+                    135deg,
+                    #0f0c29,
+                    #302b63,
+                    #24243e
+                );
 
+            min-height: 100vh;
+            padding: 20px;
             color: white;
         }
 
-        /* ================================
-           الحاوية الرئيسية
-        ================================= */
         .container {
-            width: calc(100% - 30px);
             max-width: 1100px;
-            min-width: 0;
-
-            margin: 20px auto;
-            padding: 35px 30px;
-
-            background: rgba(255,255,255,0.08);
+            margin: auto;
+            background: rgba(255,255,255,0.07);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-
-            border-radius: 35px;
             border: 1px solid rgba(255,255,255,0.1);
-
-            box-shadow: 0 30px 80px rgba(0,0,0,0.45);
-
-            overflow: hidden;
-
-            animation: fadeUp 0.7s ease;
+            border-radius: 30px;
+            padding: 35px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
         }
 
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
+        /* الرأس */
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ================================
-           الهيدر
-        ================================= */
         .header {
-            width: 100%;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-
+            align-items: center;
             gap: 15px;
-            margin-bottom: 30px;
-
             flex-wrap: wrap;
+            margin-bottom: 35px;
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-
-            min-width: 0;
         }
 
         .logo-icon {
-            flex-shrink: 0;
-
-            width: 58px;
-            height: 58px;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            font-size: 38px;
+            font-size: 35px;
 
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 17px;
-
-            box-shadow: 0 8px 30px rgba(102,126,234,0.4);
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2
+                );
         }
 
         .logo h1 {
-            color: white;
-            font-size: 27px;
-            white-space: nowrap;
+            font-size: 28px;
         }
 
-        .logo h1 span {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 3px 12px;
-            border-radius: 30px;
-            font-size: 14px;
+        .logo span {
+            font-size: 13px;
+            background: #667eea;
+            padding: 4px 10px;
+            border-radius: 20px;
         }
 
         .header-actions {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .header-btn {
-            background: rgba(255,255,255,0.08);
+            border: none;
             color: white;
-
-            border: 1px solid rgba(255,255,255,0.15);
-
-            padding: 10px 18px;
-            border-radius: 30px;
-
+            background: rgba(255,255,255,0.08);
+            padding: 11px 18px;
+            border-radius: 25px;
             cursor: pointer;
-
-            font-size: 14px;
             font-weight: bold;
-
-            transition: 0.3s;
         }
 
         .header-btn:hover {
-            background: rgba(255,255,255,0.16);
-            transform: translateY(-2px);
+            background: rgba(255,255,255,0.15);
         }
 
-        .header-btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-        }
+        /* الترحيب */
 
-        /* ================================
-           الترحيب
-        ================================= */
-        .welcome-section {
-            width: 100%;
+        .welcome {
             text-align: center;
-
-            padding: 20px 0 30px;
-
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-
-            margin-bottom: 25px;
+            padding: 20px;
+            margin-bottom: 30px;
         }
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .logo-image {
-            width: 150px;
-            max-width: 80%;
-            height: auto;
-
-            border-radius: 16px;
-
-            filter: drop-shadow(0 8px 25px rgba(255,215,0,0.15));
-        }
-
-        .avatar-wrapper {
-            width: 105px;
-            height: 105px;
-
-            margin: 0 auto 15px;
+        .avatar {
+            width: 110px;
+            height: 110px;
+            margin: auto auto 15px;
 
             border-radius: 50%;
-            padding: 5px;
 
-            background: linear-gradient(135deg,#f6b26b,#e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-            box-shadow: 0 12px 40px rgba(230,126,34,0.35);
+            font-size: 55px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f6b26b,
+                    #e67e22
+                );
         }
 
-        .avatar-wrapper img {
-            width: 100%;
-            height: 100%;
-
-            object-fit: cover;
-
-            border-radius: 50%;
-            border: 4px solid #0b0e1a;
-
-            display: block;
+        .welcome h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
         }
 
-        .name {
-            font-size: 28px;
-            font-weight: bold;
-            line-height: 1.4;
-
-            color: white;
-        }
-
-        .highlight {
-            background: linear-gradient(to left,#f6b26b,#f1c40f);
-
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .title {
-            font-size: 17px;
-            color: rgba(255,255,255,0.65);
-            margin-top: 8px;
-        }
-
-        .title strong {
+        .welcome h2 span {
             color: #f6b26b;
         }
 
-        .divider {
-            width: 70px;
-            height: 3px;
-
-            background: linear-gradient(90deg,#f6b26b,#e67e22);
-
-            margin: 15px auto 0;
-
-            border-radius: 10px;
-        }
-
-        /* ================================
-           Hero
-        ================================= */
-        .hero {
-            width: 100%;
-            text-align: center;
-            padding: 10px 0 15px;
-        }
-
-        .greeting {
-            font-size: 45px;
-            margin-bottom: 8px;
-        }
-
-        .hero h2 {
-            color: white;
-            font-size: 32px;
-            line-height: 1.5;
-        }
-
-        .hero h2 span {
-            background: linear-gradient(135deg,#f6ad55,#ed8936);
-
-            padding: 2px 15px;
-
-            border-radius: 30px;
-
-            font-size: 29px;
-        }
-
-        .hero p {
-            color: rgba(255,255,255,0.6);
-
-            font-size: 17px;
+        .welcome p {
+            color: rgba(255,255,255,0.65);
             line-height: 1.8;
-
-            max-width: 650px;
-
-            margin: 8px auto 0;
         }
 
-        /* ================================
-           البطاقات
-        ================================= */
+        /* البطاقات */
+
         .grid {
-            width: 100%;
-
             display: grid;
-
             grid-template-columns:
-                repeat(auto-fit, minmax(190px, 1fr));
+                repeat(auto-fit,minmax(200px,1fr));
 
             gap: 18px;
-
-            margin-top: 25px;
         }
 
         .card {
-            width: 100%;
-            min-width: 0;
-
-            background: rgba(255,255,255,0.06);
-
             border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.05);
 
-            border-radius: 22px;
+            border-radius: 20px;
 
             padding: 25px 15px;
 
@@ -328,124 +173,107 @@
 
             cursor: pointer;
 
-            color: white;
-
-            text-decoration: none;
-
-            position: relative;
-
-            overflow: hidden;
-
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
         .card:hover {
             transform: translateY(-6px);
-
-            border-color: rgba(102,126,234,0.45);
-
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.09);
         }
 
         .card .icon {
             display: block;
-
             font-size: 42px;
-
             margin-bottom: 12px;
         }
 
         .card h3 {
-            font-size: 18px;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
         }
 
         .card p {
-            color: rgba(255,255,255,0.55);
+            color: rgba(255,255,255,0.5);
             font-size: 13px;
-            line-height: 1.6;
         }
 
-        .card-featured {
+        .featured {
             background:
                 linear-gradient(
                     135deg,
-                    rgba(102,126,234,0.20),
-                    rgba(118,75,162,0.20)
+                    rgba(102,126,234,0.2),
+                    rgba(118,75,162,0.2)
                 );
-
-            border-color: rgba(102,126,234,0.3);
         }
 
-        .card-featured .icon {
-            font-size: 48px;
-        }
+        /* المحادثة */
 
-        .badge-new {
-            position: absolute;
-
-            top: 10px;
-            left: 10px;
-
-            background: linear-gradient(135deg,#f6ad55,#ed8936);
-
-            color: white;
-
-            font-size: 9px;
-
-            padding: 3px 10px;
-
-            border-radius: 20px;
-
-            font-weight: bold;
-        }
-
-        /* ================================
-           المحادثة
-        ================================= */
-        #chatForm {
-            width: 100%;
-
-            display: flex;
-
-            gap: 10px;
-
+        .chat-section {
             margin-top: 30px;
+        }
 
-            padding: 10px;
+        #messages {
+            min-height: 100px;
+            max-height: 450px;
 
-            background: rgba(255,255,255,0.05);
+            overflow-y: auto;
 
-            border-radius: 16px;
+            background: rgba(0,0,0,0.15);
 
-            min-width: 0;
+            border-radius: 18px;
+
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .msg {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            line-height: 1.7;
+        }
+
+        .msg.user {
+            background: rgba(102,126,234,0.2);
+        }
+
+        .msg.ai {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .msg b {
+            display: block;
+            color: #f6b26b;
+            margin-bottom: 5px;
+        }
+
+        .msg p {
+            white-space: pre-wrap;
+        }
+
+        #chatForm {
+            display: flex;
+            gap: 10px;
         }
 
         #input {
-            width: 100%;
-            min-width: 0;
-
             flex: 1;
 
-            padding: 13px;
+            min-height: 55px;
 
-            border-radius: 12px;
+            resize: vertical;
+
+            padding: 14px;
+
+            border-radius: 15px;
 
             border: 1px solid rgba(255,255,255,0.1);
 
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.06);
 
             color: white;
 
-            font-size: 16px;
-
-            resize: none;
-
             font-family: inherit;
-        }
-
-        #input::placeholder {
-            color: rgba(255,255,255,0.35);
+            font-size: 16px;
         }
 
         #input:focus {
@@ -453,16 +281,23 @@
             border-color: #667eea;
         }
 
-        #chatForm .btn-send {
-            flex-shrink: 0;
+        #input::placeholder {
+            color: rgba(255,255,255,0.35);
+        }
 
-            background: linear-gradient(135deg,#667eea,#764ba2);
+        .btn-send {
+            width: 120px;
 
             border: none;
 
-            padding: 12px 25px;
+            border-radius: 15px;
 
-            border-radius: 12px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2
+                );
 
             color: white;
 
@@ -471,296 +306,48 @@
             cursor: pointer;
         }
 
-        /* ================================
-           الرسائل
-        ================================= */
-        #messages {
-            width: 100%;
-
-            margin-top: 15px;
-
-            max-height: 400px;
-
-            overflow-y: auto;
-            overflow-x: hidden;
-
-            padding: 10px;
-
-            background: rgba(255,255,255,0.03);
-
-            border-radius: 12px;
+        .btn-send:disabled {
+            opacity: 0.5;
         }
 
-        #messages .msg {
-            width: 100%;
-
-            padding: 10px 14px;
-
-            margin-bottom: 8px;
-
-            border-radius: 12px;
-
-            background: rgba(255,255,255,0.04);
-
-            overflow-wrap: anywhere;
-        }
-
-        #messages .msg.user {
-            background: rgba(102,126,234,0.2);
-            text-align: right;
-        }
-
-        #messages .msg.ai {
-            background: rgba(255,255,255,0.04);
-            text-align: right;
-        }
-
-        #messages .msg b {
-            color: #f6b26b;
-
-            display: block;
-
-            margin-bottom: 4px;
-        }
-
-        #messages .msg p {
-            color: rgba(255,255,255,0.85);
-
-            font-size: 15px;
-
-            line-height: 1.7;
-
-            overflow-wrap: anywhere;
-        }
-
-        /* ================================
-           شريط المحادثة السريع
-        ================================= */
-        .chat-quick {
-            width: 100%;
-
-            margin-top: 30px;
-
-            background: rgba(255,255,255,0.05);
-
-            border-radius: 20px;
-
-            padding: 20px;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
-
-            flex-wrap: wrap;
-
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .chat-quick .avatar {
-            font-size: 38px;
-            flex-shrink: 0;
-        }
-
-        .chat-quick .msg {
-            flex: 1;
-            min-width: 180px;
-
-            color: rgba(255,255,255,0.7);
-
-            font-size: 15px;
-
-            line-height: 1.7;
-        }
-
-        .chat-quick .msg strong {
-            color: white;
-        }
-
-        .actions {
-            display: flex;
-
-            gap: 8px;
-
-            flex-wrap: wrap;
-
-            justify-content: center;
-        }
-
-        .actions button {
-            background: rgba(255,255,255,0.08);
-
-            border: none;
-
-            padding: 10px 16px;
-
-            border-radius: 30px;
-
-            cursor: pointer;
-
-            color: white;
-
-            font-size: 14px;
-        }
-
-        .actions .btn-send {
-            background: linear-gradient(135deg,#667eea,#764ba2);
-        }
-
-        /* ================================
-           الفوتر
-        ================================= */
         .footer {
-            width: 100%;
-
             text-align: center;
-
-            margin-top: 30px;
-
+            margin-top: 35px;
             padding-top: 20px;
 
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top:
+                1px solid rgba(255,255,255,0.06);
 
             color: rgba(255,255,255,0.35);
 
             font-size: 13px;
-
-            line-height: 1.7;
         }
 
-        /* ================================
-           الهاتف
-        ================================= */
-        @media (max-width: 768px) {
-
-            body {
-                display: block;
-                padding: 0;
-            }
+        @media(max-width:600px) {
 
             .container {
-                width: calc(100% - 20px);
-
-                margin: 10px auto;
-
-                padding: 22px 15px;
-
-                border-radius: 25px;
+                padding: 20px 15px;
             }
 
             .header {
-                flex-direction: column;
-
-                align-items: center;
-
-                text-align: center;
+                justify-content: center;
             }
 
             .logo {
                 justify-content: center;
             }
 
-            .logo h1 {
-                font-size: 24px;
-            }
-
-            .header-actions {
-                width: 100%;
-            }
-
-            .header-btn {
-                flex: 1;
-                min-width: 95px;
-            }
-
-            .hero h2 {
-                font-size: 25px;
-            }
-
-            .hero h2 span {
-                font-size: 23px;
-            }
-
-            .hero p {
-                font-size: 15px;
-            }
-
-            .grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 12px;
-            }
-
-            .card {
-                padding: 20px 10px;
-            }
-
-            .card .icon {
-                font-size: 36px;
-            }
-
-            .card-featured .icon {
-                font-size: 42px;
-            }
-
             #chatForm {
                 flex-direction: column;
             }
 
-            #chatForm .btn-send {
+            .btn-send {
                 width: 100%;
+                height: 50px;
             }
 
-            .chat-quick {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .chat-quick .msg {
-                width: 100%;
-            }
-
-            .actions {
-                width: 100%;
-            }
-
-            .actions button {
-                flex: 1;
-            }
         }
 
-        @media (max-width: 480px) {
-
-            .container {
-                width: calc(100% - 12px);
-                padding: 18px 10px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero h2 {
-                font-size: 22px;
-            }
-
-            .hero h2 span {
-                font-size: 21px;
-            }
-
-            .name {
-                font-size: 23px;
-            }
-
-            .logo-image {
-                width: 120px;
-            }
-
-            .avatar-wrapper {
-                width: 90px;
-                height: 90px;
-            }
-        }
     </style>
 </head>
 
@@ -768,37 +355,34 @@
 
 <div class="container">
 
-    <!-- ================================
-         الهيدر
-    ================================= -->
+    <!-- الرأس -->
+
     <div class="header">
 
         <div class="logo">
-            <div class="logo-icon">🧠</div>
+
+            <div class="logo-icon">
+                🧠
+            </div>
 
             <h1>
                 هيثم
                 <span>AI</span>
             </h1>
+
         </div>
 
         <div class="header-actions">
 
             <button
                 class="header-btn"
-                onclick="window.location.href='correction.html'">
-                📝 تصحيح
+                onclick="openExam()">
+                📄 إنشاء اختبار
             </button>
 
             <button
                 class="header-btn"
-                onclick="window.location.href='library.html'">
-                📚 المكتبة
-            </button>
-
-            <button
-                class="header-btn header-btn-primary"
-                onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">
+                onclick="goChat()">
                 💬 المحادثة
             </button>
 
@@ -807,145 +391,38 @@
     </div>
 
 
-    <!-- ================================
-         الترحيب
-    ================================= -->
-    <div class="welcome-section">
+    <!-- الترحيب -->
 
-        <div class="logo-container">
-            <!-- إذا كان لديك شعار، ضع مساره هنا -->
-            <div style="font-size:55px;">🏫</div>
-        </div>
+    <div class="welcome">
 
-        <div class="avatar-wrapper">
-            <div style="
-                width:100%;
-                height:100%;
-                border-radius:50%;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                background:#17152f;
-                font-size:48px;
-            ">
-                👨‍🏫
-            </div>
-        </div>
-
-        <div class="name">
-            الأستاذ
-            <span class="highlight">
-                هيثم القصلي
-            </span>
-        </div>
-
-        <div class="title">
-            <strong>🧑‍🏫 مدرس مادة الرياضيات</strong>
-        </div>
-
-        <div class="divider"></div>
-
-    </div>
-
-
-    <!-- ================================
-         Hero
-    ================================= -->
-    <div class="hero">
-
-        <div class="greeting">
-            👋
+        <div class="avatar">
+            🧑‍🏫
         </div>
 
         <h2>
-            مرحباً بك في
-            <span>هيثم AI</span>
+            الأستاذ
+            <span>هيثم القصلي</span>
         </h2>
 
         <p>
-            مساعدك الذكي لإعداد التحضير، بنوك الأسئلة،
-            الشروحات الرياضية، والأعمال المدرسية.
+            🧑‍🏫 مدرس مادة الرياضيات
+        </p>
+
+        <p>
+            المساعد التعليمي الذكي لإعداد الاختبارات
+            والشروحات وحل المسائل والأعمال المدرسية.
         </p>
 
     </div>
 
 
-    <!-- ================================
-         الخدمات
-    ================================= -->
+    <!-- البطاقات -->
+
     <div class="grid">
 
-        <!-- تصحيح -->
         <div
-            class="card card-featured"
-            onclick="window.location.href='correction.html'">
-
-            <span class="badge-new">
-                جديد
-            </span>
-
-            <span class="icon">
-                📝
-            </span>
-
-            <h3>
-                تصحيح أوراق
-            </h3>
-
-            <p>
-                رفع صورة + تصحيح تفصيلي
-            </p>
-
-        </div>
-
-
-        <!-- المكتبة -->
-        <div
-            class="card"
-            onclick="window.location.href='library.html'">
-
-            <span class="icon">
-                📚
-            </span>
-
-            <h3>
-                المكتبة
-            </h3>
-
-            <p>
-                ملخصات وكتب تعليمية
-            </p>
-
-        </div>
-
-
-        <!-- المحادثة -->
-        <div
-            class="card"
-            onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">
-
-            <span class="icon">
-                💬
-            </span>
-
-            <h3>
-                المحادثة
-            </h3>
-
-            <p>
-                اسأل هيثم أي سؤال
-            </p>
-
-        </div>
-
-
-        <!-- ================================
-             إنشاء اختبار
-             مهم: يفتح exam.html
-        ================================= -->
-        <div
-            class="card"
-            onclick="window.location.href='exam.html'">
+            class="card featured"
+            onclick="openExam()">
 
             <span class="icon">
                 📄
@@ -956,16 +433,34 @@
             </h3>
 
             <p>
-                أسئلة + نموذج إجابة
+                أنشئ اختبارًا بالذكاء الاصطناعي
             </p>
 
         </div>
 
 
-        <!-- حل مسألة -->
         <div
             class="card"
-            onclick="document.getElementById('input').focus()">
+            onclick="goChat()">
+
+            <span class="icon">
+                💬
+            </span>
+
+            <h3>
+                المحادثة
+            </h3>
+
+            <p>
+                اسأل هيثم AI أي سؤال
+            </p>
+
+        </div>
+
+
+        <div
+            class="card"
+            onclick="sendQuick('حل المسألة التالية بالتفصيل خطوة بخطوة: ')">
 
             <span class="icon">
                 📐
@@ -976,27 +471,26 @@
             </h3>
 
             <p>
-                خطوات تفصيلية
+                حل وشرح خطوة بخطوة
             </p>
 
         </div>
 
 
-        <!-- جدول مواصفات -->
         <div
             class="card"
-            onclick="document.getElementById('input').focus()">
+            onclick="sendQuick('ساعدني في إعداد درس رياضيات متكامل للطلاب')">
 
             <span class="icon">
-                📊
+                📚
             </span>
 
             <h3>
-                جدول مواصفات
+                إعداد درس
             </h3>
 
             <p>
-                توزيع الدرجات
+                تحضير وشروحات تعليمية
             </p>
 
         </div>
@@ -1004,93 +498,58 @@
     </div>
 
 
-    <!-- ================================
-         صندوق المحادثة
-    ================================= -->
-    <form id="chatForm">
+    <!-- المحادثة -->
 
-        <textarea
-            id="input"
-            rows="1"
-            placeholder="اكتب سؤالك هنا..."
-        ></textarea>
-
-        <button
-            type="submit"
-            class="btn-send">
-            إرسال
-        </button>
-
-    </form>
-
-
-    <!-- الرسائل -->
-    <div id="messages"></div>
-
-
-    <!-- ================================
-         المحادثة السريعة
-    ================================= -->
     <div
-        class="chat-quick"
+        class="chat-section"
         id="chat">
 
-        <div class="avatar">
-            🤖
+        <div id="messages">
+
+            <div class="msg ai">
+
+                <b>
+                    هيثم AI
+                </b>
+
+                <p>
+                    مرحبًا بك 👋
+                    أنا جاهز لمساعدتك في الرياضيات
+                    والتعليم وإعداد الاختبارات.
+                </p>
+
+            </div>
+
         </div>
 
-        <div class="msg">
 
-            <strong>
-                هيثم AI
-            </strong>
+        <form id="chatForm">
 
-            مرحباً 😊 أنا جاهز لمساعدتك.
-
-            <br>
-
-            اكتب طلبك أو تحدث عبر المايك 🎤
-            أو أرفق صورة.
-
-        </div>
-
-        <div class="actions">
-
-            <button type="button">
-                🎤
-            </button>
-
-            <button type="button">
-                📎
-            </button>
+            <textarea
+                id="input"
+                placeholder="اكتب سؤالك هنا..."
+                rows="2"></textarea>
 
             <button
-                type="button"
+                type="submit"
                 class="btn-send"
-                onclick="document.getElementById('input').focus()">
+                id="sendBtn">
 
-                💬 ابدأ المحادثة
+                إرسال
 
             </button>
 
-        </div>
+        </form>
 
     </div>
 
 
-    <!-- ================================
-         الفوتر
-    ================================= -->
     <div class="footer">
 
-        تطبيق هيثم AI © 2026
-
-        <br>
-
+        هيثم AI © 2026
+        -
         الأستاذ هيثم القصلي
-
-        <br>
-
+        -
         جميع الحقوق محفوظة
 
     </div>
@@ -1098,41 +557,7 @@
 </div>
 
 
-<!-- ================================
-     الساعة والتحية
-================================= -->
-<script>
-
-    const hour = new Date().getHours();
-
-    const greeting =
-        document.querySelector('.greeting');
-
-    if (hour >= 5 && hour < 12) {
-
-        greeting.textContent = '🌅';
-
-    } else if (hour >= 12 && hour < 17) {
-
-        greeting.textContent = '☀️';
-
-    } else if (hour >= 17 && hour < 21) {
-
-        greeting.textContent = '🌇';
-
-    } else {
-
-        greeting.textContent = '🌙';
-
-    }
-
-</script>
-
-
-<!-- ================================
-     app.js
-================================= -->
 <script src="app.js"></script>
 
 </body>
-    </html>
+</html>
