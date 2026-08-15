@@ -1,259 +1,167 @@
-// app.js
-// هيثم AI
-// الاتصال بالذكاء الاصطناعي يتم من خلال /api/chat
+export default async function handler(req, res) {
+  // السماح بالطلبات من الموقع
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-document.addEventListener("DOMContentLoaded", () => {
+  // طلب OPTIONS
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
-    const form = document.getElementById("chatForm");
-    const input = document.getElementById("input");
-    const messages = document.getElementById("messages");
-    const sendBtn = document.getElementById("sendBtn");
+  // نسمح فقط بـ POST
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      success: false,
+      error: "الطلب يجب أن يكون POST"
+    });
+  }
 
-    if (!form || !input || !messages) {
-        console.error("عناصر المحادثة غير موجودة");
-        return;
+  try {
+    // مفتاح Gemini من Vercel
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({
+        success: false,
+        error: "مفتاح GEMINI_API_KEY غير موجود في Vercel"
+      });
     }
 
+    // قراءة البيانات القادمة من الموقع
+    const body = req.body || {};
 
-    // =====================================================
-    // فتح صفحة إنشاء الاختبار
-    // =====================================================
+    // دعم أكثر من طريقة لإرسال الرسالة
+    let message = "";
 
-    window.openExam = function () {
-        window.location.href = "exam.html";
-    };
+    if (typeof body.message === "string") {
+      message = body.message;
+    } else if (typeof body.prompt === "string") {
+      message = body.prompt;
+    } else if (Array.isArray(body.messages)) {
+      const lastMessage = body.messages[body.messages.length - 1];
 
-
-    // =====================================================
-    // الانتقال إلى المحادثة
-    // =====================================================
-
-    window.goChat = function () {
-
-        const chat = document.getElementById("chat");
-
-        if (chat) {
-            chat.scrollIntoView({
-                behavior: "smooth"
-            });
-
-            setTimeout(() => {
-                input.focus();
-            }, 500);
-        }
-
-    };
-
-
-    // =====================================================
-    // إرسال طلب سريع
-    // =====================================================
-
-    window.sendQuick = function (text) {
-
-        goChat();
-
-        input.value = text;
-
-        setTimeout(() => {
-            input.focus();
-        }, 500);
-
-    };
-
-
-    // =====================================================
-    // إضافة رسالة
-    // =====================================================
-
-    function addMessage(role, text) {
-
-        const div = document.createElement("div");
-
-        div.className =
-            `msg ${role}`;
-
-        const title =
-            role === "user"
-                ? "أنت"
-                : "هيثم AI";
-
-        div.innerHTML = `
-            <b>${title}</b>
-            <p></p>
-        `;
-
-        div.querySelector("p").textContent = text;
-
-        messages.appendChild(div);
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-        return div;
+      if (lastMessage) {
+        message =
+          lastMessage.content ||
+          lastMessage.text ||
+          lastMessage.message ||
+          "";
+      }
     }
 
+    message = String(message).trim();
 
-    // =====================================================
-    // إرسال الرسالة إلى الخادم
-    // =====================================================
-
-    async function sendMessage(message) {
-
-        if (!message.trim()) {
-            return;
-        }
-
-        addMessage("user", message);
-
-        input.value = "";
-
-        sendBtn.disabled = true;
-        sendBtn.textContent = "⏳";
-
-
-        const loading =
-            addMessage(
-                "ai",
-                "⏳ جاري التفكير..."
-            );
-
-
-        try {
-
-            const response =
-                await fetch("/api/chat", {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        message: message
-                    })
-
-                });
-
-
-            // محاولة قراءة JSON
-            let data;
-
-            try {
-
-                data =
-                    await response.json();
-
-            } catch (jsonError) {
-
-                throw new Error(
-                    "الخادم لم يُرجع استجابة صحيحة. تأكد من نشر api/chat.js في Vercel."
-                );
-
-            }
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.reply ||
-                    "حدث خطأ من الخادم"
-                );
-
-            }
-
-
-            const reply =
-                data.reply ||
-                "لم يصل رد من هيثم AI.";
-
-
-            loading.querySelector("p")
-                .textContent = reply;
-
-
-        } catch (error) {
-
-            console.error(
-                "Chat Error:",
-                error
-            );
-
-            loading.querySelector("p")
-                .textContent =
-                "❌ " +
-                error.message;
-
-        } finally {
-
-            sendBtn.disabled = false;
-            sendBtn.textContent = "إرسال";
-
-            messages.scrollTop =
-                messages.scrollHeight;
-
-        }
-
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        error: "لم يتم إرسال السؤال"
+      });
     }
 
+    // تعليمات هيثم AI
+    const systemInstruction = `
+أنت هيثم AI، المساعد التعليمي الذكي للأستاذ هيثم القصلي.
 
-    // =====================================================
-    // زر الإرسال
-    // =====================================================
+مهمتك مساعدة الطلاب والمعلمين باللغة العربية.
 
-    form.addEventListener(
-        "submit",
-        function (event) {
+أجب بطريقة:
+- واضحة
+- دقيقة
+- سهلة الفهم
+- مناسبة للطلاب
+- منظمة
+- بدون حشو
 
-            event.preventDefault();
+في الرياضيات:
+اشرح الحل خطوة بخطوة، ثم اذكر الإجابة النهائية بوضوح.
 
-            const message =
-                input.value.trim();
+عند إنشاء اختبار:
+أنشئ أسئلة مناسبة للصف والمادة والمستوى المطلوب.
+لا تضع إجابات خاطئة.
+اجعل الأسئلة متنوعة ومنظمة.
 
-            if (!message) {
-                return;
-            }
+إذا طلب المستخدم إنشاء اختبار، فأعطه الاختبار بشكل مرتب وواضح.
+`;
 
-            sendMessage(message);
+    // استخدام Gemini
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: systemInstruction
+              }
+            ]
+          },
 
-        }
-    );
-
-
-    // =====================================================
-    // Enter للإرسال
-    // =====================================================
-
-    input.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
-
-                event.preventDefault();
-
-                const message =
-                    input.value.trim();
-
-                if (!message) {
-                    return;
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: message
                 }
-
-                sendMessage(message);
-
+              ]
             }
+          ],
 
-        }
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 4000
+          }
+        })
+      }
     );
 
+    // قراءة الرد
+    const data = await response.json();
 
-    console.log(
-        "✅ هيثم AI جاهز"
-    );
+    // إذا كان هناك خطأ من Gemini
+    if (!response.ok) {
+      console.error("Gemini API Error:", data);
 
-});
+      return res.status(response.status).json({
+        success: false,
+        error:
+          data?.error?.message ||
+          "حدث خطأ أثناء الاتصال بـ Gemini"
+      });
+    }
+
+    // استخراج النص
+    const text =
+      data?.candidates?.[0]?.content?.parts
+        ?.map(part => part.text || "")
+        .join("") || "";
+
+    if (!text) {
+      return res.status(500).json({
+        success: false,
+        error: "تم الاتصال بـ Gemini ولكن لم يصل رد نصي"
+      });
+    }
+
+    // إرسال النتيجة للموقع
+    return res.status(200).json({
+      success: true,
+      reply: text,
+      message: text
+    });
+
+  } catch (error) {
+    console.error("Server Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "حدث خطأ في الخادم"
+    });
+  }
+}
