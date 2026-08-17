@@ -1,161 +1,151 @@
-// api/chat.js
-// هيثم AI - Gemini Backend
-// جميع طلبات الذكاء الاصطناعي تمر من هنا
-
 export default async function handler(req, res) {
-    // السماح بـ POST فقط
-    if (req.method !== "POST") {
-        return res.status(405).json({
-            reply: "طريقة الطلب غير مسموحة"
-        });
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      reply: "Method not allowed"
+    });
+  }
+
+  try {
+    const { message, image, knowledge } = req.body || {};
+
+    if (!message && !image) {
+      return res.status(400).json({
+        reply: "اكتب رسالتك أو أرفق صورة أولًا"
+      });
     }
 
-    try {
-        const {
-            message,
-            knowledge = "",
-            image = null
-        } = req.body || {};
+    const apiKey = process.env.GEMINI_API_KEY;
 
-        if (!message && !image) {
-            return res.status(400).json({
-                reply: "اكتب رسالتك أو أرفق صورة أولًا"
-            });
-        }
+    if (!apiKey) {
+      return res.status(500).json({
+        reply: "❌ مفتاح GEMINI_API_KEY غير موجود في Vercel."
+      });
+    }
 
-        // مفتاح Gemini محفوظ في Vercel Environment Variables
-        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    // تجهيز نص المستخدم مع معلومات البحث إن وجدت
+    let userText = message || "";
 
-        if (!GEMINI_API_KEY) {
-            return res.status(500).json({
-                reply:
-                    "❌ مفتاح Gemini غير مضاف في إعدادات Vercel.\n\n" +
-                    "أضف متغيرًا باسم GEMINI_API_KEY ثم أعد نشر المشروع."
-            });
-        }
+    if (knowledge) {
+      userText =
+        `سياق معلومات تم العثور عليه من البحث:\n\n` +
+        knowledge +
+        `\n\nسؤال المستخدم:\n` +
+        userText;
+    }
 
-        // النموذج
-        const MODEL = "gemini-2.5-flash";
+    const parts = [];
 
-        const GEMINI_URL =
-            `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+    if (userText) {
+      parts.push({
+        text: userText
+      });
+    }
 
-        // تعليمات هيثم AI
-        const systemInstruction = `
-أنت هيثم AI، المساعد التعليمي الذكي الخاص بالأستاذ هيثم القصلي.
+    // دعم الصور المرسلة من الموقع
+    if (image) {
+      let imageData = image;
 
-أنت مساعد متخصص في التعليم والمناهج الدراسية، وخاصة الرياضيات.
+      if (imageData.startsWith("data:")) {
+        const match = imageData.match(
+          /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/
+        );
 
-مهمتك:
-- الإجابة باللغة العربية.
-- تقديم إجابات واضحة ومنظمة.
-- شرح المسائل خطوة بخطوة.
-- مساعدة المعلمين في إعداد الاختبارات والتحضير والأنشطة.
-- مراعاة مستوى الطالب والصف الدراسي.
-- عند إنشاء اختبار، اجعله جاهزًا للطباعة.
-- لا تخترع معلومات عندما تكون غير متأكد.
-- إذا كان السؤال رياضيًا، تحقق من الحل قبل تقديمه.
-`;
-
-        let textPrompt = message || "";
-
-        if (knowledge) {
-            textPrompt =
-                `المعلومات الإضافية المتاحة:\n${knowledge}\n\n` +
-                `طلب المستخدم:\n${textPrompt}`;
-        }
-
-        const parts = [];
-
-        if (textPrompt) {
-            parts.push({
-                text: `${systemInstruction}\n\n${textPrompt}`
-            });
-        } else {
-            parts.push({
-                text: systemInstruction
-            });
-        }
-
-        // دعم الصور إذا أرسلها التطبيق
-        if (image) {
-            let imageData = image;
-
-            // إذا كانت الصورة Data URL
-            if (imageData.startsWith("data:")) {
-                const match = imageData.match(
-                    /^data:(.*?);base64,(.*)$/
-                );
-
-                if (match) {
-                    parts.push({
-                        inline_data: {
-                            mime_type: match[1],
-                            data: match[2]
-                        }
-                    });
-                }
+        if (match) {
+          parts.push({
+            inline_data: {
+              mime_type: match[1],
+              data: match[2]
             }
+          });
         }
-
-        const response = await fetch(GEMINI_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "x-goog-api-key": GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        role: "user",
-                        parts
-                    }
-                ],
-                generationConfig: {
-                    temperature: 0.4,
-                    maxOutputTokens: 4000
-                }
-            })
-        });
-
-        const data = await response.json();
-
-        console.log("Gemini status:", response.status);
-
-        if (!response.ok) {
-            console.error("Gemini Error:", data);
-
-            return res.status(response.status).json({
-                reply:
-                    data?.error?.message ||
-                    "حدث خطأ أثناء الاتصال بخدمة Gemini"
-            });
-        }
-
-        const reply =
-            data?.candidates?.[0]?.content?.parts
-                ?.map(part => part.text || "")
-                .join("")
-                .trim();
-
-        if (!reply) {
-            return res.status(500).json({
-                reply: "❌ لم يصل رد من الذكاء الاصطناعي."
-            });
-        }
-
-        return res.status(200).json({
-            reply
-        });
-
-    } catch (error) {
-
-        console.error("Server Error:", error);
-
-        return res.status(500).json({
-            reply:
-                "❌ حدث خطأ في الخادم:\n" +
-                error.message
-        });
+      }
     }
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: `
+أنت "هيثم AI"، المساعد التعليمي الذكي للأستاذ هيثم القصلي.
+
+أنت مساعد تعليمي باللغة العربية، وتساعد في:
+- الإجابة عن أسئلة المستخدم.
+- البحث وفهم المعلومات التي يتم تمريرها إليك.
+- الرياضيات وحل المسائل خطوة بخطوة.
+- إعداد الاختبارات.
+- إعداد الدروس والتحاضير.
+- شرح المناهج للطلاب والمعلمين.
+
+قواعد مهمة:
+1. أجب باللغة العربية ما لم يطلب المستخدم غير ذلك.
+2. كن واضحًا ودقيقًا ومنظمًا.
+3. إذا أرسل المستخدم معلومات من البحث، استفد منها وأجب بناءً عليها.
+4. في الرياضيات اشرح الحل خطوة بخطوة.
+5. إذا طلب المستخدم إنشاء اختبار، أنشئ اختبارًا كاملًا ومنظمًا حسب المادة والصف وعدد الأسئلة والصعوبة ونوع الأسئلة التي يحددها.
+6. لا تقل للمستخدم إنك لا تستطيع إنشاء الاختبارات.
+7. لا تذكر مفاتيح API أو تفاصيل الخادم للمستخدم.
+                `
+              }
+            ]
+          },
+
+          contents: [
+            {
+              role: "user",
+              parts: parts
+            }
+          ],
+
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 5000
+          }
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Gemini Error:", data);
+
+      return res.status(response.status).json({
+        reply:
+          data?.error?.message ||
+          "❌ حدث خطأ أثناء الاتصال بخدمة Gemini."
+      });
+    }
+
+    const reply = data?.candidates?.[0]?.content?.parts
+      ?.map(part => part.text || "")
+      .join("")
+      .trim();
+
+    if (!reply) {
+      return res.status(500).json({
+        reply: "❌ لم يصل رد من Gemini."
+      });
+    }
+
+    return res.status(200).json({
+      reply: reply
+    });
+
+  } catch (error) {
+    console.error("Server Error:", error);
+
+    return res.status(500).json({
+      reply: "❌ حدث خطأ في الخادم: " + error.message
+    });
+  }
 }
